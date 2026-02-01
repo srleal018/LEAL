@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Hub de Soluções</title>
+    <title>Leal Scripts | Loja Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        body { background-color: #020617; color: #f1f5f9; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { background-color: #020617; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
-        .tab-active { color: #3b82f6; position: relative; }
-        .tab-active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: #3b82f6; }
-        .footer-link { color: #94a3b8; font-size: 13px; transition: 0.3s; }
-        .footer-link:hover { color: #3b82f6; }
+        .tab-active { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
         .input-dark { background: #0f172a; border: 1px solid #1e293b; color: white; transition: 0.3s; }
         .input-dark:focus { border-color: #3b82f6; outline: none; }
-        .modal-bg { background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
         
-        /* Estilo do Toast (Popup) */
-        #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
-        .toast { background: #1e293b; border-left: 4px solid #3b82f6; padding: 12px 24px; border-radius: 8px; margin-top: 10px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); animation: slideIn 0.3s ease-out; }
+        /* Estilo Botão Postar Amarelo da sua imagem */
+        .btn-postar { background-color: #ffb800; color: black; font-weight: 800; transition: 0.3s; }
+        .btn-postar:hover { background-color: #e6a600; transform: translateY(-2px); }
+
+        /* Carrinho Flutuante */
+        .cart-badge { background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; position: absolute; top: -5px; right: -5px; }
+        
+        #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+        .toast { background: #1e293b; border-left: 4px solid #3b82f6; padding: 12px 24px; border-radius: 8px; margin-top: 10px; animation: slideIn 0.3s forwards; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
@@ -28,136 +30,107 @@
 
     <nav class="glass sticky top-0 z-50 p-4">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-bolt text-blue-500 text-2xl"></i>
-                <h1 class="text-xl font-black tracking-tighter">LEAL<span class="text-blue-500">HUB</span></h1>
-            </div>
+            <h1 class="text-xl font-black italic">LEAL<span class="text-blue-500">HUB</span></h1>
             
             <div class="hidden md:flex gap-8">
-                <button onclick="switchTab('scripts')" id="tab-scripts" class="text-sm font-bold uppercase tracking-wider tab-active transition-all">Scripts</button>
-                <button onclick="switchTab('reviews')" id="tab-reviews" class="text-sm font-bold uppercase tracking-wider text-slate-400 hover:text-white transition-all">Avaliações</button>
-                <button onclick="switchTab('news')" id="tab-news" class="text-sm font-bold uppercase tracking-wider text-slate-400 hover:text-white transition-all">Novidades</button>
+                <button onclick="switchTab('store')" id="tab-store" class="text-xs font-bold uppercase tab-active pb-1">Loja</button>
+                <button onclick="switchTab('scripts')" id="tab-scripts" class="text-xs font-bold uppercase text-slate-400 pb-1">Scripts</button>
+                <button onclick="switchTab('reviews')" id="tab-reviews" class="text-xs font-bold uppercase text-slate-400 pb-1">Avaliações</button>
             </div>
 
-            <div id="authArea">
-                <button id="loginBtn" class="bg-blue-600 px-5 py-2 rounded-lg font-bold text-xs hover:bg-blue-500 transition-all">LOGIN</button>
+            <div class="flex items-center gap-6">
+                <div id="cartIcon" class="relative cursor-pointer">
+                    <i class="fas fa-shopping-bag text-xl text-white"></i>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </div>
+                <div id="authArea">
+                    <button id="loginBtn" class="bg-blue-600 px-4 py-1.5 rounded-lg font-bold text-xs">LOGIN</button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <aside class="lg:col-span-3 space-y-4">
-            <h3 class="text-blue-500 font-bold text-xs uppercase flex items-center gap-2">
-                <i class="fas fa-bullhorn"></i> Anúncios Oficiais
-            </h3>
-            <div id="announcementFeed" class="space-y-4"></div>
-        </aside>
-
-        <section class="lg:col-span-9">
-            <div id="postReviewContainer" class="hidden glass p-6 rounded-2xl mb-6">
-                <textarea id="mainComment" class="w-full bg-transparent border-none outline-none text-white resize-none text-base" placeholder="Deixe sua avaliação sobre nossos scripts..." rows="3"></textarea>
-                <div class="flex justify-end mt-4">
-                    <button id="sendReview" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-bold text-sm transition-all">Publicar Avaliação</button>
-                </div>
-            </div>
-
-            <div id="mainFeed" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </section>
-    </main>
-
-    <footer class="bg-[#010409] border-t border-white/5 pt-12 pb-6 mt-20">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div>
-                <h2 class="text-xl font-black mb-4 italic">LEALHUB</h2>
-                <p class="text-slate-500 text-sm leading-relaxed mb-4">A melhor infraestrutura de scripts e automações para o seu projeto.</p>
-                <div class="flex gap-4 text-slate-400">
-                    <i class="fab fa-discord hover:text-blue-500 cursor-pointer"></i>
-                    <i class="fab fa-github hover:text-white cursor-pointer"></i>
-                    <i class="fab fa-twitter hover:text-blue-400 cursor-pointer"></i>
-                </div>
-            </div>
-            
-            <div>
-                <h4 class="font-bold text-sm mb-4">Empresa</h4>
-                <ul class="space-y-2 flex flex-col">
-                    <a href="#" class="footer-link">Sobre nós</a>
-                    <a href="#" class="footer-link">Termos de Uso</a>
-                    <a href="#" class="footer-link">Privacidade</a>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-sm mb-4">Recursos</h4>
-                <ul class="space-y-2 flex flex-col">
-                    <a href="#" class="footer-link">Como usar</a>
-                    <a href="#" class="footer-link">Documentação</a>
-                    <a href="#" class="footer-link">Suporte VIP</a>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="font-bold text-sm mb-4">Pagamento</h4>
-                <div class="flex gap-3 text-2xl text-slate-600">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-pix"></i>
-                </div>
-                <button onclick="toggleAdminModal()" class="mt-8 opacity-5 hover:opacity-100 text-[10px] text-slate-500 transition-all uppercase tracking-widest">Acesso Restrito</button>
+    <main class="flex-grow container mx-auto px-4 py-10">
+        <div id="reviewInputArea" class="hidden glass p-6 rounded-2xl max-w-2xl mx-auto mb-10">
+            <textarea id="reviewText" class="w-full bg-transparent border-none outline-none text-lg" placeholder="Escreva algo para a comunidade..." rows="2"></textarea>
+            <div class="flex justify-between items-center mt-4 text-[10px] text-slate-500">
+                <span>Postando como usuário verificado</span>
+                <button onclick="sendReview()" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold text-sm">Publicar</button>
             </div>
         </div>
-        <div class="text-center mt-12 pt-6 border-t border-white/5 text-[10px] text-slate-600 uppercase tracking-widest">
-            © 2026 Leal Scripts Hub. Todos os direitos reservados.
+
+        <div id="mainGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </main>
+
+    <footer class="bg-black border-t border-white/5 pt-12 pb-6 px-6">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="font-black italic mb-4">LEALHUB</h3>
+                <p class="text-slate-500 text-xs">Sua loja definitiva de scripts e automações.</p>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Empresa</h4>
+                <div class="flex flex-col gap-2 text-xs text-slate-500">
+                    <a href="#">Planos</a><a href="#">Sobre</a><a href="#">Marca</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Recursos</h4>
+                <div class="flex flex-col gap-2 text-xs text-slate-500">
+                    <a href="#">Como Hospedar?</a><a href="#">Fale Conosco</a><a href="#">Blog</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Formas de Pagamento</h4>
+                <div class="flex gap-3 text-xl text-slate-600 mb-6">
+                    <i class="fab fa-cc-stripe"></i><i class="fab fa-pix"></i><i class="fas fa-credit-card"></i>
+                </div>
+                <button onclick="toggleAdminModal()" class="opacity-10 hover:opacity-100 transition text-[9px] uppercase tracking-tighter">Painel do Mestre</button>
+            </div>
         </div>
     </footer>
 
-    <div id="toastContainer"></div>
-
     <div id="adminModal" class="fixed inset-0 modal-bg z-[100] hidden flex items-center justify-center p-4">
-        <div class="glass p-2 rounded-3xl max-w-4xl w-full max-h-[85vh] overflow-hidden">
-            <div id="adminLogin" class="p-12 text-center">
-                <input type="password" id="adminPass" class="w-64 input-dark rounded-xl p-3 text-center mb-4 block mx-auto" placeholder="Senha Mestra">
-                <button onclick="checkAdminPass()" class="bg-blue-600 px-10 py-3 rounded-xl font-bold hover:bg-blue-500 transition-all">ACESSAR PAINEL</button>
-                <button onclick="toggleAdminModal()" class="block mx-auto mt-4 text-slate-500 text-xs uppercase">Sair</button>
+        <div class="glass p-1 rounded-3xl max-w-xl w-full shadow-2xl">
+            <div id="adminLogin" class="p-10 text-center">
+                <h2 class="text-xl font-bold mb-6">Painel do Mestre</h2>
+                <input type="password" id="adminPass" class="w-full input-dark p-4 rounded-xl text-center mb-4" placeholder="••••••••">
+                <button onclick="checkAdminPass()" class="w-full bg-blue-600 py-4 rounded-xl font-bold">ENTRAR</button>
+                <button onclick="toggleAdminModal()" class="mt-4 text-xs text-slate-500">CANCELAR</button>
             </div>
 
-            <div id="adminPanel" class="hidden flex h-[75vh]">
-                <div class="w-1/4 bg-black/20 p-6 border-r border-white/5 space-y-4">
-                    <button onclick="setAdminMode('create')" class="w-full text-left p-3 rounded-lg hover:bg-white/5 text-xs font-bold uppercase">➕ Postar Conteúdo</button>
-                    <button onclick="setAdminMode('manage')" class="w-full text-left p-3 rounded-lg hover:bg-white/5 text-xs font-bold uppercase">⚙️ Gerenciar Banco</button>
-                    <button onclick="logoutAdmin()" class="w-full text-left p-3 rounded-lg text-red-500 text-xs font-bold uppercase mt-20">Logout</button>
-                </div>
-                <div class="w-3/4 p-8 overflow-y-auto">
-                    <div id="adminCreateSection">
-                        <h3 class="text-lg font-bold mb-6">Novo Registro</h3>
-                        <div class="space-y-4">
-                            <select id="postType" onchange="toggleFields()" class="w-full input-dark p-3 rounded-xl">
-                                <option value="products">📦 SCRIPT</option>
-                                <option value="announcements">📢 ANÚNCIO</option>
-                            </select>
-                            <input type="text" id="pTitle" placeholder="Título" class="w-full input-dark p-3 rounded-xl">
-                            <div id="scriptOnlyFields" class="grid grid-cols-2 gap-4">
-                                <input type="text" id="pCategory" placeholder="Categoria" class="input-dark p-3 rounded-xl">
-                                <input type="text" id="pPrice" placeholder="Valor (R$)" class="input-dark p-3 rounded-xl">
-                                <input type="text" id="pLink" placeholder="Link de Compra" class="col-span-2 input-dark p-3 rounded-xl">
-                            </div>
-                            <textarea id="pDesc" placeholder="Descrição completa..." class="w-full input-dark p-3 rounded-xl h-32"></textarea>
-                            <button onclick="pushUpdate()" class="w-full bg-blue-600 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-blue-500 transition-all">Confirmar Postagem</button>
-                        </div>
+            <div id="adminPanel" class="hidden p-8">
+                <h2 class="text-lg font-bold mb-6">Novo Arquivo/Produto</h2>
+                <div class="space-y-4">
+                    <input type="text" id="pName" placeholder="Nome do Produto" class="w-full input-dark p-3 rounded-lg">
+                    <input type="text" id="pPrice" placeholder="Preço (R$)" class="w-full input-dark p-3 rounded-lg">
+                    <select id="pCategory" class="w-full input-dark p-3 rounded-lg uppercase">
+                        <option value="loja">Loja</option>
+                        <option value="scripts">Scripts</option>
+                        <option value="carros">Carros</option>
+                    </select>
+                    <div class="flex gap-2 text-yellow-500 p-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                     </div>
-                    <div id="adminManageSection" class="hidden">
-                        <h3 class="text-lg font-bold mb-6">Gerenciamento</h3>
-                        <div id="adminList" class="space-y-2"></div>
+                    <div class="flex items-center gap-2">
+                        <input type="file" id="pFile" class="hidden">
+                        <label for="pFile" class="bg-white text-black px-4 py-2 rounded font-bold text-xs cursor-pointer">Escolher arquivo</label>
+                        <span id="fileName" class="text-xs text-slate-500">Nenhum arquivo escolhido</span>
                     </div>
+                    <button onclick="uploadProduct()" class="w-full btn-postar py-4 rounded-lg uppercase">Postar</button>
                 </div>
+                <button onclick="logoutAdmin()" class="mt-6 text-red-500 text-[10px] font-bold uppercase">Sair do Painel</button>
             </div>
         </div>
     </div>
 
+    <div id="toastContainer"></div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -174,168 +147,125 @@
         const provider = new GoogleAuthProvider();
 
         let currentUser = null;
-        let activeTab = 'scripts';
+        let activeTab = 'store';
+        let cart = 0;
 
-        // --- POPUP NOTIFICATION (TOAST) ---
+        // UI TOAST
         window.showToast = (msg) => {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-check-circle text-blue-500 mr-2"></i> ${msg}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3000);
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerHTML = `<i class="fas fa-check-circle text-blue-500 mr-2"></i> ${msg}`;
+            document.getElementById('toastContainer').appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }, 3000);
         };
 
-        // --- AUTH ---
+        // AUTH
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, user => {
             currentUser = user;
-            if(user) {
-                document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-600 shadow-lg shadow-blue-500/20">`;
-                showToast(`Bem-vindo, ${user.displayName.split(' ')[0]}!`);
-            }
-            updateUI();
+            if(user) document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-blue-500">`;
             loadData();
         });
 
+        // TABS
         window.switchTab = (tab) => {
             activeTab = tab;
-            ['scripts', 'reviews', 'news'].forEach(t => {
-                document.getElementById(`tab-${t}`).className = t === tab ? "text-sm font-bold uppercase tracking-wider tab-active transition-all" : "text-sm font-bold uppercase tracking-wider text-slate-400 hover:text-white transition-all";
+            ['store', 'scripts', 'reviews'].forEach(t => {
+                document.getElementById(`tab-${t}`).className = t === tab ? "text-xs font-bold uppercase tab-active pb-1" : "text-xs font-bold uppercase text-slate-400 pb-1";
             });
-            updateUI();
+            document.getElementById('reviewInputArea').classList.toggle('hidden', tab !== 'reviews');
             loadData();
         };
 
-        function updateUI() {
-            const reviewBox = document.getElementById('postReviewContainer');
-            reviewBox.classList.toggle('hidden', !(activeTab === 'reviews' && currentUser));
-        }
-
-        // --- ADMIN ---
+        // ADM LOGIC
         window.toggleAdminModal = () => document.getElementById('adminModal').classList.toggle('hidden');
         window.checkAdminPass = () => {
             if(document.getElementById('adminPass').value === "thiagoleal2707") {
                 document.getElementById('adminLogin').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                loadAdminList();
-                showToast("Acesso administrativo liberado.");
-            } else { showToast("Senha incorreta."); }
-        };
-
-        window.setAdminMode = (mode) => {
-            document.getElementById('adminCreateSection').classList.toggle('hidden', mode !== 'create');
-            document.getElementById('adminManageSection').classList.toggle('hidden', mode !== 'manage');
-            if(mode === 'manage') loadAdminList();
-        };
-
-        window.toggleFields = () => {
-            const type = document.getElementById('postType').value;
-            document.getElementById('scriptOnlyFields').classList.toggle('hidden', type !== 'products');
-        };
-
-        window.pushUpdate = async () => {
-            const type = document.getElementById('postType').value;
-            const data = {
-                title: document.getElementById('pTitle').value,
-                desc: document.getElementById('pDesc').value,
-                timestamp: serverTimestamp()
-            };
-            if(type === 'products') {
-                data.price = document.getElementById('pPrice').value;
-                data.category = document.getElementById('pCategory').value;
-                data.link = document.getElementById('pLink').value;
             }
-            await addDoc(collection(db, type), data);
-            showToast("Publicado com sucesso!");
-            ['pTitle', 'pPrice', 'pDesc', 'pCategory', 'pLink'].forEach(i => document.getElementById(i).value = "");
-            loadAdminList();
         };
 
-        window.deleteItem = async (col, id) => {
-            await deleteDoc(doc(db, col, id));
-            showToast("Item removido.");
-            loadAdminList();
+        document.getElementById('pFile').onchange = (e) => {
+            document.getElementById('fileName').innerText = e.target.files[0]?.name || "Nenhum arquivo escolhido";
         };
 
-        async function loadAdminList() {
-            const list = document.getElementById('adminList');
-            const collections = ['products', 'announcements', 'reviews'];
-            list.innerHTML = "";
-            collections.forEach(colName => {
-                onSnapshot(collection(db, colName), (snap) => {
-                    snap.forEach(d => {
-                        const item = d.data();
-                        list.innerHTML += `
-                            <div class="bg-white/5 p-3 rounded-lg flex justify-between items-center text-xs">
-                                <span>[${colName.toUpperCase()}] ${item.title || item.content.substring(0,20)}</span>
-                                <button onclick="deleteItem('${colName}', '${d.id}')" class="text-red-500 px-3 hover:text-red-400"><i class="fas fa-trash"></i></button>
-                            </div>`;
-                    });
-                });
+        window.uploadProduct = async () => {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const cat = document.getElementById('pCategory').value;
+            if(!name || !price) return;
+
+            await addDoc(collection(db, "store_items"), {
+                name, price, category: cat, timestamp: serverTimestamp()
             });
-        }
+            showToast("Produto postado com sucesso!");
+            toggleAdminModal();
+        };
 
-        // --- LOAD FEEDS ---
+        // LOAD DATA
         function loadData() {
-            // Anúncios
-            onSnapshot(query(collection(db, "announcements"), orderBy("timestamp", "desc")), (snap) => {
-                const side = document.getElementById('announcementFeed');
-                side.innerHTML = "";
-                snap.forEach(doc => {
-                    const a = doc.data();
-                    side.innerHTML += `
-                        <div class="glass p-4 rounded-xl border-l-2 border-blue-500 shadow-lg">
-                            <h4 class="font-bold text-sm mb-1">${a.title}</h4>
-                            <p class="text-[11px] text-slate-500 leading-relaxed">${a.desc}</p>
-                        </div>`;
-                });
-            });
-
-            // Main
-            const mainFeed = document.getElementById('mainFeed');
-            const col = activeTab === 'scripts' ? 'products' : 'reviews';
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = "";
             
-            onSnapshot(query(collection(db, col), orderBy("timestamp", "desc")), (snap) => {
-                mainFeed.innerHTML = "";
+            let q;
+            if(activeTab === 'reviews') {
+                q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
+            } else {
+                q = query(collection(db, "store_items"), where("category", "==", activeTab), orderBy("timestamp", "desc"));
+            }
+
+            onSnapshot(q, snap => {
+                grid.innerHTML = "";
                 snap.forEach(doc => {
-                    const d = doc.data();
-                    if(activeTab === 'scripts') {
-                        mainFeed.innerHTML += `
-                            <div class="glass p-6 rounded-2xl hover:border-blue-500/30 transition-all group">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="text-[9px] font-black bg-blue-600/20 text-blue-400 px-2 py-1 rounded uppercase">${d.category}</span>
-                                    <span class="text-green-500 font-bold text-sm">${d.price}</span>
+                    const item = doc.data();
+                    if(activeTab === 'reviews') {
+                        grid.innerHTML += `
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <img src="${item.photo}" class="w-8 h-8 rounded-full">
+                                    <span class="text-xs font-bold">${item.name}</span>
                                 </div>
-                                <h3 class="font-bold text-lg mb-2 group-hover:text-blue-400 transition">${d.title}</h3>
-                                <p class="text-slate-500 text-xs mb-6 line-clamp-3">${d.desc}</p>
-                                <button onclick="window.open('${d.link}', '_blank')" class="w-full bg-white text-black py-2 rounded-lg font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition">Obter Script</button>
+                                <p class="text-slate-400 text-sm italic">"${item.content}"</p>
                             </div>`;
-                    } else if (activeTab === 'reviews') {
-                        mainFeed.innerHTML += `
-                            <div class="glass p-5 rounded-2xl">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <img src="${d.photo}" class="w-8 h-8 rounded-full">
-                                    <div class="text-xs font-bold">${d.name}</div>
+                    } else {
+                        grid.innerHTML += `
+                            <div class="glass p-6 rounded-3xl group">
+                                <div class="h-32 bg-blue-600/10 rounded-2xl mb-4 flex items-center justify-center">
+                                    <i class="fas fa-box-open text-4xl text-blue-500 opacity-20"></i>
                                 </div>
-                                <p class="text-slate-400 text-sm italic">"${d.content}"</p>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-bold">${item.name}</h3>
+                                    <span class="text-blue-400 font-bold">R$ ${item.price}</span>
+                                </div>
+                                <div class="flex text-yellow-500 text-[10px] mb-4">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <button onclick="addToCart()" class="w-full bg-white text-black py-2 rounded-xl font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition">Comprar Agora</button>
                             </div>`;
                     }
                 });
             });
         }
 
-        document.getElementById('sendReview').onclick = async () => {
-            const val = document.getElementById('mainComment').value;
-            if(!val) return;
+        window.addToCart = () => {
+            cart++;
+            document.getElementById('cartCount').innerText = cart;
+            showToast("Item adicionado ao carrinho!");
+        };
+
+        window.sendReview = async () => {
+            const val = document.getElementById('reviewText').value;
+            if(!val || !currentUser) return;
             await addDoc(collection(db, "reviews"), {
                 name: currentUser.displayName, photo: currentUser.photoURL, content: val, timestamp: serverTimestamp()
             });
-            document.getElementById('mainComment').value = "";
-            showToast("Avaliação enviada!");
+            document.getElementById('reviewText').value = "";
+            showToast("Sua avaliação foi publicada!");
         };
 
-        window.logoutAdmin = () => { location.reload(); };
+        window.logoutAdmin = () => location.reload();
+
     </script>
 </body>
 </html>
