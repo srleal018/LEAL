@@ -1,450 +1,139 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvaliaScript - Avaliação de Scripts</title>
+    <title>Sistema de Avaliações | ScriptReview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-logout {
-            background: #ff4757;
-            color: white;
-        }
-
-        .btn-logout:hover {
-            background: #ff3742;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(102, 126, 234, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-        }
-
-        .main-content {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-
-        .hero {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, white, #f8f9ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .dashboard {
-            display: none;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-        }
-
-        .dashboard.active {
-            display: block;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .auth-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .auth-modal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        }
-
-        .google-btn {
-            width: 100%;
-            padding: 15px;
-            background: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-
-        .google-btn:hover {
-            background: #357ae8;
-        }
-
-        footer {
-            background: rgba(0,0,0,0.9);
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: auto;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .footer-content { flex-direction: column; }
-        }
+        body { background-color: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .input-dark { background: #1e293b; border: 1px solid #334155; color: white; transition: all 0.3s; }
+        .input-dark:focus { border-color: #3b82f6; outline: none; ring: 2px ring-blue-500; }
+        .preview-media { max-height: 200px; border-radius: 8px; object-fit: cover; }
     </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">📜 AvaliaScript</div>
-                <div class="auth-section" id="authSection">
-                    <!-- Login/Logout será preenchido pelo JavaScript -->
-                </div>
-            </div>
-        </div>
-    </header>
+<body class="p-4 md:p-10">
 
-    <main class="container">
-        <section class="main-content" id="heroSection">
-            <div class="hero">
-                <h1>Avalie Seus Scripts</h1>
-                <p>Plataforma completa para análise, avaliação e compartilhamento de seus scripts de programação. Faça login com Gmail para começar.</p>
-                <div>
-                    <button class="btn btn-primary" id="loginBtn">Entrar com Google</button>
-                </div>
-            </div>
-        </section>
-
-        <section class="dashboard" id="dashboard">
-            <h2>Bem-vindo, <span id="userName"></span>! 👋</h2>
-            <p id="userEmail"></p>
+    <div class="max-w-4xl mx-auto">
+        <section class="glass p-6 rounded-3xl mb-12">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-pen-fancy text-blue-500"></i> Deixe sua Avaliação
+            </h2>
             
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalScripts">0</div>
-                    <div>Scripts Avaliados</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="avgScore">0</div>
-                    <div>Média de Pontos</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="topScripts">0</div>
-                    <div>Top Scripts</div>
-                </div>
-            </div>
+            <div class="grid grid-cols-1 gap-4">
+                <textarea id="reviewText" rows="3" class="input-dark w-full p-4 rounded-xl" placeholder="O que você achou desse script?"></textarea>
+                
+                <div class="flex flex-wrap gap-4 items-center">
+                    <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-image mr-2 text-green-400"></i> Adicionar Foto
+                        <input type="file" id="imgInput" accept="image/*" class="hidden">
+                    </label>
 
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="btn btn-logout" id="logoutBtn">Sair</button>
+                    <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-video mr-2 text-red-400"></i> Adicionar Vídeo
+                        <input type="file" id="videoInput" accept="video/*" class="hidden">
+                    </label>
+
+                    <div class="flex ml-auto items-center gap-2">
+                        <span class="text-yellow-400"><i class="fas fa-star"></i></span>
+                        <select class="input-dark p-1 rounded text-sm">
+                            <option>5 Estrelas</option>
+                            <option>4 Estrelas</option>
+                            <option>3 Estrelas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="previewContainer" class="flex gap-4 mt-2 hidden">
+                    <div id="imgPreviewBox" class="relative hidden">
+                        <img src="" id="imgPreview" class="preview-media">
+                        <button onclick="clearMedia('img')" class="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 text-xs text-white">X</button>
+                    </div>
+                    <div id="videoPreviewBox" class="relative hidden">
+                        <video id="videoPreview" class="preview-media" controls></video>
+                        <button onclick="clearMedia('video')" class="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 text-xs text-white">X</button>
+                    </div>
+                </div>
+
+                <button class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl mt-4 transition">
+                    Publicar Avaliação
+                </button>
             </div>
         </section>
-    </main>
 
-    <!-- Modal de Login -->
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-modal">
-            <span class="close-btn" id="closeModal">&times;</span>
-            <h2>Entrar com Google</h2>
-            <p>Faça login para acessar sua área de avaliação de scripts</p>
-            <button class="google-btn" id="googleSignIn">
-                <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 10px;">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Continuar com Google
-            </button>
+        <h3 class="text-xl font-semibold mb-6">Comentários da Comunidade</h3>
+        
+        <div class="space-y-6">
+            <div class="glass p-6 rounded-2xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="https://ui-avatars.com/api/?name=João+Silva&background=0D8ABC&color=fff" class="w-10 h-10 rounded-full">
+                    <div>
+                        <h4 class="font-bold">João Silva</h4>
+                        <div class="text-yellow-400 text-xs"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    </div>
+                    <span class="ml-auto text-slate-500 text-sm">Há 2 horas</span>
+                </div>
+                
+                <p class="text-slate-300 mb-4">O script é incrível! Economizei horas de trabalho manual. O sistema de logs é muito detalhado.</p>
+                
+                <div class="flex gap-2 mb-6">
+                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=400" class="rounded-lg h-32 w-48 object-cover border border-slate-700">
+                </div>
+
+                <div class="ml-8 border-l-2 border-slate-700 pl-6 space-y-4">
+                    <div class="bg-slate-800/50 p-4 rounded-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-blue-400 font-bold text-sm">Admin Leal</span>
+                            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 rounded">STAFF</span>
+                        </div>
+                        <p class="text-sm text-slate-400">Obrigado pelo feedback, João! Na próxima semana lançaremos a v2.0 com suporte a Webhooks.</p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input type="text" class="input-dark flex-grow p-2 rounded-lg text-sm" placeholder="Escreva uma resposta...">
+                        <button class="bg-slate-700 px-4 rounded-lg text-sm hover:bg-blue-600 transition">Responder</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div>&copy; 2026 AvaliaScript. Todos os direitos reservados.</div>
-                <div>
-                    <a href="#" style="color: #ccc; margin: 0 10px; text-decoration: none;">Privacidade</a>
-                    <a href="#" style="color: #ccc; margin: 0 10px; text-decoration: none;">Termos</a>
-                    <a href="#" style="color: #ccc; margin: 0 10px; text-decoration: none;">Contato</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <script>
+        // Lógica de Preview de Mídia (Local sem precisar de link)
+        const imgInput = document.getElementById('imgInput');
+        const videoInput = document.getElementById('videoInput');
+        const previewContainer = document.getElementById('previewContainer');
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        imgInput.onchange = evt => {
+            const [file] = imgInput.files;
+            if (file) {
+                document.getElementById('imgPreview').src = URL.createObjectURL(file);
+                document.getElementById('imgPreviewBox').classList.remove('hidden');
+                previewContainer.classList.remove('hidden');
+            }
+        }
 
-        // Sua configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
-            authDomain: "leal-1a27b.firebaseapp.com",
-            projectId: "leal-1a27b",
-            storageBucket: "leal-1a27b.firebasestorage.app",
-            messagingSenderId: "935085322117",
-            appId: "1:935085322117:web:e8454ce939b8035b809eec",
-            measurementId: "G-RSPSJGHY8N"
-        };
+        videoInput.onchange = evt => {
+            const [file] = videoInput.files;
+            if (file) {
+                const video = document.getElementById('videoPreview');
+                video.src = URL.createObjectURL(file);
+                document.getElementById('videoPreviewBox').classList.remove('hidden');
+                previewContainer.classList.remove('hidden');
+            }
+        }
 
-        // Inicializar Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // Elementos DOM
-        const authSection = document.getElementById('authSection');
-        const heroSection = document.getElementById('heroSection');
-        const dashboard = document.getElementById('dashboard');
-        const userName = document.getElementById('userName');
-        const userEmail = document.getElementById('userEmail');
-        const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const authOverlay = document.getElementById('authOverlay');
-        const googleSignIn = document.getElementById('googleSignIn');
-        const closeModal = document.getElementById('closeModal');
-
-        // Monitorar estado de autenticação
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuário logado
-                authSection.innerHTML = `
-                    <div class="user-profile">
-                        <img src="${user.photoURL}" alt="Foto do usuário" style="width: 40px; height: 40px; border-radius: 50%;">
-                        <span>${user.displayName || user.email}</span>
-                        <button class="btn btn-logout" id="logoutBtn">Sair</button>
-                    </div>
-                `;
-                heroSection.style.display = 'none';
-                dashboard.classList.add('active');
-                userName.textContent = user.displayName || 'Usuário';
-                userEmail.textContent = user.email;
-                
-                // Adicionar event listener para logout
-                document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-                
-                // Simular dados do dashboard
-                document.getElementById('totalScripts').textContent = '47';
-                document.getElementById('avgScore').textContent = '8.7';
-                document.getElementById('topScripts').textContent = '12';
+        function clearMedia(type) {
+            if(type === 'img') {
+                document.getElementById('imgInput').value = "";
+                document.getElementById('imgPreviewBox').classList.add('hidden');
             } else {
-                // Usuário não logado
-                authSection.innerHTML = `
-                    <button class="btn btn-primary" id="loginBtn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" style="margin-right: 8px;">
-                            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                        Entrar
-                    </button>
-                `;
-                heroSection.style.display = 'flex';
-                dashboard.classList.remove('active');
-                
-                // Adicionar event listener para login
-                document.getElementById('loginBtn').addEventListener('click', () => {
-                    authOverlay.style.display = 'block';
-                });
-            }
-        });
-
-        // Login com Google
-        async function handleGoogleSignIn() {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                authOverlay.style.display = 'none';
-            } catch (error) {
-                console.error('Erro no login:', error);
-                alert('Erro ao fazer login. Tente novamente.');
+                document.getElementById('videoInput').value = "";
+                document.getElementById('videoPreviewBox').classList.add('hidden');
             }
         }
-
-        // Logout
-        async function handleLogout() {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                console.error('Erro no logout:', error);
-            }
-        }
-
-        // Event listeners
-        googleSignIn.addEventListener('click', handleGoogleSignIn);
-        closeModal.addEventListener('click', () => {
-            authOverlay.style.display = 'none';
-        });
-        authOverlay.addEventListener('click', (e) => {
-            if (e.target === authOverlay) {
-                authOverlay.style.display = 'none';
-            }
-        });
-
-        loginBtn?.addEventListener('click', () => {
-            authOverlay.style.display = 'block';
-        });
     </script>
 </body>
 </html>
