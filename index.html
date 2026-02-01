@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>LEAL SCRIPTS HUB</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Central de Avaliações</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -29,73 +29,95 @@
       -webkit-background-clip:text;
       color:transparent;
     }
-    main{max-width:1100px;margin:auto;padding:20px}
-    section{margin-bottom:50px}
+    main{max-width:900px;margin:auto;padding:20px}
     .glass{
       background:var(--glass);
       backdrop-filter:blur(14px);
       border:1px solid var(--border);
       border-radius:16px;
       padding:20px;
+      margin-bottom:30px;
     }
-    .faq-item{margin-bottom:12px;border-radius:12px;overflow:hidden}
-    .faq-question{
-      padding:16px;
+    h2{margin-top:0}
+
+    /* FORM */
+    form{display:grid;gap:15px}
+    input, textarea, button{
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:12px;
+      color:#e5e7eb;
+      font-size:.95rem;
+    }
+    textarea{resize:none;min-height:100px}
+    button{
       cursor:pointer;
-      background:rgba(255,255,255,.05);
+      background:linear-gradient(90deg,var(--neon1),var(--neon2));
+      border:none;
+      font-weight:600;
+    }
+
+    /* AVALIAÇÕES */
+    .review{
+      border-bottom:1px solid rgba(255,255,255,.1);
+      padding:15px 0;
+    }
+    .review:last-child{border-bottom:none}
+    .review-header{
       display:flex;
       justify-content:space-between;
+      font-size:.9rem;
+      opacity:.85;
     }
-    .faq-answer{
-      max-height:0;
-      overflow:hidden;
-      transition:max-height .4s ease;
-      padding:0 16px;
-      color:#cbd5f5;
-    }
-    .faq-item.active .faq-answer{
-      padding:16px;
-      max-height:300px;
-    }
-    footer{text-align:center;padding:30px;font-size:.9rem;opacity:.6}
+    .stars{color:#facc15;font-size:1.1rem}
+    footer{text-align:center;padding:30px;font-size:.85rem;opacity:.6}
   </style>
 </head>
 
 <body>
 
 <header>
-  <h1>LEAL SCRIPTS HUB</h1>
-  <p>Scripts Premium • Roblox & EB</p>
+  <h1>Central de Avaliações</h1>
+  <p>Veja e deixe sua experiência</p>
 </header>
 
 <main>
 
+  <!-- FORMULÁRIO -->
   <section class="glass">
-    <h2>📦 Scripts Disponíveis</h2>
-    <div id="products-grid"></div>
+    <h2>✍️ Enviar Avaliação</h2>
+    <form id="reviewForm">
+      <input type="text" id="name" placeholder="Seu nome / nick" required>
+      <select id="rating" required>
+        <option value="">Nota</option>
+        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+        <option value="4">⭐⭐⭐⭐ (4)</option>
+        <option value="3">⭐⭐⭐ (3)</option>
+        <option value="2">⭐⭐ (2)</option>
+        <option value="1">⭐ (1)</option>
+      </select>
+      <textarea id="message" placeholder="Escreva sua avaliação..." required></textarea>
+      <button type="submit">Enviar Avaliação</button>
+    </form>
   </section>
 
+  <!-- LISTA -->
   <section class="glass">
-    <h2>❓ Perguntas Frequentes</h2>
-    <div id="faq-container"></div>
-  </section>
-
-  <section class="glass">
-    <h2>💬 Feedback da Comunidade</h2>
-    <div id="feedback-list"></div>
+    <h2>⭐ Avaliações Recentes</h2>
+    <div id="reviews"></div>
   </section>
 
 </main>
 
 <footer>
-  © LEAL SCRIPTS HUB
+  © Central de Avaliações
 </footer>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, collection, query, where, orderBy, onSnapshot }
+  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -103,42 +125,42 @@
     projectId: "leal-1a27b",
     storageBucket: "leal-1a27b.firebasestorage.app",
     messagingSenderId: "935085322117",
-    appId: "1:935085322117:web:e8454ce939b8035b809eec",
-    measurementId: "G-RSPSJGHY8N"
+    appId: "1:935085322117:web:e8454ce939b8035b809eec"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  getAnalytics(app);
 
-  const faqContainer = document.getElementById("faq-container");
+  const form = document.getElementById("reviewForm");
+  const reviewsDiv = document.getElementById("reviews");
 
-  const q = query(
-    collection(db,"faq"),
-    where("active","==",true),
-    orderBy("order")
-  );
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await addDoc(collection(db,"reviews"),{
+      name: name.value,
+      rating: Number(rating.value),
+      message: message.value,
+      timestamp: serverTimestamp()
+    });
+    form.reset();
+  });
+
+  const q = query(collection(db,"reviews"), orderBy("timestamp","desc"));
 
   onSnapshot(q,(snap)=>{
-    faqContainer.innerHTML="";
+    reviewsDiv.innerHTML="";
     snap.forEach(doc=>{
-      const d = doc.data();
-      const item=document.createElement("div");
-      item.className="faq-item";
-      item.innerHTML=`
-        <div class="faq-question">
-          <span>${d.question}</span>
-          <span>+</span>
+      const d=doc.data();
+      const stars="★".repeat(d.rating)+"☆".repeat(5-d.rating);
+      reviewsDiv.innerHTML+=`
+        <div class="review">
+          <div class="review-header">
+            <strong>${d.name}</strong>
+            <span class="stars">${stars}</span>
+          </div>
+          <p>${d.message}</p>
         </div>
-        <div class="faq-answer">${d.answer}</div>
       `;
-      item.querySelector(".faq-question").onclick=()=>{
-        document.querySelectorAll(".faq-item").forEach(i=>{
-          if(i!==item) i.classList.remove("active");
-        });
-        item.classList.toggle("active");
-      };
-      faqContainer.appendChild(item);
     });
   });
 </script>
