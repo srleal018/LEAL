@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Loja Oficial</title>
+    <title>Leal Scripts | Hub Profissional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,15 +14,11 @@
         .input-dark { background: #0f172a; border: 1px solid #1e293b; color: white; transition: 0.3s; }
         .input-dark:focus { border-color: #3b82f6; outline: none; }
         
-        /* Estilo Botão Postar Amarelo da sua imagem */
         .btn-postar { background-color: #ffb800; color: black; font-weight: 800; transition: 0.3s; }
-        .btn-postar:hover { background-color: #e6a600; transform: translateY(-2px); }
+        .btn-postar:hover { background-color: #e6a600; transform: scale(1.02); }
 
-        /* Carrinho Flutuante */
-        .cart-badge { background: #ff4757; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; position: absolute; top: -5px; right: -5px; }
-        
         #toastContainer { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        .toast { background: #1e293b; border-left: 4px solid #3b82f6; padding: 12px 24px; border-radius: 8px; margin-top: 10px; animation: slideIn 0.3s forwards; }
+        .toast { background: #1e293b; border-left: 4px solid #3b82f6; padding: 12px 24px; border-radius: 8px; margin-top: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideIn 0.3s forwards; }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
@@ -30,7 +26,7 @@
 
     <nav class="glass sticky top-0 z-50 p-4">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-black italic">LEAL<span class="text-blue-500">HUB</span></h1>
+            <h1 class="text-xl font-black italic tracking-tighter">LEAL<span class="text-blue-500">HUB</span></h1>
             
             <div class="hidden md:flex gap-8">
                 <button onclick="switchTab('store')" id="tab-store" class="text-xs font-bold uppercase tab-active pb-1">Loja</button>
@@ -38,89 +34,108 @@
                 <button onclick="switchTab('reviews')" id="tab-reviews" class="text-xs font-bold uppercase text-slate-400 pb-1">Avaliações</button>
             </div>
 
-            <div class="flex items-center gap-6">
-                <div id="cartIcon" class="relative cursor-pointer">
-                    <i class="fas fa-shopping-bag text-xl text-white"></i>
-                    <span id="cartCount" class="cart-badge">0</span>
-                </div>
-                <div id="authArea">
-                    <button id="loginBtn" class="bg-blue-600 px-4 py-1.5 rounded-lg font-bold text-xs">LOGIN</button>
-                </div>
+            <div id="authArea">
+                <button id="loginBtn" class="bg-blue-600 px-6 py-2 rounded-xl font-bold text-xs hover:bg-blue-500 transition-all">CONECTAR</button>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto px-4 py-10">
-        <div id="reviewInputArea" class="hidden glass p-6 rounded-2xl max-w-2xl mx-auto mb-10">
-            <textarea id="reviewText" class="w-full bg-transparent border-none outline-none text-lg" placeholder="Escreva algo para a comunidade..." rows="2"></textarea>
-            <div class="flex justify-between items-center mt-4 text-[10px] text-slate-500">
-                <span>Postando como usuário verificado</span>
-                <button onclick="sendReview()" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold text-sm">Publicar</button>
+    <main class="flex-grow container mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <aside class="lg:col-span-3 space-y-4">
+            <div class="flex items-center gap-2 text-blue-500 font-bold text-[10px] uppercase tracking-widest mb-4">
+                <i class="fas fa-bullhorn"></i> Mural de Anúncios
             </div>
-        </div>
+            <div id="announcementFeed" class="space-y-3">
+                </div>
+        </aside>
 
-        <div id="mainGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-9">
+            <div id="reviewInputArea" class="hidden glass p-6 rounded-3xl mb-8 border border-blue-500/10">
+                <textarea id="reviewText" class="w-full bg-transparent border-none outline-none text-lg resize-none" placeholder="Escreva algo para a comunidade..." rows="2"></textarea>
+                <div class="flex justify-between items-center mt-4 pt-4 border-t border-white/5">
+                    <span class="text-[10px] text-slate-500 italic">Postando como usuário verificado</span>
+                    <button onclick="sendReview()" class="bg-blue-600 text-white px-8 py-2 rounded-full font-bold text-sm hover:scale-105 transition">Publicar</button>
+                </div>
             </div>
+
+            <div id="mainGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                </div>
+        </section>
     </main>
 
-    <footer class="bg-black border-t border-white/5 pt-12 pb-6 px-6">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <h3 class="font-black italic mb-4">LEALHUB</h3>
-                <p class="text-slate-500 text-xs">Sua loja definitiva de scripts e automações.</p>
+    <footer class="bg-[#010409] border-t border-white/5 pt-12 pb-8 px-6">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <h3 class="font-black italic text-lg mb-2">LEALHUB</h3>
+                <p class="text-slate-500 text-xs">A excelência em desenvolvimento e automação.</p>
             </div>
-            <div>
-                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Empresa</h4>
-                <div class="flex flex-col gap-2 text-xs text-slate-500">
-                    <a href="#">Planos</a><a href="#">Sobre</a><a href="#">Marca</a>
+            
+            <div class="flex gap-8 text-[11px] font-bold uppercase text-slate-400">
+                <a href="#" class="hover:text-blue-500 transition">Termos</a>
+                <a href="#" class="hover:text-blue-500 transition">Suporte</a>
+                <a href="#" class="hover:text-blue-500 transition">Privacidade</a>
+            </div>
+
+            <div class="flex flex-col items-center md:items-end gap-2">
+                <div class="flex gap-4 text-xl text-slate-700">
+                    <i class="fab fa-stripe"></i>
+                    <i class="fab fa-pix"></i>
                 </div>
+                <button onclick="toggleAdminModal()" class="opacity-0 hover:opacity-100 transition-all text-[10px] text-slate-600">PAINEL ADM</button>
             </div>
-            <div>
-                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Recursos</h4>
-                <div class="flex flex-col gap-2 text-xs text-slate-500">
-                    <a href="#">Como Hospedar?</a><a href="#">Fale Conosco</a><a href="#">Blog</a>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-xs font-bold uppercase mb-4 text-slate-300">Formas de Pagamento</h4>
-                <div class="flex gap-3 text-xl text-slate-600 mb-6">
-                    <i class="fab fa-cc-stripe"></i><i class="fab fa-pix"></i><i class="fas fa-credit-card"></i>
-                </div>
-                <button onclick="toggleAdminModal()" class="opacity-10 hover:opacity-100 transition text-[9px] uppercase tracking-tighter">Painel do Mestre</button>
-            </div>
+        </div>
+        <div class="text-center mt-10 text-[9px] text-slate-700 uppercase tracking-[3px]">
+            © 2026 LEAL HUB - ALL RIGHTS RESERVED
         </div>
     </footer>
 
-    <div id="adminModal" class="fixed inset-0 modal-bg z-[100] hidden flex items-center justify-center p-4">
-        <div class="glass p-1 rounded-3xl max-w-xl w-full shadow-2xl">
-            <div id="adminLogin" class="p-10 text-center">
-                <h2 class="text-xl font-bold mb-6">Painel do Mestre</h2>
-                <input type="password" id="adminPass" class="w-full input-dark p-4 rounded-xl text-center mb-4" placeholder="••••••••">
-                <button onclick="checkAdminPass()" class="w-full bg-blue-600 py-4 rounded-xl font-bold">ENTRAR</button>
-                <button onclick="toggleAdminModal()" class="mt-4 text-xs text-slate-500">CANCELAR</button>
+    <div id="adminModal" class="fixed inset-0 modal-bg z-[100] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div class="glass p-2 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden">
+            
+            <div id="adminLogin" class="p-12 text-center">
+                <i class="fas fa-user-shield text-4xl text-blue-500 mb-4"></i>
+                <h2 class="text-xl font-bold mb-6 tracking-tight">Identifique-se, Mestre</h2>
+                <input type="password" id="adminPass" class="w-full max-w-xs input-dark p-4 rounded-2xl text-center mb-6 block mx-auto tracking-widest" placeholder="••••••••">
+                <button onclick="checkAdminPass()" class="w-full max-w-xs bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-500 transition">ACESSAR SISTEMA</button>
             </div>
 
-            <div id="adminPanel" class="hidden p-8">
-                <h2 class="text-lg font-bold mb-6">Novo Arquivo/Produto</h2>
-                <div class="space-y-4">
-                    <input type="text" id="pName" placeholder="Nome do Produto" class="w-full input-dark p-3 rounded-lg">
-                    <input type="text" id="pPrice" placeholder="Preço (R$)" class="w-full input-dark p-3 rounded-lg">
-                    <select id="pCategory" class="w-full input-dark p-3 rounded-lg uppercase">
-                        <option value="loja">Loja</option>
-                        <option value="scripts">Scripts</option>
-                        <option value="carros">Carros</option>
-                    </select>
-                    <div class="flex gap-2 text-yellow-500 p-2">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <input type="file" id="pFile" class="hidden">
-                        <label for="pFile" class="bg-white text-black px-4 py-2 rounded font-bold text-xs cursor-pointer">Escolher arquivo</label>
-                        <span id="fileName" class="text-xs text-slate-500">Nenhum arquivo escolhido</span>
-                    </div>
-                    <button onclick="uploadProduct()" class="w-full btn-postar py-4 rounded-lg uppercase">Postar</button>
+            <div id="adminPanel" class="hidden h-[80vh] flex flex-col">
+                <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                    <h2 class="font-black text-sm uppercase">Gerenciador Central</h2>
+                    <button onclick="logoutAdmin()" class="text-red-500 text-[10px] font-bold uppercase hover:underline">Sair</button>
                 </div>
-                <button onclick="logoutAdmin()" class="mt-6 text-red-500 text-[10px] font-bold uppercase">Sair do Painel</button>
+
+                <div class="p-8 overflow-y-auto space-y-8">
+                    <div>
+                        <h3 class="text-blue-500 font-bold text-xs uppercase mb-4 tracking-tighter">📦 Novo Arquivo/Produto</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="pName" placeholder="Nome do Produto" class="col-span-2 input-dark p-3 rounded-xl">
+                            <input type="text" id="pPrice" placeholder="Preço (R$)" class="input-dark p-3 rounded-xl">
+                            <select id="pCategory" class="input-dark p-3 rounded-xl">
+                                <option value="store">Loja</option>
+                                <option value="scripts">Scripts</option>
+                            </select>
+                            <input type="text" id="pLink" placeholder="Link do Arquivo/Botão" class="col-span-2 input-dark p-3 rounded-xl">
+                            <button onclick="uploadProduct()" class="col-span-2 btn-postar py-4 rounded-xl uppercase tracking-widest">Postar na vitrine</button>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t border-white/5">
+                        <h3 class="text-green-500 font-bold text-xs uppercase mb-4 tracking-tighter">📢 Publicar Anúncio Lateral</h3>
+                        <div class="space-y-3">
+                            <input type="text" id="aTitle" placeholder="Título do Anúncio" class="w-full input-dark p-3 rounded-xl">
+                            <textarea id="aDesc" placeholder="Breve descrição..." class="w-full input-dark p-3 rounded-xl h-20"></textarea>
+                            <button onclick="uploadAnnouncement()" class="w-full bg-white text-black py-3 rounded-xl font-black text-xs uppercase">Publicar Mural</button>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t border-white/5">
+                        <h3 class="text-red-500 font-bold text-xs uppercase mb-4 tracking-tighter">⚙️ Gerenciar Conteúdo Ativo</h3>
+                        <div id="adminList" class="space-y-2">
+                            </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -130,7 +145,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -148,9 +163,7 @@
 
         let currentUser = null;
         let activeTab = 'store';
-        let cart = 0;
 
-        // UI TOAST
         window.showToast = (msg) => {
             const t = document.createElement('div');
             t.className = 'toast';
@@ -163,7 +176,7 @@
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         onAuthStateChanged(auth, user => {
             currentUser = user;
-            if(user) document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-blue-500">`;
+            if(user) document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-600 p-0.5">`;
             loadData();
         });
 
@@ -177,37 +190,82 @@
             loadData();
         };
 
-        // ADM LOGIC
+        // ADMIN
         window.toggleAdminModal = () => document.getElementById('adminModal').classList.toggle('hidden');
         window.checkAdminPass = () => {
             if(document.getElementById('adminPass').value === "thiagoleal2707") {
                 document.getElementById('adminLogin').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
+                loadAdminList();
             }
         };
 
-        document.getElementById('pFile').onchange = (e) => {
-            document.getElementById('fileName').innerText = e.target.files[0]?.name || "Nenhum arquivo escolhido";
-        };
-
         window.uploadProduct = async () => {
-            const name = document.getElementById('pName').value;
-            const price = document.getElementById('pPrice').value;
-            const cat = document.getElementById('pCategory').value;
-            if(!name || !price) return;
-
-            await addDoc(collection(db, "store_items"), {
-                name, price, category: cat, timestamp: serverTimestamp()
-            });
-            showToast("Produto postado com sucesso!");
-            toggleAdminModal();
+            const data = {
+                name: document.getElementById('pName').value,
+                price: document.getElementById('pPrice').value,
+                category: document.getElementById('pCategory').value,
+                link: document.getElementById('pLink').value,
+                timestamp: serverTimestamp()
+            };
+            await addDoc(collection(db, "store_items"), data);
+            showToast("Publicado na vitrine!");
+            loadAdminList();
         };
+
+        window.uploadAnnouncement = async () => {
+            const data = {
+                title: document.getElementById('aTitle').value,
+                desc: document.getElementById('aDesc').value,
+                timestamp: serverTimestamp()
+            };
+            await addDoc(collection(db, "announcements"), data);
+            showToast("Anúncio publicado!");
+            loadAdminList();
+        };
+
+        window.deleteItem = async (col, id) => {
+            if(confirm("Remover permanentemente?")) {
+                await deleteDoc(doc(db, col, id));
+                showToast("Item removido.");
+                loadAdminList();
+            }
+        };
+
+        async function loadAdminList() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = "";
+            ['store_items', 'announcements', 'reviews'].forEach(colName => {
+                onSnapshot(collection(db, colName), snap => {
+                    snap.forEach(d => {
+                        const i = d.data();
+                        list.innerHTML += `<div class="bg-white/5 p-3 rounded-xl flex justify-between items-center text-[10px] uppercase font-bold">
+                            <span class="truncate max-w-[200px]">${i.name || i.title || i.content}</span>
+                            <button onclick="deleteItem('${colName}', '${d.id}')" class="text-red-500 hover:scale-110"><i class="fas fa-trash"></i></button>
+                        </div>`;
+                    });
+                });
+            });
+        }
 
         // LOAD DATA
         function loadData() {
+            // Mural Anúncios
+            onSnapshot(query(collection(db, "announcements"), orderBy("timestamp", "desc")), snap => {
+                const feed = document.getElementById('announcementFeed');
+                feed.innerHTML = "";
+                snap.forEach(d => {
+                    const a = d.data();
+                    feed.innerHTML += `
+                        <div class="glass p-4 rounded-2xl border-l-2 border-blue-500 hover:bg-white/5 transition">
+                            <h4 class="font-bold text-xs mb-1 text-white">${a.title}</h4>
+                            <p class="text-[10px] text-slate-500 leading-relaxed">${a.desc}</p>
+                        </div>`;
+                });
+            });
+
+            // Grid Principal
             const grid = document.getElementById('mainGrid');
-            grid.innerHTML = "";
-            
             let q;
             if(activeTab === 'reviews') {
                 q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
@@ -221,38 +279,30 @@
                     const item = doc.data();
                     if(activeTab === 'reviews') {
                         grid.innerHTML += `
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="glass p-6 rounded-3xl border border-white/5">
                                 <div class="flex items-center gap-3 mb-4">
-                                    <img src="${item.photo}" class="w-8 h-8 rounded-full">
-                                    <span class="text-xs font-bold">${item.name}</span>
+                                    <img src="${item.photo}" class="w-10 h-10 rounded-full border border-blue-500/30">
+                                    <span class="text-xs font-black uppercase tracking-tighter">${item.name}</span>
                                 </div>
-                                <p class="text-slate-400 text-sm italic">"${item.content}"</p>
+                                <p class="text-slate-400 text-sm italic leading-relaxed">"${item.content}"</p>
                             </div>`;
                     } else {
                         grid.innerHTML += `
-                            <div class="glass p-6 rounded-3xl group">
-                                <div class="h-32 bg-blue-600/10 rounded-2xl mb-4 flex items-center justify-center">
-                                    <i class="fas fa-box-open text-4xl text-blue-500 opacity-20"></i>
+                            <div class="glass p-6 rounded-[2rem] group hover:border-blue-500/50 transition-all">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="bg-blue-600/10 text-blue-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">${activeTab}</div>
+                                    <div class="text-green-500 font-black text-sm">R$ ${item.price}</div>
                                 </div>
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="font-bold">${item.name}</h3>
-                                    <span class="text-blue-400 font-bold">R$ ${item.price}</span>
-                                </div>
-                                <div class="flex text-yellow-500 text-[10px] mb-4">
+                                <h3 class="font-black text-xl mb-4 group-hover:text-blue-500 transition">${item.name}</h3>
+                                <div class="flex text-yellow-500 text-[10px] mb-8">
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                 </div>
-                                <button onclick="addToCart()" class="w-full bg-white text-black py-2 rounded-xl font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition">Comprar Agora</button>
+                                <button onclick="window.open('${item.link}', '_blank')" class="w-full bg-white text-black py-3 rounded-2xl font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition">Obter Agora</button>
                             </div>`;
                     }
                 });
             });
         }
-
-        window.addToCart = () => {
-            cart++;
-            document.getElementById('cartCount').innerText = cart;
-            showToast("Item adicionado ao carrinho!");
-        };
 
         window.sendReview = async () => {
             const val = document.getElementById('reviewText').value;
@@ -261,11 +311,10 @@
                 name: currentUser.displayName, photo: currentUser.photoURL, content: val, timestamp: serverTimestamp()
             });
             document.getElementById('reviewText').value = "";
-            showToast("Sua avaliação foi publicada!");
+            showToast("Avaliação publicada!");
         };
 
         window.logoutAdmin = () => location.reload();
-
     </script>
 </body>
 </html>
