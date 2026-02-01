@@ -1,233 +1,608 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Área de Avaliação • Scripts</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AvaliaScript - Área de Avaliação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-body {
-  margin: 0;
-  background: linear-gradient(135deg, #141e30, #243b55);
-  color: #fff;
-}
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-radius: 20px;
+        }
 
-header {
-  padding: 20px;
-  text-align: center;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-}
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-header h1 {
-  margin: 0;
-  font-size: 24px;
-}
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 30px 15px;
-}
+        .back-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-.card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-}
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
 
-.card h2 {
-  margin-top: 0;
-}
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
 
-input, textarea, select, button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-textarea {
-  resize: none;
-  min-height: 100px;
-}
+        .tab-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
 
-button {
-  background: #4facfe;
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
+        .tab-content {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
 
-button:hover {
-  transform: scale(1.03);
-}
+        .tab-content.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
 
-.preview {
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
 
-.preview img, .preview video {
-  max-width: 200px;
-  border-radius: 10px;
-}
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(102, 126, 234, 0.05);
+        }
 
-.review {
-  margin-top: 20px;
-  padding: 20px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 15px;
-}
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #764ba2;
+            background: rgba(118, 75, 162, 0.1);
+            transform: scale(1.02);
+        }
 
-.review strong {
-  font-size: 14px;
-}
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
 
-.reply {
-  margin-top: 15px;
-  margin-left: 20px;
-  padding: 15px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-}
+        .file-input {
+            display: none;
+        }
 
-.reply textarea {
-  min-height: 60px;
-}
+        .media-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
 
-footer {
-  text-align: center;
-  padding: 15px;
-  font-size: 13px;
-  opacity: 0.7;
-}
-</style>
+        .media-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .media-item video, .media-item img {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .remove-media {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star.active {
+            color: #ffd700;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .evaluations-list {
+            margin-top: 2rem;
+        }
+
+        .evaluation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .evaluation-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .evaluation-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .evaluation-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .evaluation-stars {
+            color: #ffd700;
+        }
+
+        .reply-form {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .reply-list {
+            margin-top: 1rem;
+        }
+
+        .reply {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .tabs { flex-direction: column; }
+            .rating-group { flex-direction: column; align-items: flex-start; }
+            .media-item video, .media-item img { width: 100%; height: 150px; }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">📊 AvaliaScript - Avaliações</div>
+                <button class="back-btn" onclick="window.history.back()">← Voltar</button>
+            </div>
+        </header>
 
-<header>
-  <h1>Área de Avaliação de Scripts</h1>
-</header>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('avaliar')">Nova Avaliação</button>
+            <button class="tab-btn" onclick="switchTab('minhas')">Minhas Avaliações</button>
+        </div>
 
-<main>
+        <!-- Tab 1: Nova Avaliação -->
+        <div id="avaliar" class="tab-content active">
+            <h2>📤 Criar Nova Avaliação</h2>
+            
+            <div class="form-group">
+                <label>Título da Avaliação</label>
+                <input type="text" id="evalTitle" placeholder="Ex: Script de Login FiveM">
+            </div>
 
-  <!-- FORMULÁRIO DE AVALIAÇÃO -->
-  <div class="card">
-    <h2>Nova Avaliação</h2>
+            <div class="form-group">
+                <label>Descrição do Script</label>
+                <textarea id="evalDesc" placeholder="Descreva o que seu script faz..."></textarea>
+            </div>
 
-    <label>Nota</label>
-    <select id="nota">
-      <option value="⭐">⭐</option>
-      <option value="⭐⭐">⭐⭐</option>
-      <option value="⭐⭐⭐">⭐⭐⭐</option>
-      <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-      <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-    </select>
+            <!-- Upload de Mídias -->
+            <div class="form-group">
+                <label>Adicione Vídeo ou Imagens (arraste ou clique)</label>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📎</div>
+                    <p>Arraste arquivos aqui ou clique para selecionar</p>
+                    <p><small>Vídeos MP4, WEBM (até 50MB) | Imagens JPG, PNG (até 10MB)</small></p>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="video/*,image/*">
+                </div>
+                <div class="media-preview" id="mediaPreview"></div>
+            </div>
 
-    <label>Comentário</label>
-    <textarea id="comentario" placeholder="Escreva sua avaliação..."></textarea>
+            <div class="form-group">
+                <label>Categoria</label>
+                <select id="evalCategory">
+                    <option value="">Selecione...</option>
+                    <option value="roblox">Roblox</option>
+                    <option value="fivem">FiveM</option>
+                    <option value="discord">Discord Bot</option>
+                    <option value="web">Web/HTML</option>
+                    <option value="lua">Lua Geral</option>
+                </select>
+            </div>
 
-    <label>Imagens</label>
-    <input type="file" id="imagens" multiple accept="image/*">
+            <div style="display: flex; gap: 2rem; align-items: end;">
+                <div class="form-group">
+                    <label>Nota (1-10)</label>
+                    <div class="rating-group">
+                        <div class="stars" id="ratingStars">
+                            <span class="star" data-rating="1">⭐</span>
+                            <span class="star" data-rating="2">⭐</span>
+                            <span class="star" data-rating="3">⭐</span>
+                            <span class="star" data-rating="4">⭐</span>
+                            <span class="star" data-rating="5">⭐</span>
+                            <span class="star" data-rating="6">⭐</span>
+                            <span class="star" data-rating="7">⭐</span>
+                            <span class="star" data-rating="8">⭐</span>
+                            <span class="star" data-rating="9">⭐</span>
+                            <span class="star" data-rating="10">⭐</span>
+                        </div>
+                        <span id="ratingValue">0</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="submitEvaluation()">Publicar Avaliação</button>
+            </div>
+        </div>
 
-    <label>Vídeo</label>
-    <input type="file" id="video" accept="video/*">
-
-    <button onclick="publicar()">Publicar Avaliação</button>
-
-    <div class="preview" id="preview"></div>
-  </div>
-
-  <!-- LISTA DE AVALIAÇÕES -->
-  <div class="card">
-    <h2>Avaliações</h2>
-    <div id="avaliacoes"></div>
-  </div>
-
-</main>
-
-<footer>
-  © 2026 • Sistema de Avaliação • Thiago Leal
-</footer>
-
-<script>
-const preview = document.getElementById("preview");
-const imagensInput = document.getElementById("imagens");
-const videoInput = document.getElementById("video");
-const avaliacoes = document.getElementById("avaliacoes");
-
-imagensInput.onchange = () => {
-  preview.innerHTML = "";
-  [...imagensInput.files].forEach(file => {
-    const img = document.createElement("img");
-    img.src = URL.createObjectURL(file);
-    preview.appendChild(img);
-  });
-};
-
-videoInput.onchange = () => {
-  const video = document.createElement("video");
-  video.controls = true;
-  video.src = URL.createObjectURL(videoInput.files[0]);
-  preview.appendChild(video);
-};
-
-function publicar() {
-  const nota = document.getElementById("nota").value;
-  const comentario = document.getElementById("comentario").value;
-
-  if (!comentario) return alert("Escreva um comentário");
-
-  const div = document.createElement("div");
-  div.className = "review";
-
-  div.innerHTML = `
-    <strong>${nota}</strong>
-    <p>${comentario}</p>
-    <div class="preview">${preview.innerHTML}</div>
-
-    <div class="reply">
-      <textarea placeholder="Responder avaliação..."></textarea>
-      <button onclick="responder(this)">Responder</button>
+        <!-- Tab 2: Minhas Avaliações -->
+        <div id="minhas" class="tab-content">
+            <h2>📋 Suas Avaliações</h2>
+            <div class="evaluations-list" id="evaluationsList">
+                <!-- Avaliações serão carregadas aqui -->
+            </div>
+        </div>
     </div>
-  `;
 
-  avaliacoes.prepend(div);
+    <script>
+        let currentMediaFiles = [];
+        let currentRating = 0;
 
-  preview.innerHTML = "";
-  document.getElementById("comentario").value = "";
-  imagensInput.value = "";
-  videoInput.value = "";
-}
+        // Switch entre tabs
+        function switchTab(tabName) {
+            // Remove active de todos
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adiciona active no selecionado
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'minhas') {
+                loadEvaluations();
+            }
+        }
 
-function responder(btn) {
-  const area = btn.previousElementSibling;
-  if (!area.value) return;
+        // Upload de arquivos
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const mediaPreview = document.getElementById('mediaPreview');
 
-  const resposta = document.createElement("div");
-  resposta.className = "reply";
-  resposta.innerHTML = `<p>${area.value}</p>`;
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFiles);
 
-  btn.parentElement.appendChild(resposta);
-  area.value = "";
-}
-</script>
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
 
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e);
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFiles(e) {
+            const files = Array.from(e.target.files || e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function processFiles(files) {
+            files.forEach(file => {
+                if (currentMediaFiles.length < 10 && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+                    currentMediaFiles.push(file);
+                    previewFile(file);
+                }
+            });
+        }
+
+        function previewFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const mediaItem = document.createElement('div');
+                mediaItem.className = 'media-item';
+                mediaItem.innerHTML = `
+                    <button class="remove-media" onclick="removeMedia(this)">×</button>
+                    ${file.type.startsWith('video/') ? 
+                        `<video src="${e.target.result}" controls></video>` : 
+                        `<img src="${e.target.result}" alt="Preview">`
+                    }
+                `;
+                mediaPreview.appendChild(mediaItem);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.removeMedia = function(btn) {
+            btn.parentElement.remove();
+            // Remove do array (simplificado)
+            currentMediaFiles = currentMediaFiles.filter((_, i) => i < currentMediaFiles.length - 1);
+        };
+
+        // Sistema de estrelas
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.dataset.rating);
+                document.getElementById('ratingValue').textContent = currentRating;
+                document.querySelectorAll('.star').forEach((s, i) => {
+                    s.classList.toggle('active', i < currentRating);
+                });
+            });
+        });
+
+        // Submeter avaliação
+        function submitEvaluation() {
+            if (!document.getElementById('evalTitle').value || currentRating === 0) {
+                alert('Preencha o título e dê uma nota!');
+                return;
+            }
+
+            // Simular envio (em produção salve no Firebase/Firestore)
+            const evaluation = {
+                title: document.getElementById('evalTitle').value,
+                description: document.getElementById('evalDesc').value,
+                category: document.getElementById('evalCategory').value,
+                rating: currentRating,
+                media: currentMediaFiles.length,
+                date: new Date().toLocaleDateString('pt-BR'),
+                replies: []
+            };
+
+            saveEvaluation(evaluation);
+            alert('✅ Avaliação publicada com sucesso!');
+            
+            // Reset form
+            document.getElementById('evalTitle').value = '';
+            document.getElementById('evalDesc').value = '';
+            document.getElementById('evalCategory').value = '';
+            currentRating = 0;
+            document.getElementById('ratingValue').textContent = '0';
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            mediaPreview.innerHTML = '';
+            currentMediaFiles = [];
+        }
+
+        // Salvar avaliação (localStorage - em produção use Firebase)
+        function saveEvaluation(evaluation) {
+            let evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+            evaluations.unshift(evaluation);
+            localStorage.setItem('evaluations', JSON.stringify(evaluations.slice(0, 50))); // Máx 50
+        }
+
+        // Carregar avaliações
+        function loadEvaluations() {
+            const evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+            const list = document.getElementById('evaluationsList');
+            
+            if (evaluations.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma avaliação encontrada. Crie a primeira!</p>';
+                return;
+            }
+
+            list.innerHTML = evaluations.map(evalData => `
+                <div class="evaluation-card">
+                    <div class="evaluation-header">
+                        <div>
+                            <div class="evaluation-author">${evalData.title}</div>
+                            <div class="evaluation-date">${evalData.date} • ${evalData.category}</div>
+                        </div>
+                        <div class="evaluation-rating">
+                            <div class="evaluation-stars">${'⭐'.repeat(evalData.rating)}</div>
+                            <span>${evalData.rating}/10</span>
+                        </div>
+                    </div>
+                    <p>${evalData.description}</p>
+                    ${evalData.media > 0 ? `<p><small>📎 ${evalData.media} arquivo(s) anexado(s)</small></p>` : ''}
+                    
+                    <div class="reply-form">
+                        <textarea placeholder="Deixe sua resposta... (Ctrl+Enter para enviar)" 
+                                  onkeydown="handleReply(event, this)"></textarea>
+                        <div class="reply-list">
+                            ${evalData.replies?.map(reply => `
+                                <div class="reply">
+                                    <strong>${reply.author}:</strong> ${reply.text}
+                                    <br><small>${reply.date}</small>
+                                </div>
+                            `).join('') || ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Responder avaliação
+        function handleReply(event, textarea) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                const text = textarea.value.trim();
+                if (text) {
+                    const evaluationTitle = textarea.closest('.evaluation-card').querySelector('.evaluation-author').textContent;
+                    addReply(evaluationTitle, text);
+                    textarea.value = '';
+                }
+            }
+        }
+
+        function addReply(title, text) {
+            let evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+            const evaluation = evaluations.find(e => e.title === title);
+            if (evaluation) {
+                evaluation.replies = evaluation.replies || [];
+                evaluation.replies.push({
+                    author: 'Você',
+                    text: text,
+                    date: new Date().toLocaleDateString('pt-BR')
+                });
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                loadEvaluations();
+            }
+        }
+    </script>
 </body>
 </html>
