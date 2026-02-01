@@ -2,82 +2,115 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Plataforma de Avaliação</title>
+<title>Avaliação de Scripts</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color: #fff;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top,#1b2735,#090a0f);
+  color: #eaeaea;
 }
+
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 25px;
-  background: rgba(255,255,255,0.06);
+  padding: 18px 30px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
 }
-header strong { font-size: 18px; }
+header strong { font-size: 20px; }
 
 button {
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 10px 18px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   font-weight: 600;
 }
 .login { background: #fff; }
-.logout { background: #ff6b6b; color: #fff; }
+.logout { background: #ff5c5c; color: #fff; }
 
 main {
   max-width: 900px;
   margin: auto;
-  padding: 25px;
+  padding: 30px 20px;
 }
+
 .card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 22px;
   padding: 25px;
   margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
+
+.card h2 { margin-top: 0; }
+
 input, textarea {
   width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
 }
-textarea { min-height: 100px; resize: vertical; }
+textarea { min-height: 110px; resize: vertical; }
 
 .review {
-  background: rgba(0,0,0,0.3);
-  border-radius: 15px;
-  padding: 15px;
+  margin-top: 20px;
+  background: rgba(0,0,0,0.35);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-header img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.review-header .name {
+  font-weight: 600;
+}
+.review-header .date {
+  font-size: 12px;
+  opacity: .7;
+}
+
+.preview img, .preview video {
+  max-width: 220px;
+  border-radius: 12px;
+  margin-top: 10px;
+  margin-right: 6px;
+}
+
+.reply-box {
   margin-top: 15px;
 }
-.preview img, .preview video {
-  max-width: 200px;
-  border-radius: 10px;
-  margin: 5px;
-}
-.reply-box {
-  margin-top: 10px;
-}
 .reply {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.07);
   border-radius: 10px;
-  padding: 8px;
+  padding: 8px 10px;
   margin-top: 6px;
   font-size: 14px;
 }
+
 footer {
   text-align: center;
-  opacity: 0.7;
+  opacity: .6;
   font-size: 13px;
   padding: 15px;
 }
@@ -89,7 +122,7 @@ footer {
 <header>
   <strong>Plataforma de Avaliação</strong>
   <div>
-    <button class="login" id="loginBtn">Login com Google</button>
+    <button class="login" id="loginBtn">Login Google</button>
     <button class="logout" id="logoutBtn" style="display:none;">Sair</button>
   </div>
 </header>
@@ -99,10 +132,10 @@ footer {
 <div class="card">
   <h2>Nova Avaliação</h2>
   <input id="titulo" placeholder="Título da avaliação">
-  <textarea id="descricao" placeholder="Descreva sua avaliação"></textarea>
+  <textarea id="descricao" placeholder="Escreva sua avaliação"></textarea>
   <input type="file" id="imagens" multiple accept="image/*">
   <input type="file" id="video" accept="video/*">
-  <button onclick="publicar()">Publicar Avaliação</button>
+  <button onclick="publicar()">Publicar</button>
 </div>
 
 <div class="card">
@@ -112,7 +145,7 @@ footer {
 
 </main>
 
-<footer>© 2026 • Sistema real com Firebase</footer>
+<footer>© 2026 • Avaliação Profissional</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -155,30 +188,25 @@ onAuthStateChanged(auth, user => {
   logoutBtn.style.display = user ? "inline" : "none";
 });
 
-function limparTexto(txt) {
-  return txt.replace(/[<>]/g, '');
-}
+function clean(t) { return t.replace(/[<>]/g, ''); }
 
 window.publicar = async () => {
   if (!usuario) return alert("Faça login");
 
-  const titulo = limparTexto(document.getElementById("titulo").value);
-  const descricao = limparTexto(document.getElementById("descricao").value);
-  const imgs = document.getElementById("imagens").files;
-  const vid = document.getElementById("video").files[0];
+  const titulo = clean(titulo.value);
+  const descricao = clean(descricao.value);
 
   const imagensURL = [];
-
-  for (let img of imgs) {
+  for (let img of imagens.files) {
     const r = ref(storage, `avaliacoes/${Date.now()}_${img.name}`);
     await uploadBytes(r, img);
     imagensURL.push(await getDownloadURL(r));
   }
 
   let videoURL = null;
-  if (vid) {
-    const rVid = ref(storage, `avaliacoes/${Date.now()}_${vid.name}`);
-    await uploadBytes(rVid, vid);
+  if (video.files[0]) {
+    const rVid = ref(storage, `avaliacoes/${Date.now()}_${video.files[0].name}`);
+    await uploadBytes(rVid, video.files[0]);
     videoURL = await getDownloadURL(rVid);
   }
 
@@ -188,23 +216,32 @@ window.publicar = async () => {
     imagens: imagensURL,
     video: videoURL,
     respostas: [],
-    criadoEm: Date.now()
+    authorName: usuario.displayName,
+    authorPhoto: usuario.photoURL,
+    createdAt: Date.now()
   });
 
-  document.getElementById("titulo").value = "";
-  document.getElementById("descricao").value = "";
-  document.getElementById("imagens").value = "";
-  document.getElementById("video").value = "";
+  titulo.value = descricao.value = imagens.value = video.value = "";
 };
 
-const q = query(collection(db, "avaliacoes"), orderBy("criadoEm","desc"));
+const q = query(collection(db, "avaliacoes"), orderBy("createdAt","desc"));
 onSnapshot(q, snap => {
   lista.innerHTML = "";
   snap.forEach(d => {
     const v = d.data();
+    const date = new Date(v.createdAt).toLocaleString('pt-BR');
+
     lista.innerHTML += `
       <div class="review">
-        <strong>${v.titulo}</strong>
+        <div class="review-header">
+          <img src="${v.authorPhoto}">
+          <div>
+            <div class="name">${v.authorName}</div>
+            <div class="date">${date}</div>
+          </div>
+        </div>
+
+        <h4>${v.titulo}</h4>
         <p>${v.descricao}</p>
 
         <div class="preview">
@@ -213,7 +250,7 @@ onSnapshot(q, snap => {
         </div>
 
         <div class="reply-box">
-          <input placeholder="Responder..." 
+          <input placeholder="Responder..."
             onkeydown="if(event.key==='Enter') responder('${d.id}', this)">
           ${v.respostas.map(r => `<div class="reply">${r}</div>`).join("")}
         </div>
@@ -223,12 +260,9 @@ onSnapshot(q, snap => {
 });
 
 window.responder = async (id, input) => {
-  if (!usuario) return;
-  if (!input.value) return;
-
-  const refDoc = doc(db, "avaliacoes", id);
-  await updateDoc(refDoc, {
-    respostas: arrayUnion(limparTexto(input.value))
+  if (!usuario || !input.value) return;
+  await updateDoc(doc(db,"avaliacoes",id), {
+    respostas: arrayUnion(clean(input.value))
   });
   input.value = "";
 };
