@@ -1,272 +1,177 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Avaliação de Scripts</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top,#1b2735,#090a0f);
-  color: #eaeaea;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 30px;
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(10px);
-}
-header strong { font-size: 20px; }
-
-button {
-  padding: 10px 18px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-.login { background: #fff; }
-.logout { background: #ff5c5c; color: #fff; }
-
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 30px 20px;
-}
-
-.card {
-  background: rgba(255,255,255,0.06);
-  border-radius: 22px;
-  padding: 25px;
-  margin-bottom: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
-}
-
-.card h2 { margin-top: 0; }
-
-input, textarea {
-  width: 100%;
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-}
-textarea { min-height: 110px; resize: vertical; }
-
-.review {
-  margin-top: 20px;
-  background: rgba(0,0,0,0.35);
-  border-radius: 18px;
-  padding: 18px;
-}
-
-.review-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.review-header img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-}
-
-.review-header .name {
-  font-weight: 600;
-}
-.review-header .date {
-  font-size: 12px;
-  opacity: .7;
-}
-
-.preview img, .preview video {
-  max-width: 220px;
-  border-radius: 12px;
-  margin-top: 10px;
-  margin-right: 6px;
-}
-
-.reply-box {
-  margin-top: 15px;
-}
-.reply {
-  background: rgba(255,255,255,0.07);
-  border-radius: 10px;
-  padding: 8px 10px;
-  margin-top: 6px;
-  font-size: 14px;
-}
-
-footer {
-  text-align: center;
-  opacity: .6;
-  font-size: 13px;
-  padding: 15px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leal Scripts | Community Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .accent-border { border-left: 4px solid #3b82f6; }
+        .karma-badge { background: linear-gradient(45deg, #1e3a8a, #3b82f6); }
+        .reply-line { border-left: 2px solid #1e293b; margin-left: 1.5rem; padding-left: 1.5rem; }
+    </style>
 </head>
+<body class="min-h-screen">
 
-<body>
+    <nav class="border-b border-white/5 p-4 sticky top-0 bg-black/50 z-50 backdrop-blur-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">L</div>
+                <h1 class="font-black text-xl tracking-widest uppercase">Leal<span class="text-blue-500">Scripts</span></h1>
+            </div>
+            <div id="authArea">
+                <button id="loginBtn" class="bg-white text-black px-5 py-2 rounded-full font-bold text-sm hover:bg-blue-500 hover:text-white transition">CONECTAR GOOGLE</button>
+            </div>
+        </div>
+    </nav>
 
-<header>
-  <strong>Plataforma de Avaliação</strong>
-  <div>
-    <button class="login" id="loginBtn">Login Google</button>
-    <button class="logout" id="logoutBtn" style="display:none;">Sair</button>
-  </div>
-</header>
+    <main class="max-w-4xl mx-auto px-4 py-10">
+        
+        <section id="userPanel" class="hidden mb-12">
+            <div class="glass-card p-6 rounded-3xl flex flex-col md:flex-row gap-6 items-center">
+                <img id="userImg" class="w-20 h-20 rounded-2xl border-2 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                <div class="flex-grow text-center md:text-left">
+                    <h2 class="text-2xl font-bold">Bem-vindo, <span id="userName" class="text-blue-400">...</span></h2>
+                    <p class="text-slate-500 text-sm">Nível de Prestígio: <span class="text-yellow-500 font-bold">Ouro</span></p>
+                </div>
+                <button id="logoutBtn" class="text-slate-500 hover:text-red-500 text-sm underline">Sair da conta</button>
+            </div>
 
-<main id="app" style="display:none;">
+            <div class="mt-8 glass-card p-6 rounded-3xl accent-border">
+                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-star text-yellow-500"></i> O que você achou do script?</h3>
+                <textarea id="reviewInput" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 ring-blue-500 outline-none transition" rows="3" placeholder="Sua opinião sincera ajuda a comunidade..."></textarea>
+                <div class="flex justify-between items-center mt-4">
+                    <div class="flex gap-2">
+                        <select id="starsInput" class="bg-slate-900 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                            <option value="3">⭐⭐⭐ (3/5)</option>
+                        </select>
+                    </div>
+                    <button id="postReview" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-2 rounded-xl font-bold transition">PUBLICAR</button>
+                </div>
+            </div>
+        </section>
 
-<div class="card">
-  <h2>Nova Avaliação</h2>
-  <input id="titulo" placeholder="Título da avaliação">
-  <textarea id="descricao" placeholder="Escreva sua avaliação"></textarea>
-  <input type="file" id="imagens" multiple accept="image/*">
-  <input type="file" id="video" accept="video/*">
-  <button onclick="publicar()">Publicar</button>
-</div>
-
-<div class="card">
-  <h2>Avaliações</h2>
-  <div id="lista"></div>
-</div>
-
-</main>
-
-<footer>© 2026 • Avaliação Profissional</footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, updateDoc, doc, arrayUnion }
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL }
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
-  authDomain: "leal-1a27b.firebaseapp.com",
-  projectId: "leal-1a27b",
-  storageBucket: "leal-1a27b.firebasestorage.app",
-  messagingSenderId: "935085322117",
-  appId: "1:935085322117:web:e8454ce939b8035b809eec"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const provider = new GoogleAuthProvider();
-
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const appDiv = document.getElementById("app");
-const lista = document.getElementById("lista");
-
-let usuario = null;
-
-loginBtn.onclick = () => signInWithPopup(auth, provider);
-logoutBtn.onclick = () => signOut(auth);
-
-onAuthStateChanged(auth, user => {
-  usuario = user;
-  appDiv.style.display = user ? "block" : "none";
-  loginBtn.style.display = user ? "none" : "inline";
-  logoutBtn.style.display = user ? "inline" : "none";
-});
-
-function clean(t) { return t.replace(/[<>]/g, ''); }
-
-window.publicar = async () => {
-  if (!usuario) return alert("Faça login");
-
-  const titulo = clean(titulo.value);
-  const descricao = clean(descricao.value);
-
-  const imagensURL = [];
-  for (let img of imagens.files) {
-    const r = ref(storage, `avaliacoes/${Date.now()}_${img.name}`);
-    await uploadBytes(r, img);
-    imagensURL.push(await getDownloadURL(r));
-  }
-
-  let videoURL = null;
-  if (video.files[0]) {
-    const rVid = ref(storage, `avaliacoes/${Date.now()}_${video.files[0].name}`);
-    await uploadBytes(rVid, video.files[0]);
-    videoURL = await getDownloadURL(rVid);
-  }
-
-  await addDoc(collection(db, "avaliacoes"), {
-    titulo,
-    descricao,
-    imagens: imagensURL,
-    video: videoURL,
-    respostas: [],
-    authorName: usuario.displayName,
-    authorPhoto: usuario.photoURL,
-    createdAt: Date.now()
-  });
-
-  titulo.value = descricao.value = imagens.value = video.value = "";
-};
-
-const q = query(collection(db, "avaliacoes"), orderBy("createdAt","desc"));
-onSnapshot(q, snap => {
-  lista.innerHTML = "";
-  snap.forEach(d => {
-    const v = d.data();
-    const date = new Date(v.createdAt).toLocaleString('pt-BR');
-
-    lista.innerHTML += `
-      <div class="review">
-        <div class="review-header">
-          <img src="${v.authorPhoto}">
-          <div>
-            <div class="name">${v.authorName}</div>
-            <div class="date">${date}</div>
-          </div>
+        <div id="guestAlert" class="glass-card p-10 rounded-3xl text-center border-dashed border-2 border-white/10">
+            <i class="fas fa-lock text-4xl text-slate-700 mb-4"></i>
+            <h2 class="text-xl font-bold">Área Restrita</h2>
+            <p class="text-slate-500 mt-2">Faça login para ver as avaliações e deixar seu comentário.</p>
         </div>
 
-        <h4>${v.titulo}</h4>
-        <p>${v.descricao}</p>
+        <div id="feed" class="space-y-8 mt-10">
+            </div>
 
-        <div class="preview">
-          ${v.imagens.map(i => `<img src="${i}">`).join("")}
-          ${v.video ? `<video controls src="${v.video}"></video>` : ""}
-        </div>
+    </main>
 
-        <div class="reply-box">
-          <input placeholder="Responder..."
-            onkeydown="if(event.key==='Enter') responder('${d.id}', this)">
-          ${v.respostas.map(r => `<div class="reply">${r}</div>`).join("")}
-        </div>
-      </div>
-    `;
-  });
-});
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-window.responder = async (id, input) => {
-  if (!usuario || !input.value) return;
-  await updateDoc(doc(db,"avaliacoes",id), {
-    respostas: arrayUnion(clean(input.value))
-  });
-  input.value = "";
-};
-</script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
+            authDomain: "leal-1a27b.firebaseapp.com",
+            projectId: "leal-1a27b",
+            storageBucket: "leal-1a27b.firebasestorage.app",
+            messagingSenderId: "935085322117",
+            appId: "1:935085322117:web:e8454ce939b8035b809eec"
+        };
 
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let userGlobal = null;
+
+        // --- AUTH ---
+        document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            const userPanel = document.getElementById('userPanel');
+            const guestAlert = document.getElementById('guestAlert');
+            const authArea = document.getElementById('authArea');
+
+            if (user) {
+                userGlobal = user;
+                userPanel.classList.remove('hidden');
+                guestAlert.classList.add('hidden');
+                document.getElementById('userImg').src = user.photoURL;
+                document.getElementById('userName').innerText = user.displayName;
+                authArea.innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border border-blue-500">`;
+                loadReviews();
+            } else {
+                userPanel.classList.add('hidden');
+                guestAlert.classList.remove('hidden');
+                authArea.innerHTML = `<button id="loginBtn" onclick="location.reload()" class="bg-white text-black px-5 py-2 rounded-full font-bold text-sm">CONECTAR GOOGLE</button>`;
+                document.getElementById('feed').innerHTML = "";
+            }
+        });
+
+        // --- POSTAR ---
+        document.getElementById('postReview').onclick = async () => {
+            const text = document.getElementById('reviewInput').value;
+            const stars = document.getElementById('starsInput').value;
+            if(!text) return;
+
+            await addDoc(collection(db, "reviews"), {
+                uid: userGlobal.uid,
+                name: userGlobal.displayName,
+                photo: userGlobal.photoURL,
+                content: text,
+                rating: stars,
+                karma: Math.floor(Math.random() * 100), // Mecânica de Karma simulada
+                timestamp: serverTimestamp()
+            });
+            document.getElementById('reviewInput').value = "";
+        };
+
+        // --- CARREGAR FEED ---
+        function loadReviews() {
+            const q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const feed = document.getElementById('feed');
+                feed.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const r = doc.data();
+                    feed.innerHTML += `
+                        <div class="glass-card p-6 rounded-3xl relative overflow-hidden">
+                            <div class="flex items-start gap-4">
+                                <img src="${r.photo}" class="w-12 h-12 rounded-xl">
+                                <div class="flex-grow">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-bold text-white">${r.name}</h4>
+                                        <span class="karma-badge text-[10px] px-2 py-0.5 rounded text-white font-bold">KARMA ${r.karma}</span>
+                                    </div>
+                                    <div class="text-yellow-500 text-xs mb-2">${"⭐".repeat(r.rating)}</div>
+                                    <p class="text-slate-300 text-sm leading-relaxed">${r.content}</p>
+                                    
+                                    <div class="mt-4 flex gap-4 text-xs text-slate-500">
+                                        <button class="hover:text-blue-400"><i class="fas fa-reply mr-1"></i> Responder</button>
+                                        <button class="hover:text-green-400"><i class="fas fa-arrow-up mr-1"></i> Útil</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reply-line mt-4">
+                                <div class="flex items-center gap-2 text-xs mb-1">
+                                    <span class="text-blue-400 font-bold uppercase tracking-tighter">Suporte Leal</span>
+                                    <span class="text-slate-600">agora mesmo</span>
+                                </div>
+                                <p class="text-xs text-slate-400 italic font-light px-2 py-2 bg-white/5 rounded-lg border border-white/5">
+                                    Obrigado por avaliar! Sua contribuição nos ajuda a melhorar nossos códigos.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+    </script>
 </body>
 </html>
