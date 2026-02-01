@@ -11,10 +11,11 @@
         body { background-color: #020617; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
         .tab-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
-        .admin-card { background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); }
         .input-dark { background: #0f172a; border: 1px solid #1e293b; color: white; transition: 0.3s; }
         .input-dark:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
         .modal-bg { background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen pb-10">
@@ -32,15 +33,12 @@
         
         <aside class="space-y-6">
             <div class="flex items-center gap-2 text-blue-400 font-bold uppercase text-xs tracking-widest">
-                <i class="fas fa-bullhorn"></i> Anúncios Oficiais
+                <i class="fas fa-bullhorn"></i> Anúncios
             </div>
-            <div id="announcementFeed" class="space-y-4">
-                <div class="text-slate-500 text-xs italic">Nenhum anúncio recente...</div>
-            </div>
+            <div id="announcementFeed" class="space-y-4"></div>
         </aside>
 
         <main class="lg:col-span-3 space-y-6">
-            
             <div class="flex gap-8 border-b border-white/10 mb-6 overflow-x-auto">
                 <button onclick="switchTab('scripts')" id="tab-scripts" class="pb-3 font-bold text-sm uppercase tracking-wider tab-active transition-all">Scripts</button>
                 <button onclick="switchTab('reviews')" id="tab-reviews" class="pb-3 font-bold text-sm uppercase tracking-wider text-slate-500 hover:text-white transition-all">Avaliações</button>
@@ -48,15 +46,13 @@
             </div>
 
             <div id="postReviewContainer" class="hidden glass p-6 rounded-3xl border border-blue-500/10 mb-6">
-                <textarea id="mainComment" class="w-full bg-transparent border-none outline-none text-white resize-none text-lg" placeholder="Escreva algo para a comunidade..." rows="2"></textarea>
-                <div class="flex justify-between items-center mt-4">
-                    <span class="text-[10px] text-slate-500">Postando como usuário verificado</span>
+                <textarea id="mainComment" class="w-full bg-transparent border-none outline-none text-white resize-none text-lg" placeholder="O que achou dos scripts?" rows="2"></textarea>
+                <div class="flex justify-end mt-4">
                     <button id="sendReview" class="bg-blue-600 hover:bg-blue-500 px-8 py-2 rounded-full font-bold text-sm transition-all">Publicar</button>
                 </div>
             </div>
 
-            <div id="mainFeed" class="space-y-4">
-                </div>
+            <div id="mainFeed" class="space-y-4"></div>
         </main>
     </div>
 
@@ -65,40 +61,42 @@
     </button>
 
     <div id="adminModal" class="fixed inset-0 modal-bg z-[100] hidden flex items-center justify-center p-4">
-        <div class="glass p-1 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden">
+        <div class="glass p-1 rounded-3xl max-w-4xl w-full max-h-[90vh] shadow-2xl overflow-hidden">
             
             <div id="adminLogin" class="p-8 text-center">
-                <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-500">
-                    <i class="fas fa-lock text-2xl"></i>
-                </div>
-                <h2 class="text-2xl font-extrabold mb-2">Área do Desenvolvedor</h2>
-                <p class="text-slate-400 text-sm mb-6">Identifique-se para gerenciar o ecossistema.</p>
+                <h2 class="text-2xl font-extrabold mb-6 text-blue-500">Painel do Mestre</h2>
                 <input type="password" id="adminPass" class="w-full input-dark rounded-2xl p-4 mb-4 text-center tracking-[1em]" placeholder="••••••••">
-                <button onclick="checkAdminPass()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-500 transition-all">AUTENTICAR</button>
-                <button onclick="toggleAdminModal()" class="mt-4 text-slate-500 text-xs uppercase font-bold tracking-widest">Voltar ao Hub</button>
+                <button onclick="checkAdminPass()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold">ENTRAR</button>
+                <button onclick="toggleAdminModal()" class="mt-4 text-slate-500 text-xs uppercase font-bold">Cancelar</button>
             </div>
 
-            <div id="adminPanel" class="hidden">
-                <div class="flex">
-                    <div class="w-1/3 bg-slate-900/50 p-6 border-r border-white/5">
-                        <h3 class="font-black text-xs text-blue-500 mb-6 uppercase tracking-widest">Painel de Controle</h3>
-                        <nav class="space-y-2">
-                            <button onclick="setAdminMode('scripts')" class="w-full text-left p-3 rounded-xl hover:bg-white/5 text-sm font-bold">📂 Novo Script</button>
-                            <button onclick="setAdminMode('announcement')" class="w-full text-left p-3 rounded-xl hover:bg-white/5 text-sm font-bold">📢 Postar Anúncio</button>
-                            <button onclick="logoutAdmin()" class="w-full text-left p-3 rounded-xl text-red-500 text-sm font-bold mt-10">Logout</button>
-                        </nav>
-                    </div>
-                    <div class="w-2/3 p-8">
-                        <div id="adminFormTitle" class="text-xl font-bold mb-6">Adicionar Novo Script</div>
-                        <div class="space-y-4">
-                            <input type="text" id="pTitle" placeholder="Título" class="w-full input-dark p-3 rounded-xl">
-                            <div class="flex gap-2">
-                                <input type="text" id="pCategory" placeholder="Categoria (ex: Roblox)" class="w-1/2 input-dark p-3 rounded-xl">
-                                <input type="text" id="pPrice" placeholder="Valor (R$)" class="w-1/2 input-dark p-3 rounded-xl">
-                            </div>
-                            <textarea id="pDesc" placeholder="Descrição detalhada ou logs da versão..." class="w-full input-dark p-3 rounded-xl h-32"></textarea>
-                            <button onclick="pushUpdate()" id="btnSubmitAdmin" class="w-full bg-green-600 py-4 rounded-2xl font-bold hover:bg-green-500 shadow-lg shadow-green-900/20 transition-all">CONFIRMAR POSTAGEM</button>
+            <div id="adminPanel" class="hidden flex h-[80vh]">
+                <div class="w-1/4 bg-slate-900/50 p-6 border-r border-white/5 space-y-2">
+                    <button onclick="setAdminMode('create')" class="w-full text-left p-3 rounded-xl hover:bg-white/5 text-sm font-bold">➕ Criar Novo</button>
+                    <button onclick="setAdminMode('manage')" class="w-full text-left p-3 rounded-xl hover:bg-white/5 text-sm font-bold">⚙️ Gerenciar Itens</button>
+                    <button onclick="logoutAdmin()" class="w-full text-left p-3 rounded-xl text-red-500 text-sm font-bold mt-10">Sair</button>
+                </div>
+
+                <div class="w-3/4 p-8 overflow-y-auto">
+                    <div id="adminCreateSection" class="space-y-4">
+                        <select id="postType" onchange="toggleFields()" class="w-full input-dark p-3 rounded-xl font-bold text-blue-400">
+                            <option value="products">📦 NOVO SCRIPT</option>
+                            <option value="announcements">📢 NOVO ANÚNCIO</option>
+                        </select>
+                        <input type="text" id="pTitle" placeholder="Título" class="w-full input-dark p-3 rounded-xl">
+                        <div class="flex gap-2" id="scriptOnlyFields">
+                            <input type="text" id="pCategory" placeholder="Categoria" class="w-1/2 input-dark p-3 rounded-xl">
+                            <input type="text" id="pPrice" placeholder="Preço (R$)" class="w-1/2 input-dark p-3 rounded-xl">
+                            <input type="text" id="pLink" placeholder="Link de Compra/Download" class="w-full input-dark p-3 rounded-xl mt-2">
                         </div>
+                        <textarea id="pDesc" placeholder="Descrição..." class="w-full input-dark p-3 rounded-xl h-32"></textarea>
+                        <button onclick="pushUpdate()" class="w-full bg-green-600 py-4 rounded-2xl font-bold hover:bg-green-500 transition-all">POSTAR AGORA</button>
+                    </div>
+
+                    <div id="adminManageSection" class="hidden space-y-4">
+                        <h3 class="font-bold text-xl mb-4">Gerenciar Conteúdo</h3>
+                        <div id="adminList" class="space-y-2">
+                            </div>
                     </div>
                 </div>
             </div>
@@ -108,7 +106,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -126,132 +124,159 @@
 
         let currentUser = null;
         let activeTab = 'scripts';
-        let adminMode = 'scripts'; // 'scripts' ou 'announcement'
 
         // --- AUTH ---
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            if(user) {
-                document.getElementById('postReviewContainer').classList.remove('hidden');
-                document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-500">`;
-            }
+            if(user) document.getElementById('authArea').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-500">`;
+            updateView();
             loadData();
         });
 
-        // --- TABS LOGIC ---
+        // --- NAVEGAÇÃO ---
         window.switchTab = (tab) => {
             activeTab = tab;
-            const tabs = ['scripts', 'reviews', 'news'];
-            tabs.forEach(t => {
-                document.getElementById(`tab-${t}`).classList.remove('tab-active', 'text-white');
-                document.getElementById(`tab-${t}`).classList.add('text-slate-500');
+            ['scripts', 'reviews', 'news'].forEach(t => {
+                document.getElementById(`tab-${t}`).className = t === tab ? "pb-3 font-bold text-sm uppercase tracking-wider tab-active transition-all" : "pb-3 font-bold text-sm uppercase tracking-wider text-slate-500 hover:text-white transition-all";
             });
-            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-white');
+            updateView();
             loadData();
         };
 
-        // --- ADMIN LOGIC ---
-        window.toggleAdminModal = () => document.getElementById('adminModal').classList.toggle('hidden');
-        
-        window.setAdminMode = (mode) => {
-            adminMode = mode;
-            document.getElementById('adminFormTitle').innerText = mode === 'scripts' ? 'Novo Script' : 'Novo Anúncio';
-            document.getElementById('pPrice').style.display = mode === 'scripts' ? 'block' : 'none';
-        };
+        function updateView() {
+            const reviewBox = document.getElementById('postReviewContainer');
+            // Mostra a caixa de texto APENAS se estiver na aba reviews e o usuário estiver logado
+            if(activeTab === 'reviews' && currentUser) {
+                reviewBox.classList.remove('hidden');
+            } else {
+                reviewBox.classList.add('hidden');
+            }
+        }
 
+        // --- ADMIN FUNCS ---
+        window.toggleAdminModal = () => document.getElementById('adminModal').classList.toggle('hidden');
         window.checkAdminPass = () => {
             if(document.getElementById('adminPass').value === "thiagoleal2707") {
                 document.getElementById('adminLogin').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-            } else { alert("Acesso Negado."); }
+                loadAdminList();
+            }
         };
 
-        window.logoutAdmin = () => {
-            document.getElementById('adminLogin').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            toggleAdminModal();
+        window.setAdminMode = (mode) => {
+            document.getElementById('adminCreateSection').classList.toggle('hidden', mode !== 'create');
+            document.getElementById('adminManageSection').classList.toggle('hidden', mode !== 'manage');
+            if(mode === 'manage') loadAdminList();
         };
 
-        // --- DATABASE OPERATIONS ---
+        window.toggleFields = () => {
+            const type = document.getElementById('postType').value;
+            document.getElementById('scriptOnlyFields').classList.toggle('hidden', type !== 'products');
+        };
+
         window.pushUpdate = async () => {
-            const title = document.getElementById('pTitle').value;
-            const price = document.getElementById('pPrice').value;
-            const desc = document.getElementById('pDesc').value;
-            const cat = document.getElementById('pCategory').value;
-
-            if(!title || !desc) return;
-
-            const collectionName = adminMode === 'scripts' ? 'products' : 'announcements';
-            
-            await addDoc(collection(db, collectionName), {
-                title, price: price || '', desc, category: cat || 'Geral', timestamp: serverTimestamp()
-            });
-
-            alert("Postado com sucesso!");
-            ['pTitle', 'pPrice', 'pDesc', 'pCategory'].forEach(id => document.getElementById(id).value = "");
+            const type = document.getElementById('postType').value;
+            const data = {
+                title: document.getElementById('pTitle').value,
+                desc: document.getElementById('pDesc').value,
+                timestamp: serverTimestamp()
+            };
+            if(type === 'products') {
+                data.price = document.getElementById('pPrice').value;
+                data.category = document.getElementById('pCategory').value;
+                data.link = document.getElementById('pLink').value;
+            }
+            await addDoc(collection(db, type), data);
+            alert("Sucesso!");
+            loadAdminList();
         };
 
+        // --- FUNÇÃO OBTER ---
+        window.obterItem = (link) => {
+            if(!link || link === "") {
+                alert("Link não configurado para este script.");
+                return;
+            }
+            window.open(link, '_blank');
+        };
+
+        // --- GERENCIAR / DELETAR ---
+        window.deleteItem = async (col, id) => {
+            if(confirm("Deseja realmente apagar este item?")) {
+                await deleteDoc(doc(db, col, id));
+                loadAdminList();
+            }
+        };
+
+        async function loadAdminList() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = "<p class='text-xs text-slate-500'>Carregando itens para exclusão...</p>";
+            
+            const collections = ['products', 'announcements', 'reviews'];
+            let html = "";
+
+            for(const colName of collections) {
+                onSnapshot(collection(db, colName), (snap) => {
+                    html += `<div class='text-blue-400 text-[10px] font-bold mt-4 uppercase'>${colName}</div>`;
+                    snap.forEach(d => {
+                        const item = d.data();
+                        html += `
+                            <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center">
+                                <span class="text-xs truncate max-w-[200px]">${item.title || item.content}</span>
+                                <button onclick="deleteItem('${colName}', '${d.id}')" class="text-red-500 hover:text-red-400 p-2"><i class="fas fa-trash"></i></button>
+                            </div>`;
+                    });
+                    list.innerHTML = html;
+                });
+            }
+        }
+
+        // --- CARREGAR FEEDS ---
         function loadData() {
-            // Carregar Anúncios (Sempre visíveis na lateral)
+            // Anúncios Lateral
             onSnapshot(query(collection(db, "announcements"), orderBy("timestamp", "desc")), (snap) => {
                 const side = document.getElementById('announcementFeed');
                 side.innerHTML = "";
                 snap.forEach(doc => {
                     const a = doc.data();
-                    side.innerHTML += `
-                        <div class="glass p-4 rounded-2xl border-l-4 border-blue-500">
-                            <h4 class="font-bold text-sm">${a.title}</h4>
-                            <p class="text-[11px] text-slate-400 mt-1">${a.desc}</p>
-                        </div>`;
+                    side.innerHTML += `<div class="glass p-4 rounded-2xl border-l-4 border-blue-500"><h4 class="font-bold text-sm">${a.title}</h4><p class="text-[11px] text-slate-400 mt-1">${a.desc}</p></div>`;
                 });
             });
 
-            // Carregar Main Feed baseado na Aba
+            // Main Feed
             const mainFeed = document.getElementById('mainFeed');
-            let q;
-            if(activeTab === 'scripts') {
-                q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-                onSnapshot(q, (snap) => {
-                    mainFeed.innerHTML = "";
-                    snap.forEach(doc => {
-                        const p = doc.data();
+            const col = activeTab === 'scripts' ? 'products' : 'reviews';
+            
+            onSnapshot(query(collection(db, col), orderBy("timestamp", "desc")), (snap) => {
+                mainFeed.innerHTML = "";
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    if(activeTab === 'scripts') {
                         mainFeed.innerHTML += `
-                            <div class="glass p-6 rounded-3xl flex justify-between items-center group hover:bg-white/5 transition">
+                            <div class="glass p-6 rounded-3xl flex justify-between items-center">
                                 <div>
-                                    <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-1 rounded-md font-bold uppercase">${p.category}</span>
-                                    <h3 class="text-xl font-bold mt-2">${p.title}</h3>
-                                    <p class="text-slate-400 text-sm mt-1">${p.desc}</p>
+                                    <span class="text-[10px] bg-blue-600/20 text-blue-400 px-2 py-1 rounded-md font-bold uppercase">${data.category}</span>
+                                    <h3 class="text-xl font-bold mt-2">${data.title}</h3>
+                                    <p class="text-slate-400 text-sm mt-1">${data.desc}</p>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-green-400 font-bold text-lg">${p.price}</div>
-                                    <button class="mt-2 text-[10px] font-black bg-white text-black px-4 py-2 rounded-lg uppercase">Obter</button>
+                                    <div class="text-green-400 font-bold text-lg">${data.price}</div>
+                                    <button onclick="obterItem('${data.link}')" class="mt-2 text-[10px] font-black bg-white text-black px-6 py-2 rounded-lg uppercase hover:bg-blue-500 hover:text-white transition">Obter</button>
                                 </div>
                             </div>`;
-                    });
-                });
-            } else if (activeTab === 'reviews') {
-                q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
-                onSnapshot(q, (snap) => {
-                    mainFeed.innerHTML = "";
-                    snap.forEach(doc => {
-                        const r = doc.data();
+                    } else if (activeTab === 'reviews') {
                         mainFeed.innerHTML += `
                             <div class="glass p-5 rounded-2xl border border-white/5">
                                 <div class="flex items-center gap-3 mb-4">
-                                    <img src="${r.photo}" class="w-8 h-8 rounded-full border border-blue-500/50">
-                                    <div>
-                                        <div class="text-sm font-bold">${r.name}</div>
-                                        <div class="text-[10px] text-blue-400 uppercase tracking-tighter">Cliente Verificado</div>
-                                    </div>
+                                    <img src="${data.photo}" class="w-8 h-8 rounded-full border border-blue-500/50">
+                                    <div class="text-sm font-bold">${data.name}</div>
                                 </div>
-                                <p class="text-slate-300 text-sm leading-relaxed italic">"${r.content}"</p>
+                                <p class="text-slate-300 text-sm italic">"${data.content}"</p>
                             </div>`;
-                    });
+                    }
                 });
-            } else {
-                mainFeed.innerHTML = "<div class='text-center p-10 text-slate-500'>Fique de olho nos anúncios laterais para novidades!</div>";
-            }
+            });
         }
 
         document.getElementById('sendReview').onclick = async () => {
@@ -262,6 +287,8 @@
             });
             document.getElementById('mainComment').value = "";
         };
+
+        window.logoutAdmin = () => { location.reload(); };
 
     </script>
 </body>
