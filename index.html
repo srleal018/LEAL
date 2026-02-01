@@ -3,84 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEAL SCRIPTS | HIGH SPEED</title>
+    <title>LEAL SCRIPTS | PREMIUM HUB</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --p: #2563eb; --txt: #1e293b; --bg: #f8fafc; }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--txt); }
-        
-        header { background:#fff; padding:1rem 8%; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; position:sticky; top:0; z-index:100; }
-        .logo { font-weight:800; color:var(--p); font-size:1.2rem; }
-        
-        .container { max-width:1100px; margin:0 auto; padding:2rem 1rem; }
-        
-        /* ADMIN DASHBOARD COMPACTO */
-        #adminPanel { display:none; background:#fff; border:2px solid var(--p); padding:1.5rem; border-radius:8px; margin-bottom:2rem; }
-        .adm-grid { display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; }
-        .list-box { background:#f1f5f9; padding:10px; border-radius:5px; height:200px; overflow-y:auto; font-size:0.8rem; }
-        
-        /* BARRA DE PROGRESSO VELOZ */
-        #progWrap { display:none; background:#e2e8f0; height:8px; border-radius:10px; margin:10px 0; overflow:hidden; }
-        #progBar { width:0%; height:100%; background:var(--p); transition: width 0.1s linear; }
+        :root {
+            --primary: #00f298;
+            --accent: #0070f3;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
 
-        /* CARDS */
-        .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; }
-        .card { background:#fff; border:1px solid #e2e8f0; padding:1.5rem; border-radius:8px; transition:0.2s; }
-        .card:hover { border-color:var(--p); transform:translateY(-3px); }
-        .btn { display:block; width:100%; padding:10px; border-radius:5px; text-align:center; text-decoration:none; font-weight:700; cursor:pointer; border:none; margin-top:10px; font-size:0.8rem; }
-        .btn-p { background:var(--p); color:#fff; }
-        .btn-del { background:#fee2e2; color:#ef4444; padding:4px 8px; font-size:0.7rem; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text); background-image: radial-gradient(circle at top right, #1e293b, #0f172a); min-height: 100vh; }
 
-        input, textarea, select { width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; margin-bottom:8px; outline:none; font-size:0.85rem; }
-        .review { background:#fff; padding:1rem; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px; }
-        .reply { margin-top:8px; padding-left:10px; border-left:2px solid var(--p); font-size:0.8rem; color:#64748b; }
+        /* NAVBAR EXCLUSIVA */
+        header {
+            padding: 1.5rem 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, #00f298, #0070f3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-btns button { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .nav-btns button:hover { background: var(--primary); color: #000; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+        /* MODAIS (POP-UPS) */
+        .modal { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: none; align-items: center; justify-content: center; z-index: 1000; 
+        }
+        .modal-content { 
+            background: #1e293b; padding: 2.5rem; border-radius: 24px; width: 90%; max-width: 450px; 
+            border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        /* GRID E CARDS ESTILO VIDRO */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .card { 
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 24px;
+            transition: 0.4s; backdrop-filter: blur(10px);
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,242,152,0.1); }
+        .card h3 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 2rem; }
+
+        /* INPUTS E BOTÕES */
+        input, textarea, select { 
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); 
+            padding: 12px 18px; border-radius: 12px; color: white; margin-bottom: 1rem; outline: none;
+        }
+        .btn-main { 
+            width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            background: linear-gradient(to right, #00f298, #0070f3); color: #000;
+        }
+        .btn-main:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* ADMIN PANEL */
+        #adminPanel { 
+            display: none; background: rgba(15, 23, 42, 0.9); border: 1px solid var(--primary); 
+            padding: 2rem; border-radius: 24px; margin-bottom: 3rem;
+        }
+        .adm-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+        .scroll-box { height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.05); }
+
+        #uploadProgress { display: none; height: 6px; background: #334155; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        #progressBar { height: 100%; width: 0; background: var(--primary); transition: 0.2s; }
+
+        footer { text-align: center; padding: 4rem; color: #64748b; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
+    <div id="modalPass" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom:1.5rem">Acesso Restrito</h2>
+            <input type="password" id="admPassInput" placeholder="Digite a senha mestra">
+            <button class="btn-main" onclick="verifyPass()">ENTRAR NO PAINEL</button>
+            <button style="background:none; border:none; color:#64748b; margin-top:1rem; cursor:pointer;" onclick="closeModal('modalPass')">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="modalPix" class="modal">
+        <div class="modal-content" style="text-align:center">
+            <h2 style="color:var(--primary)">PAGAMENTO PIX</h2>
+            <p id="pixPrice" style="margin: 1rem 0; font-weight: bold; font-size: 1.5rem;"></p>
+            <div id="pixKeyArea" style="background:#0f172a; padding:15px; border-radius:12px; font-size:0.7rem; border:1px dashed var(--primary); word-break:break-all; margin-bottom:1.5rem"></div>
+            <button class="btn-main" onclick="closeModal('modalPix')">CONCLUÍDO</button>
+        </div>
+    </div>
+
     <header>
         <div class="logo">LEAL SCRIPTS</div>
-        <button onclick="checkAdm()" style="background:none; border:none; color:#cbd5e1; cursor:pointer;">ADMIN</button>
+        <div class="nav-btns">
+            <button onclick="openModal('modalPass')"><i class="fas fa-lock"></i> ADM</button>
+        </div>
     </header>
 
     <div class="container">
+        
         <div id="adminPanel">
-            <div class="adm-grid">
+            <h2 style="margin-bottom:1.5rem; display:flex; justify-content:space-between">
+                PAINEL DE CONTROLE 
+                <button onclick="document.getElementById('adminPanel').style.display='none'" style="background:none; border:none; color:red; cursor:pointer">FECHAR</button>
+            </h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
                 <div>
-                    <h4 style="margin-bottom:10px">LANÇAR RÁPIDO</h4>
                     <input type="text" id="t" placeholder="Nome do Script">
-                    <textarea id="d" placeholder="Descrição curta"></textarea>
-                    <select id="tp"><option value="free">Grátis</option><option value="vip">Premium</option></select>
-                    <input type="text" id="pr" placeholder="Preço (Ex: 20.00)">
-                    <input type="text" id="kx" placeholder="Sua Chave PIX">
-                    <input type="file" id="fl">
-                    
-                    <div id="progWrap"><div id="progBar"></div></div>
-                    <button class="btn btn-p" id="upBtn" onclick="fastUpload()">PUBLICAR AGORA</button>
+                    <textarea id="d" placeholder="Descrição"></textarea>
+                    <select id="tp"><option value="free">Grátis</option><option value="vip">Premium (Loja)</option></select>
+                    <input type="text" id="p" placeholder="Preço (ex: 29.90)">
+                    <input type="text" id="k" placeholder="Sua Chave PIX">
+                    <input type="file" id="f">
+                    <div id="uploadProgress"><div id="progressBar"></div></div>
+                    <button class="btn-main" id="upBtn" onclick="handleUpload()">LANÇAR AGORA</button>
                 </div>
-                <div>
-                    <h4 style="margin-bottom:10px">GERENCIAR</h4>
-                    <div class="list-box" id="admItems"></div>
-                    <h4 style="margin:10px 0">MODERAR FEEDBACK</h4>
-                    <div class="list-box" id="admRevs"></div>
+                <div class="adm-lists">
+                    <div class="scroll-box" id="listItems"><h4>Scripts Online</h4></div>
+                    <div class="scroll-box" id="listRevs"><h4>Comentários</h4></div>
                 </div>
             </div>
         </div>
 
-        <h2 style="margin-bottom:1.5rem">Produtos</h2>
+        <h2 style="margin-bottom:2rem">Scripts Disponíveis</h2>
         <div id="mainGrid" class="grid"></div>
 
-        <h2 style="margin:3rem 0 1.5rem">Comunidade</h2>
-        <div style="max-width:500px; margin-bottom:2rem">
-            <input type="text" id="nK" placeholder="Seu Nick">
-            <textarea id="mK" placeholder="Sua mensagem..."></textarea>
-            <button class="btn btn-p" onclick="sendRev()">Postar Comentário</button>
+        <div style="margin-top:5rem; background:var(--card); padding:3rem; border-radius:24px; border:1px solid rgba(255,255,255,0.05)">
+            <h2 style="margin-bottom:2rem">Comunidade</h2>
+            <div style="max-width:500px">
+                <input type="text" id="nK" placeholder="Seu Nick">
+                <textarea id="mK" placeholder="Sua mensagem..."></textarea>
+                <button class="btn-main" onclick="sendReview()">PUBLICAR FEEDBACK</button>
+            </div>
+            <div id="revGrid" style="margin-top:2rem"></div>
         </div>
-        <div id="revGrid"></div>
     </div>
+
+    <footer>
+        <p>© 2026 LEAL SCRIPTS • DESENVOLVIDO COM PRECISÃO</p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -100,48 +166,47 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // UPLOAD ULTRA RÁPIDO
-        window.fastUpload = async () => {
-            const file = document.getElementById('fl').files[0];
-            const title = document.getElementById('t').value;
-            if(!file || !title) return alert("Falta título ou arquivo!");
-
-            const btn = document.getElementById('upBtn');
-            const pWrap = document.getElementById('progWrap');
-            const pBar = document.getElementById('progBar');
-
-            btn.disabled = true;
-            pWrap.style.display = 'block';
+        // UPLOAD COM PROGRESSO
+        window.handleUpload = async () => {
+            const file = document.getElementById('f').files[0];
+            if(!file || !document.getElementById('t').value) return alert("Preencha tudo!");
+            
+            const upBtn = document.getElementById('upBtn');
+            const progArea = document.getElementById('uploadProgress');
+            const bar = document.getElementById('progressBar');
+            
+            upBtn.disabled = true; progArea.style.display = 'block';
 
             const sRef = ref(storage, `scripts/${Date.now()}_${file.name}`);
-            const task = uploadBytesResumable(sRef, file);
+            const uploadTask = uploadBytesResumable(sRef, file);
 
-            task.on('state_changed', 
-                (s) => pBar.style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%',
-                (e) => alert("Erro!"),
+            uploadTask.on('state_changed', 
+                (s) => bar.style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%',
+                () => alert("Erro!"),
                 async () => {
-                    const url = await getDownloadURL(task.snapshot.ref);
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
                     await addDoc(collection(db, "produtos"), {
-                        t: title, d: document.getElementById('d').value,
+                        t: document.getElementById('t').value,
+                        d: document.getElementById('d').value,
                         tp: document.getElementById('tp').value,
-                        p: document.getElementById('pr').value || "0",
-                        k: document.getElementById('kx').value || "",
-                        url: url, data: new Date()
+                        p: document.getElementById('p').value || "0",
+                        k: document.getElementById('k').value || "",
+                        url, data: new Date()
                     });
                     location.reload();
                 }
             );
         };
 
-        // EXCLUSÃO IMEDIATA
-        window.delP = async (id) => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "produtos", id)); render(); } };
-        window.delR = async (id) => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "avaliacoes", id)); render(); } };
-        window.repR = async (id) => { 
-            const msg = prompt("Resposta:"); 
-            if(msg) { await updateDoc(doc(db, "avaliacoes", id), { r: msg }); render(); } 
+        // GESTÃO
+        window.delP = async (id) => { if(confirm("Excluir?")) { await deleteDoc(doc(db, "produtos", id)); window.render(); } };
+        window.delR = async (id) => { if(confirm("Excluir?")) { await deleteDoc(doc(db, "avaliacoes", id)); window.render(); } };
+        window.repR = async (id) => {
+            const m = prompt("Sua resposta:");
+            if(m) { await updateDoc(doc(db, "avaliacoes", id), { r: m }); window.render(); }
         };
 
-        // RENDERIZAÇÃO OTIMIZADA
+        // RENDERIZAÇÃO
         window.render = async () => {
             const [pSnap, rSnap] = await Promise.all([
                 getDocs(query(collection(db, "produtos"), orderBy("data", "desc"))),
@@ -149,57 +214,74 @@
             ]);
 
             const mG = document.getElementById('mainGrid');
-            const aI = document.getElementById('admItems');
-            const aR = document.getElementById('admRevs');
+            const aI = document.getElementById('listItems');
+            const aR = document.getElementById('listRevs');
             const rG = document.getElementById('revGrid');
 
-            mG.innerHTML = ""; aI.innerHTML = ""; aR.innerHTML = ""; rG.innerHTML = "";
+            mG.innerHTML = ""; aI.innerHTML = "<h4>Scripts Online</h4>"; aR.innerHTML = "<h4>Comentários</h4>"; rG.innerHTML = "";
 
             pSnap.forEach(doc => {
                 const i = doc.data();
                 mG.innerHTML += `
                     <div class="card">
-                        <span style="font-size:10px; color:var(--p)">${i.tp.toUpperCase()}</span>
-                        <h3 style="font-size:1rem">${i.t}</h3>
-                        <p style="font-size:0.8rem; color:#64748b">${i.d}</p>
+                        <span style="color:var(--primary); font-size:0.7rem; font-weight:800; letter-spacing:1px">${i.tp.toUpperCase()}</span>
+                        <h3 style="margin-top:0.5rem">${i.t}</h3>
+                        <p>${i.d}</p>
                         ${i.tp === 'vip' ? 
-                          `<button class="btn btn-p" onclick="alert('PIX: ${i.k} - R$ ${i.p}')">COMPRAR R$ ${i.p}</button>` : 
-                          `<a href="${i.url}" class="btn btn-p" target="_blank">BAIXAR</a>`}
+                          `<button class="btn-main" onclick="openPix('${i.p}', '${i.k}')">ADQUIRIR AGORA</button>` : 
+                          `<a href="${i.url}" class="btn-main" style="display:block; text-decoration:none; text-align:center" target="_blank">DOWNLOAD FREE</a>`}
                     </div>`;
-                aI.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px">
-                    <span>${i.t}</span> <button class="btn-del" onclick="delP('${doc.id}')">X</button>
+                aI.innerHTML += `<div style="display:flex; justify-content:space-between; margin-top:10px; font-size:0.7rem">
+                    <span>${i.t}</span> <button onclick="delP('${doc.id}')" style="color:red; background:none; border:none">X</button>
                 </div>`;
             });
 
             rSnap.forEach(doc => {
                 const i = doc.data();
                 rG.innerHTML += `
-                    <div class="review">
-                        <strong>${i.n}</strong>
-                        <p style="font-size:0.85rem">${i.m}</p>
-                        ${i.r ? `<div class="reply"><strong>Leal:</strong> ${i.r}</div>` : ''}
+                    <div style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px solid rgba(255,255,255,0.05)">
+                        <strong style="color:var(--primary)">@${i.n}</strong>
+                        <p style="font-size:0.9rem; margin-top:5px">${i.m}</p>
+                        ${i.r ? `<div style="margin-top:10px; padding-left:15px; border-left:2px solid var(--accent); font-size:0.8rem; color:#94a3b8"><strong>OFICIAL LEAL:</strong> ${i.r}</div>` : ''}
                     </div>`;
-                aR.innerHTML += `<div style="margin-bottom:8px">
+                aR.innerHTML += `<div style="margin-top:10px; font-size:0.7rem">
                     <span>${i.n}</span>
-                    <button class="btn-del" onclick="delR('${doc.id}')">X</button>
-                    <button onclick="repR('${doc.id}')" style="font-size:0.7rem">Rep</button>
+                    <button onclick="repR('${doc.id}')" style="color:var(--primary); background:none; border:none; margin-left:10px">REP</button>
+                    <button onclick="delR('${doc.id}')" style="color:red; background:none; border:none; margin-left:10px">X</button>
                 </div>`;
             });
         };
 
-        window.sendRev = async () => {
+        window.sendReview = async () => {
             const n = document.getElementById('nK').value;
             const m = document.getElementById('mK').value;
             if(!n || !m) return;
             await addDoc(collection(db, "avaliacoes"), { n, m, data: new Date(), r: "" });
-            document.getElementById('mK').value = ""; render();
+            document.getElementById('mK').value = ""; window.render();
         };
 
         window.render();
     </script>
 
     <script>
-        function checkAdm() { if(prompt("Senha:") === "l34l") document.getElementById('adminPanel').style.display='block'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function verifyPass() {
+            if(document.getElementById('admPassInput').value === "l34l") {
+                closeModal('modalPass');
+                document.getElementById('adminPanel').style.display = 'block';
+                window.scrollTo(0,0);
+            } else {
+                alert("Senha Incorreta!");
+            }
+        }
+
+        function openPix(p, k) {
+            document.getElementById('pixPrice').innerText = "R$ " + p;
+            document.getElementById('pixKeyArea').innerText = k;
+            openModal('modalPix');
+        }
     </script>
 </body>
 </html>
