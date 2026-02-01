@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvaliaScript - Roblox Studio</title>
+    <title>AvaliaScript Studio - Avaliação Profissional</title>
     <style>
         :root {
             --roblox-blue: #00a2ff;
@@ -43,8 +43,7 @@
             height: 100%;
             background: 
                 radial-gradient(circle at 20% 80%, rgba(0,162,255,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.1) 0%, transparent 30%);
+                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.3) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
@@ -57,7 +56,7 @@
             z-index: 1;
         }
 
-        /* Loading - Roblox Style */
+        /* Loading */
         .loading {
             position: fixed;
             top: 0;
@@ -70,7 +69,6 @@
             align-items: center;
             z-index: 9999;
             flex-direction: column;
-            backdrop-filter: blur(20px);
         }
 
         .roblox-spinner {
@@ -80,19 +78,6 @@
             border-top: 6px solid white;
             border-radius: 50%;
             animation: roblox-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-            position: relative;
-        }
-
-        .roblox-spinner::after {
-            content: 'R';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--roblox-blue);
-            animation: pulse 2s infinite;
         }
 
         @keyframes roblox-spin {
@@ -100,17 +85,12 @@
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
-        }
-
-        /* Header - Glassmorphism Premium */
+        /* Header Premium */
         .header {
             background: var(--glass-bg);
             backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
-            padding: 1.2rem 0;
+            padding: 1.5rem 0;
             box-shadow: var(--shadow-hard);
             margin-bottom: 2.5rem;
             border-radius: 24px;
@@ -126,68 +106,85 @@
         }
 
         @keyframes slideDownGlass {
-            from { 
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .logo {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 30px rgba(0, 162, 255, 0.5);
-            letter-spacing: -0.02em;
         }
 
-        .user-info {
+        .user-profile {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            padding: 14px 24px;
+            padding: 16px 28px;
             border-radius: 30px;
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-soft);
+            min-width: 280px;
         }
 
-        .user-avatar {
-            width: 48px;
-            height: 48px;
+        .user-avatar-large {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.3);
-            box-shadow: 0 0 20px rgba(0,162,255,0.4);
+            border: 4px solid rgba(255,255,255,0.4);
+            box-shadow: 0 0 25px rgba(0,162,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(0,162,255,0.7);
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
         }
 
         .user-name {
-            font-weight: 600;
+            font-weight: 700;
             color: white;
-            max-width: 150px;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .user-email {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .logout-btn {
             background: linear-gradient(135deg, #ff4757, #ff3838);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
             cursor: pointer;
             font-size: 14px;
@@ -201,7 +198,221 @@
             box-shadow: 0 10px 25px rgba(255,71,87,0.5);
         }
 
-        /* Auth Screen - Epic Roblox Style */
+        /* Auth Screen */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .auth-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            padding: 4.```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AvaliaScript Studio - Pro</title>
+    <style>
+        :root {
+            --roblox-blue: #00a2ff;
+            --roblox-blue-dark: #0084c7;
+            --roblox-blue-light: #33b5ff;
+            --roblox-gray: #23272a;
+            --roblox-dark: #191b21;
+            --roblox-light: #f5f6f6;
+            --roblox-accent: #00d4aa;
+            --shadow-soft: 0 10px 30px rgba(0, 162, 255, 0.2);
+            --shadow-hard: 0 20px 60px rgba(0, 162, 255, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, var(--roblox-blue) 0%, var(--roblox-blue-dark) 50%, var(--roblox-gray) 100%);
+            min-height: 100vh;
+            color: #e6e6e6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0,162,255,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-blue-dark));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .roblox-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(255,255,255,0.2);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            animation: roblox-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes roblox-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header Premium */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-hard);
+            margin-bottom: 2.5rem;
+            border-radius: 24px;
+            display: none;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .header.show {
+            display: block;
+            animation: slideDownGlass 0.6s ease;
+        }
+
+        @keyframes slideDownGlass {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 162, 255, 0.5);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 16px 28px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            min-width: 280px;
+        }
+
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255,255,255,0.4);
+            box-shadow: 0 0 25px rgba(0,162,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(0,162,255,0.7);
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-email {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255,71,87,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,71,87,0.5);
+        }
+
+        /* Auth Screen */
         .auth-screen {
             min-height: 100vh;
             display: flex;
@@ -220,25 +431,6 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-            animation: shine 3s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .auth-card h1 {
@@ -247,16 +439,7 @@
             background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 1.5rem;
-            text-shadow: 0 0 40px rgba(0,162,255,0.6);
-        }
-
-        .auth-subtitle {
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 3rem;
-            font-size: 1.2rem;
-            font-weight: 400;
         }
 
         .google-btn {
@@ -273,34 +456,16 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.4s ease;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .google-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
         }
 
         .google-btn:hover {
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-5px);
             box-shadow: 0 25px 50px rgba(0,162,255,0.4);
-            color: #000;
         }
 
-        .google-btn:hover::before {
-            left: 100%;
-        }
-
-        /* Tabs - Premium Glass */
+        /* Tabs */
         .tabs {
             display: flex;
             background: var(--glass-bg);
@@ -321,21 +486,8 @@
             font-size: 16px;
             font-weight: 700;
             color: rgba(255,255,255,0.8);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.4s ease;
             position: relative;
-            overflow: hidden;
-        }
-
-        .tab-btn::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--roblox-accent), var(--roblox-blue-light));
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
         }
 
         .tab-btn:hover {
@@ -348,11 +500,7 @@
             background: rgba(255,255,255,0.15);
         }
 
-        .tab-btn.active::before {
-            width: 80%;
-        }
-
-        /* Tab Content - Ultimate Glass */
+        /* Tab Content */
         .tab-content {
             display: none;
             background: var(--glass-bg);
@@ -361,23 +509,16 @@
             border-radius: 28px;
             padding: 3.5rem;
             box-shadow: var(--shadow-hard);
-            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .tab-content.active {
             display: block;
-            animation: glassSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: glassSlideIn 0.6s ease;
         }
 
         @keyframes glassSlideIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(40px) scale(0.95);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .tab-content h2 {
@@ -390,10 +531,9 @@
             text-align: center;
         }
 
-        /* Form Elements - Roblox Studio Style */
+        /* Form Styles */
         .form-group {
             margin-bottom: 2rem;
-            position: relative;
         }
 
         .form-group label {
@@ -402,7 +542,6 @@
             font-weight: 700;
             color: rgba(255,255,255,0.95);
             font-size: 1.1rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .form-group input, 
@@ -414,11 +553,9 @@
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 20px;
             font-size: 16px;
-            font-weight: 500;
             color: #333;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.4s ease;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            backdrop-filter: blur(10px);
         }
 
         .form-group input:focus, 
@@ -426,133 +563,16 @@
         .form-group select:focus {
             outline: none;
             border-color: var(--roblox-blue-light);
-            box-shadow: 0 0 0 4px rgba(0,162,255,0.2), 0 20px 40px rgba(0,162,255,0.3);
+            box-shadow: 0 0 0 4px rgba(0,162,255,0.2);
             transform: translateY(-2px);
-            background: white;
         }
 
         textarea {
             resize: vertical;
             min-height: 160px;
-            font-family: inherit;
         }
 
-        /* Upload Area - Glowing */
-        .upload-area {
-            border: 3px dashed rgba(255,255,255,0.4);
-            border-radius: 24px;
-            padding: 4rem 3rem;
-            text-align: center;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(20px);
-            margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .upload-area::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, var(--roblox-blue-light), var(--roblox-accent));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .upload-area:hover::before,
-        .upload-area.dragover::before {
-            opacity: 0.05;
-        }
-
-        .upload-area:hover,
-        .upload-area.dragover {
-            border-color: var(--roblox-blue-light);
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-hard);
-        }
-
-        .upload-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, white, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-        }
-
-        .upload-text {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: rgba(255,255,255,0.95);
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-hint {
-            color: rgba(255,255,255,0.7);
-            font-size: 1rem;
-        }
-
-        /* Media Grid - Studio Gallery */
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .media-item {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,162,255,0.1));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .media-item:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 30px 80px rgba(0,162,255,0.4);
-        }
-
-        .media-item img,
-        .media-item video {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: linear-gradient(135deg, #ff4757, #ff3838);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            box-shadow: 0 5px 15px rgba(255,71,87,0.4);
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .remove-btn:hover {
-            transform: scale(1.2);
-            box-shadow: 0 8px 25px rgba(255,71,87,0.6);
-        }
-
-        /* Rating - Glowing Stars */
+        /* Rating Stars */
         .rating-container {
             display: flex;
             align-items: center;
@@ -567,33 +587,22 @@
             background: rgba(255,255,255,0.1);
             border-radius: 20px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .star {
             font-size: 3rem;
             color: rgba(255,215,0,0.3);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));
-            user-select: none;
+            transition: all 0.3s ease;
         }
 
-        .star:hover,
-        .star.active {
+        .star:hover, .star.active {
             color: #ffd700;
+            transform: scale(1.2);
             filter: drop-shadow(0 0 20px #ffd700);
-            transform: scale(1.2) rotate(5deg);
         }
 
-        #ratingValue {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--roblox-blue-light);
-            text-shadow: 0 0 20px rgba(0,162,255,0.6);
-        }
-
-        /* Buttons - Ultimate Roblox */
+        /* Buttons */
         .btn {
             padding: 20px 40px;
             border: none;
@@ -601,43 +610,26 @@
             cursor: pointer;
             font-size: 18px;
             font-weight: 700;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.4s ease;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-blue-dark));
             color: white;
-            border: 2px solid var(--roblox-blue-light);
         }
 
         .btn-primary:hover {
-            transform: translateY(-8px) scale(1.05);
+            transform: translateY(-8px);
             box-shadow: 0 25px 60px rgba(0,162,255,0.5);
-            border-color: white;
-        }
-
-        .btn-primary:active {
-            transform: translateY(-4px);
         }
 
         .btn-success {
             background: linear-gradient(135deg, var(--roblox-accent), #00b894);
             color: white;
-            border: 2px solid var(--roblox-accent);
         }
 
-        .btn-success:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 25px 60px rgba(0,212,170,0.5);
-            border-color: white;
-        }
-
-        /* Evaluation Cards - Studio Quality */
+        /* Evaluation Cards */
         .evaluation-card {
             background: var(--glass-bg);
             backdrop-filter: blur(30px);
@@ -647,21 +639,7 @@
             margin-bottom: 2.5rem;
             box-shadow: var(--shadow-hard);
             border-top: 4px solid var(--roblox-blue);
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .evaluation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--roblox-blue), var(--roblox-accent), var(--roblox-blue));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: all 0.5s ease;
         }
 
         .evaluation-card:hover {
@@ -669,8 +647,34 @@
             box-shadow: 0 40px 100px rgba(0,162,255,0.4);
         }
 
-        .evaluation-card:hover::before {
-            opacity: 1;
+        .evaluation-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.4);
+        }
+
+        .author-info h4 {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .author-info p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
         }
 
         .evaluation-title {
@@ -689,14 +693,6 @@
             font-size: 1rem;
         }
 
-        .info-tag {
-            background: rgba(255,255,255,0.15);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-        }
-
         .evaluation-rating-display {
             display: flex;
             align-items: center;
@@ -707,11 +703,8 @@
             font-weight: 700;
             font-size: 1.2rem;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,215,0,0.3);
-            box-shadow: 0 5px 15px rgba(255,215,0,0.2);
         }
 
-        /* Reply System */
         .reply-area {
             margin-top: 2.5rem;
             padding-top: 2.5rem;
@@ -728,15 +721,9 @@
             align-items: flex-end;
         }
 
-        .reply-input textarea {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
         .reply-list {
             max-height: 400px;
             overflow-y: auto;
-            padding-right: 1rem;
         }
 
         .reply-item {
@@ -745,79 +732,58 @@
             border-radius: 20px;
             margin-bottom: 1.5rem;
             border-left: 5px solid var(--roblox-accent);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
         }
 
-        .reply-author {
-            font-weight: 700;
-            color: white;
+        .reply-author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 0.8rem;
-            font-size: 1.1rem;
         }
 
-        .reply-date {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
+        .reply-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 6rem 3rem;
             color: rgba(255,255,255,0.7);
         }
 
-        .empty-state svg {
-            font-size: 8rem;
-            margin-bottom: 2rem;
-            opacity: 0.6;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container { padding: 0 15px; }
-            .tab-content { padding: 2.5rem 2rem; }
-        }
-
         @media (max-width: 768px) {
             .tabs { flex-direction: column; }
             .reply-input { flex-direction: column; gap: 1rem; }
-            .evaluation-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
-            .media-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-            .auth-card { padding: 2.5rem 2rem; }
-            .tab-content { padding: 2rem 1.5rem; margin-bottom: 2rem; }
-        }
-
-        @media (max-width: 480px) {
-            .logo { font-size: 1.8rem; }
-            .evaluation-title { font-size: 1.6rem; }
-            .media-grid { grid-template-columns: 1fr; }
+            .user-profile { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
+            .container { padding: 0 15px; }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
+    <!-- Loading -->
     <div class="loading" id="loading">
         <div class="roblox-spinner"></div>
-        <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">Carregando AvaliaScript Studio...</p>
+        <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">Carregando Studio...</p>
     </div>
 
     <!-- Auth Screen -->
     <div class="auth-screen" id="authScreen">
         <div class="auth-card">
             <h1>🎨 AvaliaScript Studio</h1>
-            <p class="auth-subtitle">Sistema profissional para avaliação de scripts Roblox & FiveM</p>
+            <p style="color: rgba(255,255,255,0.9); margin-bottom: 3rem; font-size: 1.2rem;">
+                Sistema profissional para avaliação de scripts
+            </p>
             <button class="google-btn" id="googleLogin">
                 <svg width="28" height="28" viewBox="0 0 24 24" style="filter: drop-shadow(0 0 5px rgba(0,0,0,0.3));">
-                    <!-- Google Icon -->
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Entrar com Google Account
+                Entrar com Google
             </button>
         </div>
     </div>
@@ -825,42 +791,351 @@
     <!-- Main App -->
     <div class="main-app" id="mainApp">
         <header class="header" id="header">
-            <div class="container">
-                <div class="header-content">
-                    <div class="logo">🎨 Studio</div>
-                    <div class="user-info" id="userInfo">
-                        <!-- User info loaded by JS -->
-                    </div>
+            <div class="header-content">
+                <div class="logo">🎨 Studio</div>
+                <div class="user-profile" id="userProfile">
+                    <!-- Preenchido pelo JS -->
                 </div>
             </div>
         </header>
 
         <div class="container">
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('newEval')">
-                    <span>📤</span> Nova Avaliação
-                </button>
-                <button class="tab-btn" onclick="switchTab('myEvals')">
-                    <span>💎</span> Minhas Criações
-                </button>
-                <button class="tab-btn" onclick="switchTab('allEvals')">
-                    <span>🌐</span> Marketplace
-                </button>
+                <button class="tab-btn active" onclick="switchTab('newEval')">📤 Nova Avaliação</button>
+                <button class="tab-btn" onclick="switchTab('myEvals')">💎 Minhas</button>
+                <button class="tab-btn" onclick="switchTab('allEvals')">🌐 Todas</button>
             </div>
 
-            <!-- Resto do conteúdo permanece IDENTICO ao anterior, só mudei classes -->
-            <!-- newEval, myEvals, allEvals tabs com as mesmas funcionalidades -->
-            <!-- ... (mantive todo o JavaScript igual ao anterior) ... -->
+            <!-- Nova Avaliação -->
+            <div id="newEval" class="tab-content active">
+                <h2>✨ Criar Nova Avaliação</h2>
+                <form id="evalForm">
+                    <div class="form-group">
+                        <label>Título do Script *</label>
+                        <input type="text" id="evalTitle" required placeholder="Ex: Sistema de Login FiveM">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição Completa *</label>
+                        <textarea id="evalDesc" required placeholder="Descreva detalhadamente o funcionamento do script..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <select id="evalCategory" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="roblox">Roblox</option>
+                            <option value="fivem">FiveM/GTA</option>
+                            <option value="discord">Discord Bot</option>
+                            <option value="web">Web/HTML</option>
+                            <option value="lua">Lua Geral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nota do Script * (1-10)</label>
+                        <div class="rating-container">
+                            <div class="stars" id="ratingStars"></div>
+                            <span id="ratingValue">0</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🚀 Publicar Avaliação</button>
+                </form>
+            </div>
+
+            <!-- Minhas Avaliações -->
+            <div id="myEvals" class="tab-content">
+                <h2>💎 Suas Avaliações</h2>
+                <div id="myEvaluationsList" class="empty-state">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
+                    <p>Nenhuma avaliação criada ainda.<br>Crie sua primeira avaliação!</p>
+                </div>
+            </div>
+
+            <!-- Todas Avaliações -->
+            <div id="allEvals" class="tab-content">
+                <h2>🌐 Marketplace de Avaliações</h2>
+                <div id="allEvaluationsList" class="empty-state">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+                    <p>Carregando avaliações...<br>Aguarde alguns segundos.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- JavaScript permanece EXATAMENTE o mesmo do código anterior -->
+    <!-- Firebase + JavaScript -->
     <script type="module">
-        // COLE TODO O JAVASCRIPT DO CÓDIGO ANTERIOR AQUI
-        // (initializeApp, auth, db, storage, todas as funções)
-        // Não mudei nada do JS - só visual!
-        
-        // ... Todo o código JavaScript anterior ...
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp, doc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
+            authDomain: "leal-1a27b.firebaseapp.com",
+            projectId: "leal-1a27b",
+            storageBucket: "leal-1a27b.firebasestorage.app",
+            messagingSenderId: "935085322117",
+            appId: "1:935085322117:web:e8454ce939b8035b809eec",
+            measurementId: "G-RSPSJGHY8N"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let currentRating = 0;
+
+        // DOM Elements
+        const loading = document.getElementById('loading');
+        const authScreen = document.getElementById('authScreen');
+        const mainApp = document.getElementById('mainApp');
+        const header = document.getElementById('header');
+        const userProfile = document.getElementById('userProfile');
+        const googleLogin = document.getElementById('googleLogin');
+        const evalForm = document.getElementById('evalForm');
+
+        // Auth State Observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loading.style.display = 'none';
+                authScreen.style.display = 'none';
+                mainApp.style.display = 'block';
+                header.classList.add('show');
+                updateUserProfile();
+                loadUserEvaluations();
+                loadAllEvaluations();
+            } else {
+                currentUser = null;
+                loading.style.display = 'none';
+                authScreen.style.display = 'flex';
+                mainApp.style.display = 'none';
+                header.classList.remove('show');
+            }
+        });
+
+        // Google Login
+        googleLogin.addEventListener('click', async () => {
+            try {
+                loading.style.display = 'flex';
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error('Erro login:', error);
+                alert('Erro no login: ' + error.message);
+                loading.style.display = 'none';
+            }
+        });
+
+        // Logout
+        window.logout = async () => {
+            try {
+                loading.style.display = 'flex';
+                await signOut(auth);
+            } catch (error) {
+                console.error('Erro logout:', error);
+            }
+        };
+
+        // Update User Profile
+        function updateUserProfile() {
+            userProfile.innerHTML = `
+                <img src="${currentUser.photoURL}" alt="Avatar" class="user-avatar">
+                <div class="user-details">
+                    <div class="user-name">${currentUser.displayName}</div>
+                    <div class="user-email">${currentUser.email}</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            `;
+        }
+
+        // Tab Switching
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        };
+
+        // Initialize Rating Stars
+        function initStars() {
+            const starsContainer = document.getElementById('ratingStars');
+            starsContainer.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.textContent = '⭐';
+                star.dataset.rating = i;
+                star.onclick = () => setRating(i);
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function setRating(rating) {
+            currentRating = rating;
+            document.getElementById('ratingValue').textContent = rating;
+            document.querySelectorAll('#ratingStars .star').forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+        }
+
+        initStars();
+
+        // Submit Evaluation (SEM ARQUIVOS)
+        evalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentRating || !currentUser) {
+                alert('⚠️ Preencha todos os campos e dê uma nota!');
+                return;
+            }
+
+            try {
+                loading.style.display = 'flex';
+                
+                await addDoc(collection(db, 'evaluations'), {
+                    title: document.getElementById('evalTitle').value,
+                    description: document.getElementById('evalDesc').value,
+                    category: document.getElementById('evalCategory').value,
+                    rating: currentRating,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName,
+                    authorEmail: currentUser.email,
+                    authorPhoto: currentUser.photoURL,
+                    replies: [],
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+
+                alert('✅ Avaliação publicada com sucesso!');
+                evalForm.reset();
+                setRating(0);
+                loadUserEvaluations();
+                loadAllEvaluations();
+
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao publicar: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        // Load User Evaluations
+        window.loadUserEvaluations = async () => {
+            if (!currentUser) return;
+            const q = query(
+                collection(db, 'evaluations'),
+                where('authorId', '==', currentUser.uid),
+                orderBy('createdAt', 'desc')
+            );
+            const snapshot = await getDocs(q);
+            displayEvaluations(snapshot.docs, 'myEvaluationsList');
+        };
+
+        // Load All Evaluations
+        window.loadAllEvaluations = async () => {
+            const q = query(
+                collection(db, 'evaluations'),
+                orderBy('createdAt', 'desc')
+            );
+            const snapshot = await getDocs(q);
+            displayEvaluations(snapshot.docs, 'allEvaluationsList');
+        };
+
+        // Display Evaluations
+        function displayEvaluations(docs, containerId) {
+            const container = document.getElementById(containerId);
+            if (docs.empty) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
+                        <p>${containerId === 'myEvaluationsList' ? 
+                            'Nenhuma avaliação criada ainda.' : 
+                            'Nenhuma avaliação encontrada.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = docs.map(doc => {
+                const data = doc.data();
+                const stars = '⭐'.repeat(data.rating);
+                const repliesCount = data.replies?.length || 0;
+
+                return `
+                    <div class="evaluation-card" data-id="${doc.id}">
+                        <div class="evaluation-author">
+                            <img src="${data.authorPhoto}" alt="${data.authorName}" class="author-avatar">
+                            <div class="author-info">
+                                <h4>${data.authorName}</h4>
+                                <p>${data.authorEmail}</p>
+                            </div>
+                        </div>
+                        <div class="evaluation-title">${data.title}</div>
+                        <div class="evaluation-info">
+                            <span class="info-tag">📂 ${data.category}</span>
+                            <span class="info-tag">💬 ${repliesCount} respostas</span>
+                        </div>
+                        <div class="evaluation-rating-display">
+                            ${stars} ${data.rating}/10
+                        </div>
+                        <p style="margin: 1.5rem 0; color: rgba(255,255,255,0.9); line-height: 1.7;">
+                            ${data.description}
+                        </p>
+                        
+                        <div class="reply-area">
+                            <div class="reply-input">
+                                <textarea placeholder="💭 Deixe sua resposta aqui... (Ctrl+Enter)" 
+                                          onkeydown="handleReply(event, this, '${doc.id}')"></textarea>
+                                <button class="btn btn-success" onclick="addReply('${doc.id}', this.previousElementSibling)">Responder</button>
+                            </div>
+                            <div class="reply-list">
+                                ${data.replies?.map(reply => `
+                                    <div class="reply-item">
+                                        <div class="reply-author-info">
+                                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--roblox-blue),var(--roblox-accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${reply.author.charAt(0).toUpperCase()}</div>
+                                            <div>
+                                                <div style="font-weight:700;color:white;">${reply.author}</div>
+                                                <div style="color:rgba(255,255,255,0.6);font-size:0.9rem;">${reply.date ? new Date(reply.date.toDate()).toLocaleDateString('pt-BR') : 'Agora'}</div>
+                                            </div>
+                                        </div>
+                                        <div style="color:rgba(255,255,255,0.95);margin-top:1rem;">${reply.text}</div>
+                                    </div>
+                                `).join('') || ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add Reply
+        window.addReply = async (docId, textarea) => {
+            const text = textarea.value.trim();
+            if (!text || !currentUser) return;
+
+            try {
+                await updateDoc(doc(db, 'evaluations', docId), {
+                    replies: arrayUnion({
+                        author: currentUser.displayName,
+                        text: text,
+                        date: serverTimestamp()
+                    }),
+                    updatedAt: serverTimestamp()
+                });
+                textarea.value = '';
+                loadUserEvaluations();
+                loadAllEvaluations();
+            } catch (error) {
+                console.error('Erro reply:', error);
+            }
+        };
+
+        window.handleReply = (event, textarea, docId) => {
+            if (event.ctrlKey && event.key === 'Enter') {
+                addReply(docId, textarea);
+            }
+        };
     </script>
 </body>
 </html>
