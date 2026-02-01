@@ -3,144 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Oficial</title>
+    <title>LEAL SCRIPTS | HUB PREMIUM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <style>
-        :root {
-            --neon: #00ff41;
-            --bg: #050505;
-            --card: #0d0d0d;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
-        body { background-color: var(--bg); color: #fff; line-height: 1.6; }
-
-        /* HEADER */
-        header {
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--neon);
-            background: rgba(0,0,0,0.8);
-            position: sticky; top: 0; z-index: 1000;
-        }
-        .logo { font-size: 22px; color: var(--neon); font-weight: bold; text-shadow: 0 0 10px var(--neon); }
-        .nav-btns button {
-            background: transparent; border: 1px solid var(--neon); color: var(--neon);
-            padding: 8px 15px; cursor: pointer; margin-left: 10px; transition: 0.3s;
-        }
-        .nav-btns button:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
-
-        /* ANÚNCIOS */
-        .ads { display: flex; justify-content: center; gap: 20px; padding: 20px; flex-wrap: wrap; }
-        .ad-box { width: 300px; height: 90px; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; color: #444; font-size: 12px; }
-
-        /* CONTEÚDO */
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        h2 { color: var(--neon); text-transform: uppercase; margin: 30px 0 20px; border-left: 4px solid var(--neon); padding-left: 15px; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: var(--card); border: 1px solid #222; padding: 20px; transition: 0.3s; position: relative; }
-        .card:hover { border-color: var(--neon); transform: translateY(-5px); }
-        .card h3 { margin-bottom: 10px; }
-        .card p { color: #aaa; font-size: 14px; margin-bottom: 20px; }
-        .card .btn { display: block; text-align: center; background: #111; color: var(--neon); border: 1px solid var(--neon); padding: 10px; text-decoration: none; }
-
-        /* FORMULÁRIOS */
-        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; margin-bottom: 10px; }
-        input:focus { border-color: var(--neon); outline: none; }
-        
-        #adminPanel { display: none; border: 1px solid red; padding: 20px; background: #1a0000; margin-bottom: 40px; }
-
-        /* FOOTER */
-        footer { margin-top: 50px; padding: 40px; text-align: center; border-top: 1px solid #222; color: #444; }
-        .discord-link { color: #5865F2; text-decoration: none; font-weight: bold; font-size: 18px; }
-
-        /* POPUP */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .popup { background: #000; border: 1px solid var(--neon); padding: 30px; text-align: center; width: 350px; }
-    </style>
-</head>
-<body>
-
-    <div id="popup" class="overlay">
-        <div class="popup">
-            <h3 id="popTitle" style="color:var(--neon)">AVISO</h3>
-            <p id="popMsg" style="margin: 20px 0;"></p>
-            <button onclick="fecharPop()" style="background:var(--neon); border:none; padding:10px 20px; cursor:pointer;">OK</button>
-        </div>
-    </div>
-
-    <header>
-        <div class="logo"><i class="fas fa-lion"></i> LEAL SCRIPTS</div>
-        <div class="nav-btns">
-            <button onclick="scrollPara('#loja')">LOJA</button>
-            <button onclick="scrollPara('#avaliacoes')">AVALIAÇÕES</button>
-            <button onclick="abrirAdmin()" style="border-color:red; color:red;">ADM</button>
-        </div>
-    </header>
-
-    <div class="ads">
-        <div class="ad-box" id="ad1">ANÚNCIO DISPONÍVEL</div>
-        <div class="ad-box" id="ad2">ANÚNCIO DISPONÍVEL</div>
-        <div class="ad-box" id="ad3">ANÚNCIO DISPONÍVEL</div>
-    </div>
-
-    <div class="container">
-        
-        <div id="adminPanel">
-            <h2 style="color:red; border:none;">PAINEL DO LEAL</h2>
-            <input type="text" id="admTitle" placeholder="Título do Script">
-            <textarea id="admDesc" placeholder="Descrição"></textarea>
-            <input type="text" id="admLink" placeholder="Link (Download/Pastebin)">
-            <select id="admTipo" style="width:100%; padding:10px; background:#000; color:#fff; margin-bottom:10px;">
-                <option value="free">Lançamento Free</option>
-                <option value="vip">Produto Loja</option>
-            </select>
-            <button onclick="salvarProduto()" style="background:red; color:#fff; border:none; padding:10px; width:100%; cursor:pointer;">POSTAR AGORA</button>
-        </div>
-
-        <section id="lancamentos">
-            <h2>Lançamentos Recentes</h2>
-            <div id="gridFree" class="grid"></div>
-        </section>
-
-        <section id="loja">
-            <h2>Loja Leal</h2>
-            <div id="gridVip" class="grid"></div>
-        </section>
-
-        <section id="avaliacoes">
-            <h2>Avaliações</h2>
-            <div style="background:#0a0a0a; padding:20px; border:1px solid #222; margin-bottom:20px;">
-                <input type="text" id="revNick" placeholder="Seu Nick">
-                <textarea id="revMsg" placeholder="Sua opinião..."></textarea>
-                <button onclick="postarAvaliacao()" style="background:var(--neon); color:#000; border:none; padding:10px 20px; cursor:pointer; font-weight:bold;">ENVIAR FEEDBACK</button>
-            </div>
-            <div id="listaAvaliacoes"></div>
-        </section>
-
-    </div>
-
-    <footer>
-        <pre style="font-size: 9px; color:#222; margin-bottom:20px;">
-  _____   ____  _____      _      ______          _      
- |  __ \ / __ \|  __ \    | |    |  ____|   /\   | |     
- | |__) | |  | | |__) |   | |    | |__     /  \  | |     
- |  ___/| |  | |  _  /    | |    |  __|   / /\ \ | |     
- | |    | |__| | | \ \    | |____| |____ / ____ \| |____ 
- |_|     \____/|_|  \_\   |______|______/_/    \_\______|
-        </pre>
-        <p>FEITO POR LEAL</p>
-        <a href="#" class="discord-link"><i class="fab fa-discord"></i> NOSSO DISCORD</a>
-    </footer>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
+        // CONFIGURAÇÃO DO SEU PROJETO (LEAL-1A27B)
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
             authDomain: "leal-1a27b.firebaseapp.com",
@@ -152,59 +23,193 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // Funções Globais
+        // --- FUNÇÕES DE NÚCLEO ---
         window.salvarProduto = async () => {
+            const btn = document.getElementById('btnPostar');
+            btn.innerText = "ENVIANDO..."; btn.disabled = true;
+
             const t = document.getElementById('admTitle').value;
             const d = document.getElementById('admDesc').value;
-            const l = document.getElementById('admLink').value;
             const tp = document.getElementById('admTipo').value;
-            if(!t) return;
-            await addDoc(collection(db, "produtos"), { t, d, l, tp, data: new Date() });
+            const preco = document.getElementById('admPreco').value;
+            const pix = document.getElementById('admPix').value;
+            const file = document.getElementById('admFile').files[0];
+
+            let urlFinal = "#";
+
+            if(file) {
+                const storageRef = ref(storage, 'projetos/' + file.name);
+                await uploadBytes(storageRef, file);
+                urlFinal = await getDownloadURL(storageRef);
+            }
+
+            await addDoc(collection(db, "produtos"), {
+                titulo: t, desc: d, tipo: tp, preco: preco || "Grátis", 
+                pix: pix || "", link: urlFinal, data: new Date()
+            });
+
             location.reload();
         };
 
-        window.postarAvaliacao = async () => {
-            const nick = document.getElementById('revNick').value;
-            const msg = document.getElementById('revMsg').value;
-            if(!nick || !msg) return;
-            await addDoc(collection(db, "avaliacoes"), { nick, msg, data: new Date() });
-            document.getElementById('revMsg').value = "";
-            window.carregarDados();
-        };
-
         window.carregarDados = async () => {
-            const qP = query(collection(db, "produtos"), orderBy("data", "desc"));
-            const snapP = await getDocs(qP);
-            let hFree = "", hVip = "";
-            snapP.forEach(doc => {
-                const i = doc.data();
-                const card = `<div class="card"><h3>${i.t}</h3><p>${i.d}</p><a href="${i.l}" class="btn">ACESSAR</a></div>`;
-                if(i.tp === 'free') hFree += card; else hVip += card;
-            });
-            document.getElementById('gridFree').innerHTML = hFree;
-            document.getElementById('gridVip').innerHTML = hVip;
+            const q = query(collection(db, "produtos"), orderBy("data", "desc"));
+            const snap = await getDocs(q);
+            const gridFree = document.getElementById('gridFree');
+            const gridVip = document.getElementById('gridVip');
+            gridFree.innerHTML = ""; gridVip.innerHTML = "";
 
-            const qA = query(collection(db, "avaliacoes"), orderBy("data", "desc"));
-            const snapA = await getDocs(qA);
-            let hA = "";
-            snapA.forEach(doc => {
-                const a = doc.data();
-                hA += `<div style="background:#050505; border:1px solid #111; padding:15px; margin-bottom:10px;"><strong style="color:var(--neon)">${a.nick}:</strong> <span>${a.msg}</span></div>`;
+            snap.forEach(doc => {
+                const i = doc.data();
+                const card = `
+                    <div class="card">
+                        ${i.tipo === 'vip' ? `<div class="tag">PREMIUM</div>` : ''}
+                        <h3>${i.titulo}</h3>
+                        <p>${i.desc}</p>
+                        ${i.tipo === 'vip' ? 
+                            `<button class="btn-buy" onclick="abrirPix('${i.preco}', '${i.pix}')">COMPRAR (R$ ${i.preco})</button>` : 
+                            `<a href="${i.link}" class="btn-down" target="_blank">DOWNLOAD</a>`}
+                    </div>`;
+                if(i.tipo === 'free') gridFree.innerHTML += card; else gridVip.innerHTML += card;
             });
-            document.getElementById('listaAvaliacoes').innerHTML = hA;
         };
 
         window.carregarDados();
     </script>
 
+    <style>
+        :root { --neon: #00ff41; --bg: #050505; --card: #0d0d0d; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Courier New', monospace; }
+        body { background: var(--bg); color:#fff; }
+
+        header { padding:20px 5%; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--neon); background:rgba(0,0,0,0.9); position:sticky; top:0; z-index:100; }
+        .logo { font-size:24px; color:var(--neon); font-weight:bold; text-shadow:0 0 10px var(--neon); display:flex; align-items:center; gap:10px; }
+        .logo img { width:40px; filter: drop-shadow(0 0 5px var(--neon)); }
+
+        .btn-adm-trigger { background:transparent; border:1px solid red; color:red; padding:8px 15px; cursor:pointer; font-weight:bold; }
+        .btn-adm-trigger:hover { background:red; color:#fff; }
+
+        .container { max-width:1200px; margin:0 auto; padding:20px; }
+        h2 { color:var(--neon); margin:40px 0 20px; text-transform:uppercase; border-left:4px solid var(--neon); padding-left:15px; }
+
+        #adminPanel { display:none; background:#110000; border:1px solid red; padding:25px; margin-bottom:40px; border-radius:5px; }
+        .form-grid { display:grid; grid-template-columns: 1fr 1fr; gap:15px; }
+
+        input, textarea, select { width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px; }
+        input:focus { border-color:var(--neon); outline:none; }
+
+        .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; }
+        .card { background:var(--card); border:1px solid #222; padding:25px; transition:0.3s; position:relative; overflow:hidden; }
+        .card:hover { border-color:var(--neon); transform:translateY(-5px); box-shadow:0 0 20px rgba(0,255,65,0.1); }
+        .tag { position:absolute; top:10px; right:-30px; background:var(--neon); color:#000; padding:5px 40px; transform:rotate(45deg); font-weight:bold; font-size:12px; }
+
+        .btn-buy { width:100%; background:var(--neon); color:#000; border:none; padding:12px; font-weight:bold; cursor:pointer; margin-top:10px; }
+        .btn-down { display:block; text-align:center; text-decoration:none; color:var(--neon); border:1px solid var(--neon); padding:10px; margin-top:10px; }
+
+        /* PIX POPUP */
+        .overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index:1000; }
+        .popup { background:#000; border:2px solid var(--neon); padding:30px; text-align:center; width:400px; box-shadow: 0 0 50px var(--neon); }
+
+        footer { margin-top:100px; padding:60px 20px; border-top:1px solid #222; text-align:center; background:#080808; }
+        .discord-btn { display:inline-flex; align-items:center; gap:10px; background:#5865F2; color:#fff; padding:15px 30px; text-decoration:none; border-radius:5px; font-weight:bold; margin-top:20px; }
+    </style>
+</head>
+<body>
+
+    <div id="pixPopup" class="overlay">
+        <div class="popup">
+            <h3 style="color:var(--neon)">PAGAMENTO VIA PIX</h3>
+            <p style="margin:15px 0;">Valor: <span id="pixPreco" style="color:var(--neon); font-weight:bold;"></span></p>
+            <div style="background:#111; padding:15px; border:1px dashed var(--neon); word-break:break-all; font-size:12px;">
+                <p>Chave Aleatória:</p>
+                <strong id="pixChave"></strong>
+            </div>
+            <p style="font-size:11px; color:#777; margin-top:15px;">Após pagar, envie o comprovante no Discord.</p>
+            <button onclick="fecharPix()" style="margin-top:20px; background:transparent; border:1px solid #555; color:#555; padding:5px 20px; cursor:pointer;">FECHAR</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-lion"></i> LEAL SCRIPTS
+        </div>
+        <div>
+            <button class="btn-adm-trigger" onclick="abrirAdmin()">PAINEL ADM</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div id="adminPanel">
+            <h2 style="color:red; border:none; margin-top:0;">GERENCIADOR DE CONTEÚDO</h2>
+            <div class="form-grid">
+                <div>
+                    <label>Título do Projeto:</label>
+                    <input type="text" id="admTitle" placeholder="Ex: Script de Exercícios R6">
+                    <label>Descrição Curta:</label>
+                    <textarea id="admDesc" placeholder="O que este script faz?"></textarea>
+                    <label>Tipo de Postagem:</label>
+                    <select id="admTipo">
+                        <option value="free">Grátis (Lançamento)</option>
+                        <option value="vip">Pago (Loja)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Preço (Se for Pago):</label>
+                    <input type="text" id="admPreco" placeholder="Ex: 29.90">
+                    <label>Chave PIX Aleatória:</label>
+                    <input type="text" id="admPix" placeholder="Cole sua chave aqui">
+                    <label>Arquivo do Projeto:</label>
+                    <input type="file" id="admFile" style="border:none;">
+                    <button id="btnPostar" onclick="salvarProduto()" style="background:var(--neon); color:#000; border:none; padding:15px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">PUBLICAR NO SITE</button>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <h2>Lançamentos Free</h2>
+            <div id="gridFree" class="grid"></div>
+        </section>
+
+        <section>
+            <h2>Loja Premium</h2>
+            <div id="gridVip" class="grid"></div>
+        </section>
+
+    </div>
+
+    <footer>
+        <pre style="font-size: 8px; color:#222; margin-bottom:30px; line-height:8px;">
+  _____   ____  _____      _      ______          _      
+ |  __ \ / __ \|  __ \    | |    |  ____|   /\   | |     
+ | |__) | |  | | |__) |   | |    | |__     /  \  | |     
+ |  ___/| |  | |  _  /    | |    |  __|   / /\ \ | |     
+ | |    | |__| | | \ \    | |____| |____ / ____ \| |____ 
+ |_|     \____/|_|  \_\   |______|______/_/    \_\______|
+        </pre>
+        <p style="letter-spacing: 5px; color:#555;">FEITO POR LEAL</p>
+        <p style="color:#333; margin-top:10px;">Sistemas exclusivos para Roblox & EB</p>
+        
+        <a href="SEU_LINK_DO_DISCORD" class="discord-btn">
+            <i class="fab fa-discord"></i> ENTRAR NO DISCORD PARA SUPORTE
+        </a>
+    </footer>
+
     <script>
         function abrirAdmin() {
-            let pass = prompt("SENHA ADM:");
-            if(pass === "l34l") document.getElementById('adminPanel').style.display = 'block';
+            let p = prompt("SENHA DE ACESSO:");
+            if(p === "l34l") document.getElementById('adminPanel').style.display = 'block';
+            else alert("ACESSO NEGADO.");
         }
-        function scrollPara(id) { document.querySelector(id).scrollIntoView({ behavior: 'smooth' }); }
-        function fecharPop() { document.getElementById('popup').style.display = 'none'; }
+
+        function abrirPix(preco, chave) {
+            document.getElementById('pixPreco').innerText = "R$ " + preco;
+            document.getElementById('pixChave').innerText = chave;
+            document.getElementById('pixPopup').style.display = 'flex';
+        }
+
+        function fecharPix() { document.getElementById('pixPopup').style.display = 'none'; }
     </script>
 </body>
 </html>
