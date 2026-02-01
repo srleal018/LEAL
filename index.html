@@ -3,164 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Business Portal</title>
+    <title>LEAL SCRIPTS | HIGH SPEED</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
-            --bg: #f8f9fa;
-            --text: #1e293b;
-            --card-bg: #ffffff;
-        }
+        :root { --p: #2563eb; --txt: #1e293b; --bg: #f8fafc; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--txt); }
+        
+        header { background:#fff; padding:1rem 8%; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; position:sticky; top:0; z-index:100; }
+        .logo { font-weight:800; color:var(--p); font-size:1.2rem; }
+        
+        .container { max-width:1100px; margin:0 auto; padding:2rem 1rem; }
+        
+        /* ADMIN DASHBOARD COMPACTO */
+        #adminPanel { display:none; background:#fff; border:2px solid var(--p); padding:1.5rem; border-radius:8px; margin-bottom:2rem; }
+        .adm-grid { display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; }
+        .list-box { background:#f1f5f9; padding:10px; border-radius:5px; height:200px; overflow-y:auto; font-size:0.8rem; }
+        
+        /* BARRA DE PROGRESSO VELOZ */
+        #progWrap { display:none; background:#e2e8f0; height:8px; border-radius:10px; margin:10px 0; overflow:hidden; }
+        #progBar { width:0%; height:100%; background:var(--p); transition: width 0.1s linear; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+        /* CARDS */
+        .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; }
+        .card { background:#fff; border:1px solid #e2e8f0; padding:1.5rem; border-radius:8px; transition:0.2s; }
+        .card:hover { border-color:var(--p); transform:translateY(-3px); }
+        .btn { display:block; width:100%; padding:10px; border-radius:5px; text-align:center; text-decoration:none; font-weight:700; cursor:pointer; border:none; margin-top:10px; font-size:0.8rem; }
+        .btn-p { background:var(--p); color:#fff; }
+        .btn-del { background:#fee2e2; color:#ef4444; padding:4px 8px; font-size:0.7rem; }
 
-        /* HEADER CLEAN */
-        header {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 1rem 10%;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky; top: 0; z-index: 1000;
-        }
-        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-        .nav-link { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.9rem; margin-left: 1.5rem; transition: 0.2s; }
-        .nav-link:hover { color: var(--primary); }
-        .btn-adm { background: #f1f5f9; color: var(--text); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 3rem 1rem; }
-
-        /* ADMIN DASHBOARD */
-        #adminPanel {
-            display: none; background: #fff; border: 1px solid #e5e7eb; padding: 2rem; border-radius: 12px; margin-bottom: 3rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-        }
-        .adm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .adm-list { background: #f8f9fa; padding: 1rem; border-radius: 8px; max-height: 300px; overflow-y: auto; border: 1px solid #eee; }
-        .adm-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
-
-        /* TITLES */
-        h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; }
-        h2 i { color: var(--primary); }
-
-        /* GRID DE PRODUTOS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; }
-        .card { 
-            background: var(--card-bg); border: 1px solid #e5e7eb; padding: 2rem; border-radius: 12px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); border-color: var(--primary); }
-        .card h3 { margin-bottom: 0.75rem; font-size: 1.1rem; }
-        .card p { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
-
-        /* BOTÕES */
-        .btn { 
-            display: inline-block; width: 100%; text-align: center; padding: 10px; border-radius: 6px;
-            text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: 0.2s; border: none; cursor: pointer;
-        }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-outline { background: transparent; border: 1px solid #e2e8f0; color: var(--text); }
-        .btn-danger { background: #fee2e2; color: var(--danger); }
-
-        /* FORMULÁRIOS */
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 1rem; outline: none; background: #fff; }
-        input:focus { border-color: var(--primary); ring: 2px solid var(--primary); }
-
-        /* FEEDBACKS */
-        .review-box { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 1rem; }
-        .reply-leal { margin-top: 1rem; padding: 10px; background: #f0f9ff; border-radius: 6px; border-left: 3px solid var(--primary); font-size: 0.85rem; }
-
-        /* PIX POPUP */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .popup { background: white; padding: 2rem; border-radius: 16px; width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-
-        footer { padding: 4rem 1rem; text-align: center; background: #fff; border-top: 1px solid #e5e7eb; color: #94a3b8; font-size: 0.85rem; }
+        input, textarea, select { width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px; margin-bottom:8px; outline:none; font-size:0.85rem; }
+        .review { background:#fff; padding:1rem; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px; }
+        .reply { margin-top:8px; padding-left:10px; border-left:2px solid var(--p); font-size:0.8rem; color:#64748b; }
     </style>
 </head>
 <body>
 
-    <div id="pixPopup" class="overlay">
-        <div class="popup">
-            <h3 style="margin-bottom: 10px;">Pagamento Seguro</h3>
-            <p style="color: #64748b;">Valor: <strong id="pixPrice" style="color: var(--text);"></strong></p>
-            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; font-size: 0.75rem; border: 1px dashed #cbd5e1; word-break: break-all;" id="pixKey"></div>
-            <button class="btn btn-primary" onclick="closePix()">OK, CONCLUÍDO</button>
-        </div>
-    </div>
-
     <header>
-        <div class="logo"><i class="fas fa-shield-alt"></i> LEAL SCRIPTS</div>
-        <div class="nav">
-            <a href="#loja" class="nav-link">Loja</a>
-            <a href="#feed" class="nav-link">Avaliações</a>
-            <button class="btn-adm" style="margin-left: 20px;" onclick="openAdmin()">Painel ADM</button>
-        </div>
+        <div class="logo">LEAL SCRIPTS</div>
+        <button onclick="checkAdm()" style="background:none; border:none; color:#cbd5e1; cursor:pointer;">ADMIN</button>
     </header>
 
     <div class="container">
-
         <div id="adminPanel">
-            <h2 style="color: var(--text); border: none;">Dashboard Administrativo</h2>
             <div class="adm-grid">
                 <div>
-                    <h4>Novo Projeto</h4>
-                    <input type="text" id="aT" placeholder="Título">
-                    <textarea id="aD" placeholder="Descrição"></textarea>
-                    <select id="aType"><option value="free">Lançamento Free</option><option value="vip">Loja Premium</option></select>
-                    <input type="text" id="aP" placeholder="Preço (Ex: 49.90)">
-                    <input type="text" id="aK" placeholder="Chave PIX">
-                    <input type="file" id="aF">
-                    <button class="btn btn-primary" id="btnPost" onclick="uploadData()">Publicar no Site</button>
+                    <h4 style="margin-bottom:10px">LANÇAR RÁPIDO</h4>
+                    <input type="text" id="t" placeholder="Nome do Script">
+                    <textarea id="d" placeholder="Descrição curta"></textarea>
+                    <select id="tp"><option value="free">Grátis</option><option value="vip">Premium</option></select>
+                    <input type="text" id="pr" placeholder="Preço (Ex: 20.00)">
+                    <input type="text" id="kx" placeholder="Sua Chave PIX">
+                    <input type="file" id="fl">
+                    
+                    <div id="progWrap"><div id="progBar"></div></div>
+                    <button class="btn btn-p" id="upBtn" onclick="fastUpload()">PUBLICAR AGORA</button>
                 </div>
                 <div>
-                    <h4>Gestão de Conteúdo</h4>
-                    <div class="adm-list" id="admItems"></div>
-                    <h4 style="margin-top: 20px;">Moderação de Comentários</h4>
-                    <div class="adm-list" id="admRevs"></div>
+                    <h4 style="margin-bottom:10px">GERENCIAR</h4>
+                    <div class="list-box" id="admItems"></div>
+                    <h4 style="margin:10px 0">MODERAR FEEDBACK</h4>
+                    <div class="list-box" id="admRevs"></div>
                 </div>
             </div>
         </div>
 
-        <section>
-            <h2><i class="fas fa-rocket"></i> Lançamentos</h2>
-            <div id="gridFree" class="grid"></div>
-        </section>
+        <h2 style="margin-bottom:1.5rem">Produtos</h2>
+        <div id="mainGrid" class="grid"></div>
 
-        <section id="loja">
-            <h2><i class="fas fa-shopping-bag"></i> Loja VIP</h2>
-            <div id="gridVip" class="grid"></div>
-        </section>
-
-        <section id="feed" style="background: #fff; padding: 2rem; border-radius: 12px; border: 1px solid #e5e7eb;">
-            <h2><i class="fas fa-comments"></i> Avaliações</h2>
-            <div style="max-width: 600px; margin-bottom: 3rem;">
-                <input type="text" id="revNick" placeholder="Seu nome">
-                <textarea id="revMsg" placeholder="Sua mensagem..."></textarea>
-                <button class="btn btn-primary" style="width: auto; padding: 10px 30px;" onclick="postReview()">Enviar Feedback</button>
-            </div>
-            <div id="publicReviews"></div>
-        </section>
-
-    </div>
-
-    <footer>
-        <p>© 2026 LEAL SCRIPTS - Todos os direitos reservados</p>
-        <div style="margin-top: 1rem;">
-            <a href="#" style="color: #5865f2; text-decoration: none; font-weight: 600;"><i class="fab fa-discord"></i> Comunidade Oficial</a>
+        <h2 style="margin:3rem 0 1.5rem">Comunidade</h2>
+        <div style="max-width:500px; margin-bottom:2rem">
+            <input type="text" id="nK" placeholder="Seu Nick">
+            <textarea id="mK" placeholder="Sua mensagem..."></textarea>
+            <button class="btn btn-p" onclick="sendRev()">Postar Comentário</button>
         </div>
-    </footer>
+        <div id="revGrid"></div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -175,99 +100,106 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // UPLOAD DATA
-        window.uploadData = async () => {
-            const btn = document.getElementById('btnPost');
-            const file = document.getElementById('aF').files[0];
-            if(!file) return alert("Selecione o arquivo!");
-            
-            btn.innerText = "Enviando..."; btn.disabled = true;
-            const sRef = ref(storage, `files/${Date.now()}_${file.name}`);
-            await uploadBytes(sRef, file);
-            const url = await getDownloadURL(sRef);
+        // UPLOAD ULTRA RÁPIDO
+        window.fastUpload = async () => {
+            const file = document.getElementById('fl').files[0];
+            const title = document.getElementById('t').value;
+            if(!file || !title) return alert("Falta título ou arquivo!");
 
-            await addDoc(collection(db, "produtos"), {
-                t: document.getElementById('aT').value,
-                d: document.getElementById('aD').value,
-                tp: document.getElementById('aType').value,
-                p: document.getElementById('aP').value || "0",
-                k: document.getElementById('aK').value || "",
-                link: url,
-                data: new Date()
-            });
-            location.reload();
+            const btn = document.getElementById('upBtn');
+            const pWrap = document.getElementById('progWrap');
+            const pBar = document.getElementById('progBar');
+
+            btn.disabled = true;
+            pWrap.style.display = 'block';
+
+            const sRef = ref(storage, `scripts/${Date.now()}_${file.name}`);
+            const task = uploadBytesResumable(sRef, file);
+
+            task.on('state_changed', 
+                (s) => pBar.style.width = (s.bytesTransferred / s.totalBytes) * 100 + '%',
+                (e) => alert("Erro!"),
+                async () => {
+                    const url = await getDownloadURL(task.snapshot.ref);
+                    await addDoc(collection(db, "produtos"), {
+                        t: title, d: document.getElementById('d').value,
+                        tp: document.getElementById('tp').value,
+                        p: document.getElementById('pr').value || "0",
+                        k: document.getElementById('kx').value || "",
+                        url: url, data: new Date()
+                    });
+                    location.reload();
+                }
+            );
         };
 
-        // GESTÃO
-        window.delItem = async (id) => { if(confirm("Excluir projeto?")) { await deleteDoc(doc(db, "produtos", id)); window.refresh(); } };
-        window.delRev = async (id) => { if(confirm("Remover comentário?")) { await deleteDoc(doc(db, "avaliacoes", id)); window.refresh(); } };
-        window.repRev = async (id) => {
-            const txt = prompt("Sua resposta:");
-            if(txt) { await updateDoc(doc(db, "avaliacoes", id), { reply: txt }); window.refresh(); }
+        // EXCLUSÃO IMEDIATA
+        window.delP = async (id) => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "produtos", id)); render(); } };
+        window.delR = async (id) => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "avaliacoes", id)); render(); } };
+        window.repR = async (id) => { 
+            const msg = prompt("Resposta:"); 
+            if(msg) { await updateDoc(doc(db, "avaliacoes", id), { r: msg }); render(); } 
         };
 
-        // RENDER
-        window.refresh = async () => {
-            const snapP = await getDocs(query(collection(db, "produtos"), orderBy("data", "desc")));
-            const snapA = await getDocs(query(collection(db, "avaliacoes"), orderBy("data", "desc")));
-            
-            const gF = document.getElementById('gridFree'); const gV = document.getElementById('gridVip');
-            const aI = document.getElementById('admItems'); const aR = document.getElementById('admRevs');
-            const pR = document.getElementById('publicReviews');
+        // RENDERIZAÇÃO OTIMIZADA
+        window.render = async () => {
+            const [pSnap, rSnap] = await Promise.all([
+                getDocs(query(collection(db, "produtos"), orderBy("data", "desc"))),
+                getDocs(query(collection(db, "avaliacoes"), orderBy("data", "desc")))
+            ]);
 
-            gF.innerHTML = ""; gV.innerHTML = ""; aI.innerHTML = ""; aR.innerHTML = ""; pR.innerHTML = "";
+            const mG = document.getElementById('mainGrid');
+            const aI = document.getElementById('admItems');
+            const aR = document.getElementById('admRevs');
+            const rG = document.getElementById('revGrid');
 
-            snapP.forEach(doc => {
+            mG.innerHTML = ""; aI.innerHTML = ""; aR.innerHTML = ""; rG.innerHTML = "";
+
+            pSnap.forEach(doc => {
                 const i = doc.data();
-                const card = `
+                mG.innerHTML += `
                     <div class="card">
-                        <h3>${i.t}</h3>
-                        <p>${i.d}</p>
+                        <span style="font-size:10px; color:var(--p)">${i.tp.toUpperCase()}</span>
+                        <h3 style="font-size:1rem">${i.t}</h3>
+                        <p style="font-size:0.8rem; color:#64748b">${i.d}</p>
                         ${i.tp === 'vip' ? 
-                            `<button class="btn btn-primary" onclick="openPix('${i.p}', '${i.k}')">Comprar por R$ ${i.p}</button>` : 
-                            `<a href="${i.link}" class="btn btn-outline" target="_blank">Download Grátis</a>`}
+                          `<button class="btn btn-p" onclick="alert('PIX: ${i.k} - R$ ${i.p}')">COMPRAR R$ ${i.p}</button>` : 
+                          `<a href="${i.url}" class="btn btn-p" target="_blank">BAIXAR</a>`}
                     </div>`;
-                if(i.tp === 'free') gF.innerHTML += card; else gV.innerHTML += card;
-                aI.innerHTML += `<div class="adm-item">${i.t} <button onclick="delItem('${doc.id}')" class="btn btn-danger btn-sm" style="width:auto">X</button></div>`;
+                aI.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px">
+                    <span>${i.t}</span> <button class="btn-del" onclick="delP('${doc.id}')">X</button>
+                </div>`;
             });
 
-            snapA.forEach(doc => {
-                const r = doc.data();
-                pR.innerHTML += `
-                    <div class="review-box">
-                        <strong>${r.nick}</strong>
-                        <p style="margin-top:5px; color:#475569;">${r.msg}</p>
-                        ${r.reply ? `<div class="reply-leal"><strong>Oficial Leal:</strong> ${r.reply}</div>` : ''}
+            rSnap.forEach(doc => {
+                const i = doc.data();
+                rG.innerHTML += `
+                    <div class="review">
+                        <strong>${i.n}</strong>
+                        <p style="font-size:0.85rem">${i.m}</p>
+                        ${i.r ? `<div class="reply"><strong>Leal:</strong> ${i.r}</div>` : ''}
                     </div>`;
-                aR.innerHTML += `
-                    <div class="adm-item">
-                        <span>${r.nick}: ${r.msg.substring(0,15)}...</span>
-                        <div>
-                            <button onclick="repRev('${doc.id}')" class="btn btn-primary btn-sm" style="width:auto">Responder</button>
-                            <button onclick="delRev('${doc.id}')" class="btn btn-danger btn-sm" style="width:auto">X</button>
-                        </div>
-                    </div>`;
+                aR.innerHTML += `<div style="margin-bottom:8px">
+                    <span>${i.n}</span>
+                    <button class="btn-del" onclick="delR('${doc.id}')">X</button>
+                    <button onclick="repR('${doc.id}')" style="font-size:0.7rem">Rep</button>
+                </div>`;
             });
         };
 
-        window.postReview = async () => {
-            const n = document.getElementById('revNick').value; const m = document.getElementById('revMsg').value;
+        window.sendRev = async () => {
+            const n = document.getElementById('nK').value;
+            const m = document.getElementById('mK').value;
             if(!n || !m) return;
-            await addDoc(collection(db, "avaliacoes"), { nick: n, msg: m, data: new Date(), reply: "" });
-            document.getElementById('revMsg').value = ""; window.refresh();
+            await addDoc(collection(db, "avaliacoes"), { n, m, data: new Date(), r: "" });
+            document.getElementById('mK').value = ""; render();
         };
 
-        window.refresh();
+        window.render();
     </script>
 
     <script>
-        function openAdmin() { if(prompt("Senha:") === "l34l") document.getElementById('adminPanel').style.display = 'block'; }
-        function openPix(p, k) { 
-            document.getElementById('pixPrice').innerText = "R$ " + p;
-            document.getElementById('pixKey').innerText = k;
-            document.getElementById('pixPopup').style.display = 'flex'; 
-        }
-        function closePix() { document.getElementById('pixPopup').style.display = 'none'; }
+        function checkAdm() { if(prompt("Senha:") === "l34l") document.getElementById('adminPanel').style.display='block'; }
     </script>
 </body>
 </html>
