@@ -1,210 +1,884 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Sistema de Avaliação</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AvaliaScript - Sistema Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color: #fff;
-}
-header {
-  padding: 15px 25px;
-  display: flex;
-  justify-content: space-between;
-  background: rgba(255,255,255,0.05);
-}
-button {
-  padding: 10px 15px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-}
-.login { background:#fff; }
-.logout { background:#ff6b6b; }
-main {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
-.card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 20px;
-  padding: 25px;
-  margin-bottom: 25px;
-}
-input, textarea, select {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-}
-textarea { min-height: 100px; }
-.review {
-  margin-top: 15px;
-  padding: 15px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 15px;
-}
-.preview img, .preview video {
-  max-width: 200px;
-  border-radius: 10px;
-  margin: 5px;
-}
-.reply {
-  margin-top: 10px;
-  background: rgba(255,255,255,0.08);
-  padding: 10px;
-  border-radius: 10px;
-}
-footer {
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.7;
-  padding: 15px;
-}
-</style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(102, 126, 234, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            display: none;
+        }
+
+        .header.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Auth Screen */
+        .auth-screen {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .auth-card h1 {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 18px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .google-btn:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(66, 133, 244, 0.4);
+        }
+
+        /* Main App */
+        .main-app {
+            display: none;
+        }
+
+        .main-app.show {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(102, 126, 234, 0.05);
+            margin: 1.5rem 0;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #764ba2;
+            background: rgba(118, 75, 162, 0.1);
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background: white;
+        }
+
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,71,87,0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Rating Stars */
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .star {
+            font-size: 2.2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .star:hover, .star.active {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: white;
+        }
+
+        /* Evaluations List */
+        .evaluation-card {
+            background: white;
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-left: 6px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+
+        .evaluation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .evaluation-meta {
+            flex: 1;
+        }
+
+        .evaluation-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .evaluation-info {
+            color: #666;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .evaluation-rating-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .reply-area {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .reply-input {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .reply-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .reply-item {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .reply-author {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .reply-date {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 3rem;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .tabs { flex-direction: column; }
+            .evaluation-header { flex-direction: column; gap: 1rem; }
+            .reply-input { flex-direction: column; }
+            .media-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Carregando sistema...</p>
+    </div>
 
-<header>
-  <strong>Sistema de Avaliação</strong>
-  <div>
-    <button class="login" id="loginBtn">Login Google</button>
-    <button class="logout" id="logoutBtn" style="display:none;">Sair</button>
-  </div>
-</header>
-
-<main id="conteudo" style="display:none;">
-
-<div class="card">
-  <h2>Nova Avaliação</h2>
-
-  <select id="nota">
-    <option>⭐</option>
-    <option>⭐⭐</option>
-    <option>⭐⭐⭐</option>
-    <option>⭐⭐⭐⭐</option>
-    <option>⭐⭐⭐⭐⭐</option>
-  </select>
-
-  <textarea id="texto" placeholder="Escreva sua avaliação"></textarea>
-
-  <input type="file" id="imgs" multiple accept="image/*">
-  <input type="file" id="vid" accept="video/*">
-
-  <button onclick="publicar()">Publicar</button>
-</div>
-
-<div class="card">
-  <h2>Avaliações</h2>
-  <div id="lista"></div>
-</div>
-
-</main>
-
-<footer>© 2026 • Sistema Real com Firebase</footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } 
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
-  authDomain: "leal-1a27b.firebaseapp.com",
-  projectId: "leal-1a27b",
-  storageBucket: "leal-1a27b.firebasestorage.app",
-  messagingSenderId: "935085322117",
-  appId: "1:935085322117:web:e8454ce939b8035b809eec"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const provider = new GoogleAuthProvider();
-
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const conteudo = document.getElementById("conteudo");
-const lista = document.getElementById("lista");
-
-loginBtn.onclick = () => signInWithPopup(auth, provider);
-logoutBtn.onclick = () => signOut(auth);
-
-onAuthStateChanged(auth, user => {
-  if (user) {
-    conteudo.style.display = "block";
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline";
-  } else {
-    conteudo.style.display = "none";
-    loginBtn.style.display = "inline";
-    logoutBtn.style.display = "none";
-  }
-});
-
-async function publicar() {
-  const nota = notaEl.value;
-  const texto = textoEl.value;
-  const imgs = imgsEl.files;
-  const vid = vidEl.files[0];
-
-  const urlsImg = [];
-  for (let img of imgs) {
-    const refImg = ref(storage, `avaliacoes/img_${Date.now()}_${img.name}`);
-    await uploadBytes(refImg, img);
-    urlsImg.push(await getDownloadURL(refImg));
-  }
-
-  let videoURL = null;
-  if (vid) {
-    const refVid = ref(storage, `avaliacoes/video_${Date.now()}_${vid.name}`);
-    await uploadBytes(refVid, vid);
-    videoURL = await getDownloadURL(refVid);
-  }
-
-  await addDoc(collection(db, "avaliacoes"), {
-    nota, texto, imagens: urlsImg, video: videoURL, data: Date.now()
-  });
-
-  textoEl.value = "";
-  imgsEl.value = "";
-  vidEl.value = "";
-}
-
-const q = query(collection(db, "avaliacoes"), orderBy("data", "desc"));
-onSnapshot(q, snap => {
-  lista.innerHTML = "";
-  snap.forEach(doc => {
-    const d = doc.data();
-    lista.innerHTML += `
-      <div class="review">
-        <strong>${d.nota}</strong>
-        <p>${d.texto}</p>
-        <div class="preview">
-          ${d.imagens.map(i=>`<img src="${i}">`).join("")}
-          ${d.video ? `<video controls src="${d.video}"></video>` : ""}
+    <!-- Auth Screen -->
+    <div class="auth-screen" id="authScreen">
+        <div class="auth-card">
+            <h1>🔐 AvaliaScript</h1>
+            <p style="color: #666; margin-bottom: 2rem;">Faça login para acessar o sistema de avaliações</p>
+            <button class="google-btn" id="googleLogin">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Entrar com Google
+            </button>
         </div>
-      </div>
-    `;
-  });
-});
-</script>
+    </div>
 
+    <!-- Main App (Hidden até login) -->
+    <div class="main-app" id="mainApp">
+        <header class="header" id="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">📊 AvaliaScript Pro</div>
+                    <div class="user-info" id="userInfo">
+                        <!-- Preenchido pelo JS -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('newEval')">📤 Nova Avaliação</button>
+                <button class="tab-btn" onclick="switchTab('myEvals')">💎 Minhas Avaliações</button>
+                <button class="tab-btn" onclick="switchTab('allEvals')">🌐 Todas Avaliações</button>
+            </div>
+
+            <!-- Nova Avaliação -->
+            <div id="newEval" class="tab-content active">
+                <h2>✨ Criar Nova Avaliação</h2>
+                <form id="evalForm">
+                    <div class="form-group">
+                        <label>Título *</label>
+                        <input type="text" id="evalTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição *</label>
+                        <textarea id="evalDesc" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <select id="evalCategory" required>
+                            <option value="">Selecione...</option>
+                            <option value="roblox">Roblox</option>
+                            <option value="fivem">FiveM/GTA</option>
+                            <option value="discord">Discord Bot</option>
+                            <option value="web">Web/HTML</option>
+                            <option value="lua">Lua</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mídias (Vídeo/Imagens)</label>
+                        <div class="upload-area" id="uploadArea">
+                            📎 Arraste ou clique para adicionar
+                            <input type="file" id="fileInput" multiple accept="video/*,image/*">
+                        </div>
+                        <div class="media-grid" id="mediaPreview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nota * (1-10)</label>
+                        <div class="rating-container">
+                            <div class="stars" id="ratingStars"></div>
+                            <span id="ratingValue">0</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🚀 Publicar Avaliação</button>
+                </form>
+            </div>
+
+            <!-- Minhas Avaliações -->
+            <div id="myEvals" class="tab-content">
+                <h2>💎 Suas Avaliações</h2>
+                <div id="myEvaluationsList"></div>
+            </div>
+
+            <!-- Todas as Avaliações -->
+            <div id="allEvals" class="tab-content">
+                <h2>🌐 Todas as Avaliações</h2>
+                <div id="allEvaluationsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase + Scripts -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp, doc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+
+        // CONFIG FIREBASE (SUA CONFIG)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
+            authDomain: "leal-1a27b.firebaseapp.com",
+            projectId: "leal-1a27b",
+            storageBucket: "leal-1a27b.firebasestorage.app",
+            messagingSenderId: "935085322117",
+            appId: "1:935085322117:web:e8454ce939b8035b809eec",
+            measurementId: "G-RSPSJGHY8N"
+        };
+
+        // Inicializar
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let mediaFiles = [];
+
+        // DOM Elements
+        const loading = document.getElementById('loading');
+        const authScreen = document.getElementById('authScreen');
+        const mainApp = document.getElementById('mainApp');
+        const header = document.getElementById('header');
+        const userInfo = document.getElementById('userInfo');
+        const googleLogin = document.getElementById('googleLogin');
+        const evalForm = document.getElementById('evalForm');
+
+        // Monitor Auth State
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loading.style.display = 'none';
+                authScreen.style.display = 'none';
+                mainApp.classList.add('show');
+                header.classList.add('show');
+                updateUserInfo();
+                loadUserEvaluations();
+                loadAllEvaluations();
+            } else {
+                currentUser = null;
+                loading.style.display = 'none';
+                authScreen.style.display = 'flex';
+                mainApp.classList.remove('show');
+                header.classList.remove('show');
+            }
+        });
+
+        // Google Login
+        googleLogin.addEventListener('click', async () => {
+            try {
+                loading.style.display = 'flex';
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error('Erro login:', error);
+                alert('Erro no login: ' + error.message);
+                loading.style.display = 'none';
+            }
+        });
+
+        // Logout
+        window.logout = async () => {
+            try {
+                loading.style.display = 'flex';
+                await signOut(auth);
+            } catch (error) {
+                console.error('Erro logout:', error);
+            }
+        };
+
+        function updateUserInfo() {
+            userInfo.innerHTML = `
+                <img src="${currentUser.photoURL}" alt="Avatar" class="user-avatar">
+                <span>${currentUser.displayName}</span>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            `;
+        }
+
+        // Tabs
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        };
+
+        // Rating Stars
+        function initStars() {
+            const starsContainer = document.getElementById('ratingStars');
+            starsContainer.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.textContent = '⭐';
+                star.dataset.rating = i;
+                star.onclick = () => setRating(i);
+                starsContainer.appendChild(star);
+            }
+        }
+
+        let currentRating = 0;
+        function setRating(rating) {
+            currentRating = rating;
+            document.getElementById('ratingValue').textContent = rating;
+            document.querySelectorAll('#ratingStars .star').forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+        }
+
+        initStars();
+
+        // File Upload
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const mediaPreview = document.getElementById('mediaPreview');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (mediaFiles.length < 8 && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+                    mediaFiles.push(file);
+                    previewFile(file);
+                }
+            });
+        }
+
+        function previewFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.innerHTML = `
+                    <button class="remove-btn" onclick="removeMedia(this)">×</button>
+                    ${file.type.startsWith('video/') ? 
+                        `<video src="${e.target.result}" controls muted style="width:100%;height:140px;object-fit:cover;"></video>` :
+                        `<img src="${e.target.result}" style="width:100%;height:140px;object-fit:cover;">`
+                    }
+                `;
+                mediaPreview.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.removeMedia = (btn) => {
+            btn.parentElement.remove();
+            mediaFiles = mediaFiles.slice(0, -1);
+        };
+
+        // Submit Evaluation
+        evalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentRating || !currentUser) return alert('Complete todos os campos!');
+
+            try {
+                loading.style.display = 'flex';
+                
+                // Upload media files
+                const mediaUrls = [];
+                for (let file of mediaFiles) {
+                    const storageRef = ref(storage, `evaluations/${currentUser.uid}/${Date.now()}_${file.name}`);
+                    await uploadBytes(storageRef, file);
+                    const url = await getDownloadURL(storageRef);
+                    mediaUrls.push(url);
+                }
+
+                // Save to Firestore
+                await addDoc(collection(db, 'evaluations'), {
+                    title: document.getElementById('evalTitle').value,
+                    description: document.getElementById('evalDesc').value,
+                    category: document.getElementById('evalCategory').value,
+                    rating: currentRating,
+                    mediaUrls: mediaUrls,
+                    authorId: currentUser.uid,
+                    authorName: currentUser.displayName,
+                    authorPhoto: currentUser.photoURL,
+                    replies: [],
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+
+                alert('✅ Avaliação publicada com sucesso!');
+                evalForm.reset();
+                mediaFiles = [];
+                mediaPreview.innerHTML = '';
+                currentRating = 0;
+                setRating(0);
+                loadUserEvaluations();
+                loadAllEvaluations();
+
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao publicar: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        // Load User Evaluations
+        window.loadUserEvaluations = async () => {
+            const q = query(
+                collection(db, 'evaluations'),
+                where('authorId', '==', currentUser.uid),
+                orderBy('createdAt', 'desc')
+            );
+            const snapshot = await getDocs(q);
+            displayEvaluations(snapshot.docs, 'myEvaluationsList');
+        };
+
+        // Load All Evaluations
+        window.loadAllEvaluations = async () => {
+            const q = query(
+                collection(db, 'evaluations'),
+                orderBy('createdAt', 'desc')
+            );
+            const snapshot = await getDocs(q);
+            displayEvaluations(snapshot.docs, 'allEvaluationsList');
+        };
+
+        // Display Evaluations
+        function displayEvaluations(docs, containerId) {
+            const container = document.getElementById(containerId);
+            if (docs.empty) {
+                container.innerHTML = '<div class="empty-state">Nenhuma avaliação encontrada 😔</div>';
+                return;
+            }
+
+            container.innerHTML = docs.map(doc => {
+                const data = doc.data();
+                const stars = '⭐'.repeat(data.rating);
+                const repliesCount = data.replies?.length || 0;
+                const mediaCount = data.mediaUrls?.length || 0;
+
+                return `
+                    <div class="evaluation-card" data-id="${doc.id}">
+                        <div class="evaluation-header">
+                            <div class="evaluation-meta">
+                                <div class="evaluation-title">${data.title}</div>
+                                <div class="evaluation-info">
+                                    <span>📂 ${data.category}</span>
+                                    <span>📎 ${mediaCount} mídia(s)</span>
+                                    <span>💬 ${repliesCount} resposta(s)</span>
+                                </div>
+                            </div>
+                            <div class="evaluation-rating-display">
+                                ${stars} ${data.rating}/10
+                            </div>
+                        </div>
+                        <p style="margin-bottom: 1rem; color: #555;">${data.description}</p>
+                        
+                        ${data.mediaUrls?.map(url => 
+                            url.includes('video') ? 
+                            `<video src="${url}" style="max-width:200px;height:120px;object-fit:cover;border-radius:8px;margin:0.5rem;" controls muted></video>` :
+                            `<img src="${url}" style="max-width:200px;height:120px;object-fit:cover;border-radius:8px;margin:0.5rem;" onerror="this.style.display='none'">`
+                        ).join('') || ''}
+
+                        <div class="reply-area">
+                            <div class="reply-input">
+                                <textarea placeholder="💭 Deixe sua resposta... (Ctrl+Enter)" 
+                                          onkeydown="handleReply(event, this, '${doc.id}')"></textarea>
+                                <button class="btn btn-success" onclick="addReply('${doc.id}', this.previousElementSibling)">Responder</button>
+                            </div>
+                            <div class="reply-list">
+                                ${data.replies?.map(reply => `
+                                    <div class="reply-item">
+                                        <div class="reply-author">${reply.author}</div>
+                                        <div class="reply-date">${new Date(reply.date?.toDate()).toLocaleDateString('pt-BR')}</div>
+                                        <div>${reply.text}</div>
+                                    </div>
+                                `).join('') || ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add Reply
+        window.addReply = async (docId, textarea) => {
+            const text = textarea.value.trim();
+            if (!text) return;
+
+            try {
+                await updateDoc(doc(db, 'evaluations', docId), {
+                    replies: arrayUnion({
+                        author: currentUser.displayName,
+                        text: text,
+                        date: serverTimestamp()
+                    }),
+                    updatedAt: serverTimestamp()
+                });
+                textarea.value = '';
+                loadUserEvaluations();
+                loadAllEvaluations();
+            } catch (error) {
+                console.error('Erro reply:', error);
+            }
+        };
+
+        window.handleReply = (event, textarea, docId) => {
+            if (event.ctrlKey && event.key === 'Enter') {
+                addReply(docId, textarea);
+            }
+        };
+    </script>
 </body>
 </html>
