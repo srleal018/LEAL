@@ -3,74 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Community Reviews</title>
+    <title>Leal Scripts | Karma System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; }
-        .glass-card { background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
-        .accent-border { border-left: 4px solid #3b82f6; }
-        .karma-badge { background: linear-gradient(45deg, #1e3a8a, #3b82f6); }
-        .reply-line { border-left: 2px solid #1e293b; margin-left: 1.5rem; padding-left: 1.5rem; }
+        body { background-color: #05070a; color: #e2e8f0; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.1); }
+        .karma-boost { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .karma-boost:active { transform: scale(1.5) rotate(15deg); }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen pb-20">
 
-    <nav class="border-b border-white/5 p-4 sticky top-0 bg-black/50 z-50 backdrop-blur-md">
+    <nav class="glass sticky top-0 z-50 p-4 mb-10">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">L</div>
-                <h1 class="font-black text-xl tracking-widest uppercase">Leal<span class="text-blue-500">Scripts</span></h1>
-            </div>
-            <div id="authArea">
-                <button id="loginBtn" class="bg-white text-black px-5 py-2 rounded-full font-bold text-sm hover:bg-blue-500 hover:text-white transition">CONECTAR GOOGLE</button>
+            <h1 class="font-black text-2xl tracking-tighter text-white">LEAL<span class="text-blue-500">SCRIPTS</span></h1>
+            <div id="authStatus">
+                <button id="btnGoogle" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold text-sm transition">LOGIN GOOGLE</button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-4 py-10">
+    <div class="max-w-2xl mx-auto px-4">
         
-        <section id="userPanel" class="hidden mb-12">
-            <div class="glass-card p-6 rounded-3xl flex flex-col md:flex-row gap-6 items-center">
-                <img id="userImg" class="w-20 h-20 rounded-2xl border-2 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                <div class="flex-grow text-center md:text-left">
-                    <h2 class="text-2xl font-bold">Bem-vindo, <span id="userName" class="text-blue-400">...</span></h2>
-                    <p class="text-slate-500 text-sm">Nível de Prestígio: <span class="text-yellow-500 font-bold">Ouro</span></p>
-                </div>
-                <button id="logoutBtn" class="text-slate-500 hover:text-red-500 text-sm underline">Sair da conta</button>
+        <div id="postArea" class="hidden glass p-6 rounded-3xl mb-12 shadow-2xl shadow-blue-500/5">
+            <div class="flex items-center gap-3 mb-4">
+                <img id="myUserPhoto" class="w-10 h-10 rounded-full border-2 border-blue-500">
+                <span id="myUserName" class="font-bold"></span>
             </div>
-
-            <div class="mt-8 glass-card p-6 rounded-3xl accent-border">
-                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-star text-yellow-500"></i> O que você achou do script?</h3>
-                <textarea id="reviewInput" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:ring-2 ring-blue-500 outline-none transition" rows="3" placeholder="Sua opinião sincera ajuda a comunidade..."></textarea>
-                <div class="flex justify-between items-center mt-4">
-                    <div class="flex gap-2">
-                        <select id="starsInput" class="bg-slate-900 border border-white/10 rounded-lg px-3 py-1 text-sm">
-                            <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                            <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                            <option value="3">⭐⭐⭐ (3/5)</option>
-                        </select>
-                    </div>
-                    <button id="postReview" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-2 rounded-xl font-bold transition">PUBLICAR</button>
-                </div>
-            </div>
-        </section>
-
-        <div id="guestAlert" class="glass-card p-10 rounded-3xl text-center border-dashed border-2 border-white/10">
-            <i class="fas fa-lock text-4xl text-slate-700 mb-4"></i>
-            <h2 class="text-xl font-bold">Área Restrita</h2>
-            <p class="text-slate-500 mt-2">Faça login para ver as avaliações e deixar seu comentário.</p>
+            <textarea id="reviewText" class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl p-4 text-white outline-none focus:border-blue-500 transition" placeholder="Escreva sua avaliação profissional..." rows="3"></textarea>
+            <button id="btnPublish" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 rounded-xl font-bold hover:opacity-90 transition">PUBLICAR AVALIAÇÃO</button>
         </div>
 
-        <div id="feed" class="space-y-8 mt-10">
-            </div>
-
-    </main>
+        <div id="feed" class="space-y-6">
+            <div class="text-center text-slate-600 animate-pulse">Aguardando conexão com a rede...</div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -86,86 +59,84 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        let userGlobal = null;
+        let currentUser = null;
 
         // --- AUTH ---
-        document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
-        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+        document.getElementById('btnGoogle').onclick = () => signInWithPopup(auth, provider);
 
         onAuthStateChanged(auth, (user) => {
-            const userPanel = document.getElementById('userPanel');
-            const guestAlert = document.getElementById('guestAlert');
-            const authArea = document.getElementById('authArea');
-
             if (user) {
-                userGlobal = user;
-                userPanel.classList.remove('hidden');
-                guestAlert.classList.add('hidden');
-                document.getElementById('userImg').src = user.photoURL;
-                document.getElementById('userName').innerText = user.displayName;
-                authArea.innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border border-blue-500">`;
-                loadReviews();
-            } else {
-                userPanel.classList.add('hidden');
-                guestAlert.classList.remove('hidden');
-                authArea.innerHTML = `<button id="loginBtn" onclick="location.reload()" class="bg-white text-black px-5 py-2 rounded-full font-bold text-sm">CONECTAR GOOGLE</button>`;
-                document.getElementById('feed').innerHTML = "";
+                currentUser = user;
+                document.getElementById('postArea').classList.remove('hidden');
+                document.getElementById('authStatus').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-500">`;
+                document.getElementById('myUserPhoto').src = user.photoURL;
+                document.getElementById('myUserName').innerText = user.displayName;
+                initFeed();
             }
         });
 
-        // --- POSTAR ---
-        document.getElementById('postReview').onclick = async () => {
-            const text = document.getElementById('reviewInput').value;
-            const stars = document.getElementById('starsInput').value;
-            if(!text) return;
+        // --- MECÂNICA: PUBLICAR ---
+        document.getElementById('btnPublish').onclick = async () => {
+            const txt = document.getElementById('reviewText').value;
+            if(!txt) return;
 
             await addDoc(collection(db, "reviews"), {
-                uid: userGlobal.uid,
-                name: userGlobal.displayName,
-                photo: userGlobal.photoURL,
-                content: text,
-                rating: stars,
-                karma: Math.floor(Math.random() * 100), // Mecânica de Karma simulada
-                timestamp: serverTimestamp()
+                name: currentUser.displayName,
+                photo: currentUser.photoURL,
+                text: txt,
+                karma: 0,
+                voters: [], // Lista de UIDs que votaram
+                createdAt: serverTimestamp()
             });
-            document.getElementById('reviewInput').value = "";
+            document.getElementById('reviewText').value = "";
         };
 
-        // --- CARREGAR FEED ---
-        function loadReviews() {
-            const q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
+        // --- MECÂNICA: UPVOTE (KARMA) ---
+        window.giveKarma = async (docId) => {
+            if(!currentUser) return alert("Logue para votar!");
+            
+            const reviewRef = doc(db, "reviews", docId);
+            
+            // Incrementa o Karma e adiciona o usuário na lista de votantes
+            await updateDoc(reviewRef, {
+                karma: Number(document.getElementById(`val-${docId}`).innerText) + 1,
+                voters: arrayUnion(currentUser.uid)
+            }).catch(() => alert("Você já fortaleceu essa avaliação!"));
+        };
+
+        // --- RENDER FEED ---
+        function initFeed() {
+            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
             onSnapshot(q, (snapshot) => {
                 const feed = document.getElementById('feed');
                 feed.innerHTML = "";
                 snapshot.forEach((doc) => {
-                    const r = doc.data();
+                    const data = doc.data();
+                    const hasVoted = data.voters?.includes(currentUser?.uid);
+                    
                     feed.innerHTML += `
-                        <div class="glass-card p-6 rounded-3xl relative overflow-hidden">
-                            <div class="flex items-start gap-4">
-                                <img src="${r.photo}" class="w-12 h-12 rounded-xl">
-                                <div class="flex-grow">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-bold text-white">${r.name}</h4>
-                                        <span class="karma-badge text-[10px] px-2 py-0.5 rounded text-white font-bold">KARMA ${r.karma}</span>
+                        <div class="glass p-6 rounded-3xl border-l-4 border-blue-500 shadow-lg">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <img src="${data.photo}" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <h4 class="font-bold text-sm text-white">${data.name}</h4>
+                                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Verificado</p>
                                     </div>
-                                    <div class="text-yellow-500 text-xs mb-2">${"⭐".repeat(r.rating)}</div>
-                                    <p class="text-slate-300 text-sm leading-relaxed">${r.content}</p>
-                                    
-                                    <div class="mt-4 flex gap-4 text-xs text-slate-500">
-                                        <button class="hover:text-blue-400"><i class="fas fa-reply mr-1"></i> Responder</button>
-                                        <button class="hover:text-green-400"><i class="fas fa-arrow-up mr-1"></i> Útil</button>
-                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button onclick="giveKarma('${doc.id}')" ${hasVoted ? 'disabled' : ''} 
+                                        class="karma-boost ${hasVoted ? 'text-blue-500' : 'text-slate-500 hover:text-yellow-400'}">
+                                        <i class="fas fa-bolt text-xl"></i>
+                                    </button>
+                                    <div class="text-xs font-black text-slate-400">KARMA: <span id="val-${doc.id}" class="text-blue-400">${data.karma || 0}</span></div>
                                 </div>
                             </div>
-
-                            <div class="reply-line mt-4">
-                                <div class="flex items-center gap-2 text-xs mb-1">
-                                    <span class="text-blue-400 font-bold uppercase tracking-tighter">Suporte Leal</span>
-                                    <span class="text-slate-600">agora mesmo</span>
-                                </div>
-                                <p class="text-xs text-slate-400 italic font-light px-2 py-2 bg-white/5 rounded-lg border border-white/5">
-                                    Obrigado por avaliar! Sua contribuição nos ajuda a melhorar nossos códigos.
-                                </p>
+                            <p class="text-slate-300 leading-relaxed text-sm bg-black/20 p-4 rounded-xl border border-white/5">${data.text}</p>
+                            
+                            <div class="mt-4 flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase">
+                                <span class="hover:text-blue-400 cursor-pointer"><i class="fas fa-reply mr-1"></i> Responder</span>
+                                <span><i class="fas fa-clock mr-1"></i> Just Now</span>
                             </div>
                         </div>
                     `;
