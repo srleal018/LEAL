@@ -1,139 +1,233 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Avaliações | ScriptReview</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #0f172a; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .input-dark { background: #1e293b; border: 1px solid #334155; color: white; transition: all 0.3s; }
-        .input-dark:focus { border-color: #3b82f6; outline: none; ring: 2px ring-blue-500; }
-        .preview-media { max-height: 200px; border-radius: 8px; object-fit: cover; }
-    </style>
+<meta charset="UTF-8">
+<title>Área de Avaliação • Scripts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: #fff;
+}
+
+header {
+  padding: 20px;
+  text-align: center;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 15px;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+input, textarea, select, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+textarea {
+  resize: none;
+  min-height: 100px;
+}
+
+button {
+  background: #4facfe;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+.preview {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.preview img, .preview video {
+  max-width: 200px;
+  border-radius: 10px;
+}
+
+.review {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 15px;
+}
+
+.review strong {
+  font-size: 14px;
+}
+
+.reply {
+  margin-top: 15px;
+  margin-left: 20px;
+  padding: 15px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
+.reply textarea {
+  min-height: 60px;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+</style>
 </head>
-<body class="p-4 md:p-10">
 
-    <div class="max-w-4xl mx-auto">
-        <section class="glass p-6 rounded-3xl mb-12">
-            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                <i class="fas fa-pen-fancy text-blue-500"></i> Deixe sua Avaliação
-            </h2>
-            
-            <div class="grid grid-cols-1 gap-4">
-                <textarea id="reviewText" rows="3" class="input-dark w-full p-4 rounded-xl" placeholder="O que você achou desse script?"></textarea>
-                
-                <div class="flex flex-wrap gap-4 items-center">
-                    <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition text-sm">
-                        <i class="fas fa-image mr-2 text-green-400"></i> Adicionar Foto
-                        <input type="file" id="imgInput" accept="image/*" class="hidden">
-                    </label>
+<body>
 
-                    <label class="cursor-pointer bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition text-sm">
-                        <i class="fas fa-video mr-2 text-red-400"></i> Adicionar Vídeo
-                        <input type="file" id="videoInput" accept="video/*" class="hidden">
-                    </label>
+<header>
+  <h1>Área de Avaliação de Scripts</h1>
+</header>
 
-                    <div class="flex ml-auto items-center gap-2">
-                        <span class="text-yellow-400"><i class="fas fa-star"></i></span>
-                        <select class="input-dark p-1 rounded text-sm">
-                            <option>5 Estrelas</option>
-                            <option>4 Estrelas</option>
-                            <option>3 Estrelas</option>
-                        </select>
-                    </div>
-                </div>
+<main>
 
-                <div id="previewContainer" class="flex gap-4 mt-2 hidden">
-                    <div id="imgPreviewBox" class="relative hidden">
-                        <img src="" id="imgPreview" class="preview-media">
-                        <button onclick="clearMedia('img')" class="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 text-xs text-white">X</button>
-                    </div>
-                    <div id="videoPreviewBox" class="relative hidden">
-                        <video id="videoPreview" class="preview-media" controls></video>
-                        <button onclick="clearMedia('video')" class="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 text-xs text-white">X</button>
-                    </div>
-                </div>
+  <!-- FORMULÁRIO DE AVALIAÇÃO -->
+  <div class="card">
+    <h2>Nova Avaliação</h2>
 
-                <button class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl mt-4 transition">
-                    Publicar Avaliação
-                </button>
-            </div>
-        </section>
+    <label>Nota</label>
+    <select id="nota">
+      <option value="⭐">⭐</option>
+      <option value="⭐⭐">⭐⭐</option>
+      <option value="⭐⭐⭐">⭐⭐⭐</option>
+      <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+      <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+    </select>
 
-        <h3 class="text-xl font-semibold mb-6">Comentários da Comunidade</h3>
-        
-        <div class="space-y-6">
-            <div class="glass p-6 rounded-2xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <img src="https://ui-avatars.com/api/?name=João+Silva&background=0D8ABC&color=fff" class="w-10 h-10 rounded-full">
-                    <div>
-                        <h4 class="font-bold">João Silva</h4>
-                        <div class="text-yellow-400 text-xs"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    </div>
-                    <span class="ml-auto text-slate-500 text-sm">Há 2 horas</span>
-                </div>
-                
-                <p class="text-slate-300 mb-4">O script é incrível! Economizei horas de trabalho manual. O sistema de logs é muito detalhado.</p>
-                
-                <div class="flex gap-2 mb-6">
-                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=400" class="rounded-lg h-32 w-48 object-cover border border-slate-700">
-                </div>
+    <label>Comentário</label>
+    <textarea id="comentario" placeholder="Escreva sua avaliação..."></textarea>
 
-                <div class="ml-8 border-l-2 border-slate-700 pl-6 space-y-4">
-                    <div class="bg-slate-800/50 p-4 rounded-xl">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-blue-400 font-bold text-sm">Admin Leal</span>
-                            <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 rounded">STAFF</span>
-                        </div>
-                        <p class="text-sm text-slate-400">Obrigado pelo feedback, João! Na próxima semana lançaremos a v2.0 com suporte a Webhooks.</p>
-                    </div>
+    <label>Imagens</label>
+    <input type="file" id="imagens" multiple accept="image/*">
 
-                    <div class="flex gap-2">
-                        <input type="text" class="input-dark flex-grow p-2 rounded-lg text-sm" placeholder="Escreva uma resposta...">
-                        <button class="bg-slate-700 px-4 rounded-lg text-sm hover:bg-blue-600 transition">Responder</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <label>Vídeo</label>
+    <input type="file" id="video" accept="video/*">
+
+    <button onclick="publicar()">Publicar Avaliação</button>
+
+    <div class="preview" id="preview"></div>
+  </div>
+
+  <!-- LISTA DE AVALIAÇÕES -->
+  <div class="card">
+    <h2>Avaliações</h2>
+    <div id="avaliacoes"></div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 • Sistema de Avaliação • Thiago Leal
+</footer>
+
+<script>
+const preview = document.getElementById("preview");
+const imagensInput = document.getElementById("imagens");
+const videoInput = document.getElementById("video");
+const avaliacoes = document.getElementById("avaliacoes");
+
+imagensInput.onchange = () => {
+  preview.innerHTML = "";
+  [...imagensInput.files].forEach(file => {
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    preview.appendChild(img);
+  });
+};
+
+videoInput.onchange = () => {
+  const video = document.createElement("video");
+  video.controls = true;
+  video.src = URL.createObjectURL(videoInput.files[0]);
+  preview.appendChild(video);
+};
+
+function publicar() {
+  const nota = document.getElementById("nota").value;
+  const comentario = document.getElementById("comentario").value;
+
+  if (!comentario) return alert("Escreva um comentário");
+
+  const div = document.createElement("div");
+  div.className = "review";
+
+  div.innerHTML = `
+    <strong>${nota}</strong>
+    <p>${comentario}</p>
+    <div class="preview">${preview.innerHTML}</div>
+
+    <div class="reply">
+      <textarea placeholder="Responder avaliação..."></textarea>
+      <button onclick="responder(this)">Responder</button>
     </div>
+  `;
 
-    <script>
-        // Lógica de Preview de Mídia (Local sem precisar de link)
-        const imgInput = document.getElementById('imgInput');
-        const videoInput = document.getElementById('videoInput');
-        const previewContainer = document.getElementById('previewContainer');
+  avaliacoes.prepend(div);
 
-        imgInput.onchange = evt => {
-            const [file] = imgInput.files;
-            if (file) {
-                document.getElementById('imgPreview').src = URL.createObjectURL(file);
-                document.getElementById('imgPreviewBox').classList.remove('hidden');
-                previewContainer.classList.remove('hidden');
-            }
-        }
+  preview.innerHTML = "";
+  document.getElementById("comentario").value = "";
+  imagensInput.value = "";
+  videoInput.value = "";
+}
 
-        videoInput.onchange = evt => {
-            const [file] = videoInput.files;
-            if (file) {
-                const video = document.getElementById('videoPreview');
-                video.src = URL.createObjectURL(file);
-                document.getElementById('videoPreviewBox').classList.remove('hidden');
-                previewContainer.classList.remove('hidden');
-            }
-        }
+function responder(btn) {
+  const area = btn.previousElementSibling;
+  if (!area.value) return;
 
-        function clearMedia(type) {
-            if(type === 'img') {
-                document.getElementById('imgInput').value = "";
-                document.getElementById('imgPreviewBox').classList.add('hidden');
-            } else {
-                document.getElementById('videoInput').value = "";
-                document.getElementById('videoPreviewBox').classList.add('hidden');
-            }
-        }
-    </script>
+  const resposta = document.createElement("div");
+  resposta.className = "reply";
+  resposta.innerHTML = `<p>${area.value}</p>`;
+
+  btn.parentElement.appendChild(resposta);
+  area.value = "";
+}
+</script>
+
 </body>
 </html>
