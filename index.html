@@ -1,98 +1,63 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>LEAL SCRIPTS HUB</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: #0f172a;
-      --glass: rgba(255, 255, 255, 0.08);
-      --border: rgba(255, 255, 255, 0.18);
-      --neon1: #10b981;
-      --neon2: #2563eb;
+    :root{
+      --bg:#0f172a;
+      --glass:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.18);
+      --neon1:#10b981;
+      --neon2:#2563eb;
     }
-
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
+    *{box-sizing:border-box;font-family:Inter,sans-serif}
+    body{
+      margin:0;
+      background:radial-gradient(circle at top,#111827,var(--bg));
+      color:#e5e7eb;
+      min-height:100vh;
     }
-
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #111827, var(--bg));
-      color: #e5e7eb;
-      min-height: 100vh;
+    header{text-align:center;padding:30px}
+    header h1{
+      font-size:2.2rem;
+      background:linear-gradient(90deg,var(--neon1),var(--neon2));
+      -webkit-background-clip:text;
+      color:transparent;
     }
-
-    header {
-      padding: 30px;
-      text-align: center;
+    main{max-width:1100px;margin:auto;padding:20px}
+    section{margin-bottom:50px}
+    .glass{
+      background:var(--glass);
+      backdrop-filter:blur(14px);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:20px;
     }
-
-    header h1 {
-      font-size: 2.2rem;
-      background: linear-gradient(90deg, var(--neon1), var(--neon2));
-      -webkit-background-clip: text;
-      color: transparent;
+    .faq-item{margin-bottom:12px;border-radius:12px;overflow:hidden}
+    .faq-question{
+      padding:16px;
+      cursor:pointer;
+      background:rgba(255,255,255,.05);
+      display:flex;
+      justify-content:space-between;
     }
-
-    main {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px;
+    .faq-answer{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .4s ease;
+      padding:0 16px;
+      color:#cbd5f5;
     }
-
-    section {
-      margin-bottom: 60px;
+    .faq-item.active .faq-answer{
+      padding:16px;
+      max-height:300px;
     }
-
-    .glass {
-      background: var(--glass);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    /* FAQ */
-    .faq-item {
-      margin-bottom: 12px;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .faq-question {
-      padding: 16px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-      padding: 0 16px;
-      color: #cbd5f5;
-    }
-
-    .faq-item.active .faq-answer {
-      padding: 16px;
-      max-height: 300px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      font-size: 0.9rem;
-      opacity: 0.6;
-    }
+    footer{text-align:center;padding:30px;font-size:.9rem;opacity:.6}
   </style>
 </head>
 
@@ -123,15 +88,13 @@
 </main>
 
 <footer>
-  © LEAL SCRIPTS HUB — Todos os direitos reservados
+  © LEAL SCRIPTS HUB
 </footer>
 
-<!-- FIREBASE V9 MODULAR -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, collection, query, where, orderBy, onSnapshot } 
+  import { getFirestore, collection, query, where, orderBy, onSnapshot }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
 
   const firebaseConfig = {
@@ -146,44 +109,35 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const storage = getStorage(app);
   getAnalytics(app);
 
-  // FAQ
   const faqContainer = document.getElementById("faq-container");
 
-  const faqQuery = query(
-    collection(db, "faq"),
-    where("active", "==", true),
+  const q = query(
+    collection(db,"faq"),
+    where("active","==",true),
     orderBy("order")
   );
 
-  onSnapshot(faqQuery, (snapshot) => {
-    faqContainer.innerHTML = "";
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-
-      const item = document.createElement("div");
-      item.className = "faq-item";
-
-      item.innerHTML = `
+  onSnapshot(q,(snap)=>{
+    faqContainer.innerHTML="";
+    snap.forEach(doc=>{
+      const d = doc.data();
+      const item=document.createElement("div");
+      item.className="faq-item";
+      item.innerHTML=`
         <div class="faq-question">
-          <span>${data.question}</span>
+          <span>${d.question}</span>
           <span>+</span>
         </div>
-        <div class="faq-answer">
-          ${data.answer}
-        </div>
+        <div class="faq-answer">${d.answer}</div>
       `;
-
-      item.querySelector(".faq-question").onclick = () => {
-        document.querySelectorAll(".faq-item").forEach(i => {
-          if (i !== item) i.classList.remove("active");
+      item.querySelector(".faq-question").onclick=()=>{
+        document.querySelectorAll(".faq-item").forEach(i=>{
+          if(i!==item) i.classList.remove("active");
         });
         item.classList.toggle("active");
       };
-
       faqContainer.appendChild(item);
     });
   });
