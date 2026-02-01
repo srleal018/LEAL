@@ -3,47 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leal Scripts | Karma System</title>
+    <title>Leal Scripts | Hub & Reviews</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #05070a; color: #e2e8f0; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.1); }
-        .karma-boost { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .karma-boost:active { transform: scale(1.5) rotate(15deg); }
+        body { background-color: #020617; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .product-card:hover { border-color: #3b82f6; transform: translateY(-5px); }
+        .reply-box { border-left: 2px solid #334155; margin-left: 1.5rem; padding-left: 1rem; }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen">
 
-    <nav class="glass sticky top-0 z-50 p-4 mb-10">
+    <nav class="glass sticky top-0 z-50 p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="font-black text-2xl tracking-tighter text-white">LEAL<span class="text-blue-500">SCRIPTS</span></h1>
-            <div id="authStatus">
-                <button id="btnGoogle" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-bold text-sm transition">LOGIN GOOGLE</button>
+            <h1 class="text-xl font-black text-blue-500 tracking-tighter">LEAL <span class="text-white">HUB</span></h1>
+            <div id="authArea">
+                <button id="loginBtn" class="bg-blue-600 px-5 py-2 rounded-full font-bold text-xs hover:bg-blue-500 transition">LOGIN GOOGLE</button>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-2xl mx-auto px-4">
+    <div class="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div id="postArea" class="hidden glass p-6 rounded-3xl mb-12 shadow-2xl shadow-blue-500/5">
-            <div class="flex items-center gap-3 mb-4">
-                <img id="myUserPhoto" class="w-10 h-10 rounded-full border-2 border-blue-500">
-                <span id="myUserName" class="font-bold"></span>
+        <aside class="space-y-6">
+            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-shopping-cart text-blue-500"></i> Loja de Scripts</h2>
+            
+            <div class="glass p-4 rounded-2xl product-card transition-all duration-300 border border-transparent">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-1 rounded">ATUALIZADO</span>
+                    <span class="text-blue-400 font-bold">R$ 49,90</span>
+                </div>
+                <h3 class="font-bold">Auto-Farm Pro V4</h3>
+                <p class="text-slate-400 text-xs mt-1">Otimizado para o novo patch. Anti-ban incluso.</p>
+                <button class="w-full mt-4 bg-white/5 hover:bg-blue-600 text-white py-2 rounded-lg text-xs font-bold transition">VER DETALHES</button>
             </div>
-            <textarea id="reviewText" class="w-full bg-slate-900/50 border border-slate-700 rounded-2xl p-4 text-white outline-none focus:border-blue-500 transition" placeholder="Escreva sua avaliação profissional..." rows="3"></textarea>
-            <button id="btnPublish" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 rounded-xl font-bold hover:opacity-90 transition">PUBLICAR AVALIAÇÃO</button>
-        </div>
 
-        <div id="feed" class="space-y-6">
-            <div class="text-center text-slate-600 animate-pulse">Aguardando conexão com a rede...</div>
-        </div>
+            <div class="glass p-4 rounded-2xl product-card transition-all duration-300 border border-transparent">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-1 rounded">NOVO</span>
+                    <span class="text-blue-400 font-bold">R$ 29,90</span>
+                </div>
+                <h3 class="font-bold">Aimbot Universal</h3>
+                <p class="text-slate-400 text-xs mt-1">Compatível com 15+ jogos populares.</p>
+                <button class="w-full mt-4 bg-white/5 hover:bg-blue-600 text-white py-2 rounded-lg text-xs font-bold transition">VER DETALHES</button>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-2 space-y-8">
+            <h2 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-comments text-blue-500"></i> Comunidade</h2>
+
+            <div id="postReviewContainer" class="hidden glass p-6 rounded-3xl border-2 border-blue-500/20">
+                <textarea id="mainComment" class="w-full bg-transparent border-none outline-none text-white resize-none" placeholder="O que achou dos nossos scripts?" rows="2"></textarea>
+                <div class="flex justify-end mt-2">
+                    <button id="sendReview" class="bg-blue-600 px-6 py-2 rounded-xl font-bold text-sm">Postar Avaliação</button>
+                </div>
+            </div>
+
+            <div id="loginWarn" class="glass p-4 rounded-2xl text-center text-slate-500 text-sm">
+                <i class="fas fa-lock mr-2"></i> Faça login para enviar sua avaliação e responder.
+            </div>
+
+            <div id="feed" class="space-y-6">
+                </div>
+        </main>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
@@ -61,85 +90,97 @@
 
         let currentUser = null;
 
-        // --- AUTH ---
-        document.getElementById('btnGoogle').onclick = () => signInWithPopup(auth, provider);
+        // Login / Logout
+        document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
 
         onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const postReviewContainer = document.getElementById('postReviewContainer');
+            const loginWarn = document.getElementById('loginWarn');
+            const authArea = document.getElementById('authArea');
+
             if (user) {
-                currentUser = user;
-                document.getElementById('postArea').classList.remove('hidden');
-                document.getElementById('authStatus').innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-500">`;
-                document.getElementById('myUserPhoto').src = user.photoURL;
-                document.getElementById('myUserName').innerText = user.displayName;
-                initFeed();
+                postReviewContainer.classList.remove('hidden');
+                loginWarn.classList.add('hidden');
+                authArea.innerHTML = `<img src="${user.photoURL}" class="w-10 h-10 rounded-full border-2 border-blue-500">`;
             }
+            loadData(); // Sempre carrega, logado ou não
         });
 
-        // --- MECÂNICA: PUBLICAR ---
-        document.getElementById('btnPublish').onclick = async () => {
-            const txt = document.getElementById('reviewText').value;
-            if(!txt) return;
-
+        // Mecânica de Postar Comentário Principal
+        document.getElementById('sendReview').onclick = async () => {
+            const text = document.getElementById('mainComment').value;
+            if(!text) return;
             await addDoc(collection(db, "reviews"), {
                 name: currentUser.displayName,
                 photo: currentUser.photoURL,
-                text: txt,
-                karma: 0,
-                voters: [], // Lista de UIDs que votaram
-                createdAt: serverTimestamp()
+                content: text,
+                replies: [], // Array para armazenar respostas
+                timestamp: serverTimestamp()
             });
-            document.getElementById('reviewText').value = "";
+            document.getElementById('mainComment').value = "";
         };
 
-        // --- MECÂNICA: UPVOTE (KARMA) ---
-        window.giveKarma = async (docId) => {
-            if(!currentUser) return alert("Logue para votar!");
-            
-            const reviewRef = doc(db, "reviews", docId);
-            
-            // Incrementa o Karma e adiciona o usuário na lista de votantes
-            await updateDoc(reviewRef, {
-                karma: Number(document.getElementById(`val-${docId}`).innerText) + 1,
-                voters: arrayUnion(currentUser.uid)
-            }).catch(() => alert("Você já fortaleceu essa avaliação!"));
+        // Mecânica de Responder
+        window.sendReply = async (docId) => {
+            const replyInput = document.getElementById(`input-${docId}`);
+            if(!replyInput.value || !currentUser) return;
+
+            const reviewRef = collection(db, "reviews", docId, "replies");
+            await addDoc(reviewRef, {
+                name: currentUser.displayName,
+                content: replyInput.value,
+                timestamp: serverTimestamp()
+            });
+            replyInput.value = "";
         };
 
-        // --- RENDER FEED ---
-        function initFeed() {
-            const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+        // Carregar Feed e Respostas
+        function loadData() {
+            const q = query(collection(db, "reviews"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snapshot) => {
                 const feed = document.getElementById('feed');
                 feed.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const hasVoted = data.voters?.includes(currentUser?.uid);
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const docId = docSnap.id;
                     
-                    feed.innerHTML += `
-                        <div class="glass p-6 rounded-3xl border-l-4 border-blue-500 shadow-lg">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center gap-3 mb-4">
-                                    <img src="${data.photo}" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${data.name}</h4>
-                                        <p class="text-[10px] text-slate-500 uppercase tracking-widest">Verificado</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <button onclick="giveKarma('${doc.id}')" ${hasVoted ? 'disabled' : ''} 
-                                        class="karma-boost ${hasVoted ? 'text-blue-500' : 'text-slate-500 hover:text-yellow-400'}">
-                                        <i class="fas fa-bolt text-xl"></i>
-                                    </button>
-                                    <div class="text-xs font-black text-slate-400">KARMA: <span id="val-${doc.id}" class="text-blue-400">${data.karma || 0}</span></div>
-                                </div>
-                            </div>
-                            <p class="text-slate-300 leading-relaxed text-sm bg-black/20 p-4 rounded-xl border border-white/5">${data.text}</p>
-                            
-                            <div class="mt-4 flex items-center gap-4 text-[10px] font-bold text-slate-600 uppercase">
-                                <span class="hover:text-blue-400 cursor-pointer"><i class="fas fa-reply mr-1"></i> Responder</span>
-                                <span><i class="fas fa-clock mr-1"></i> Just Now</span>
-                            </div>
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.className = "glass p-6 rounded-3xl";
+                    reviewDiv.innerHTML = `
+                        <div class="flex items-center gap-3 mb-4">
+                            <img src="${data.photo}" class="w-10 h-10 rounded-full">
+                            <h4 class="font-bold text-sm">${data.name}</h4>
                         </div>
+                        <p class="text-slate-300 text-sm mb-6">${data.content}</p>
+                        
+                        <div id="replies-list-${docId}" class="space-y-3 mb-4"></div>
+
+                        ${currentUser ? `
+                            <div class="flex gap-2 mt-4 bg-black/30 p-2 rounded-xl">
+                                <input id="input-${docId}" class="bg-transparent flex-grow text-xs outline-none px-2" placeholder="Sua resposta...">
+                                <button onclick="sendReply('${docId}')" class="text-blue-500 text-xs font-bold px-2">ENVIAR</button>
+                            </div>
+                        ` : ''}
                     `;
+                    feed.appendChild(reviewDiv);
+
+                    // Carregar Sub-respostas em tempo real
+                    const subQ = query(collection(db, "reviews", docId, "replies"), orderBy("timestamp", "asc"));
+                    onSnapshot(subQ, (subSnap) => {
+                        const replyList = document.getElementById(`replies-list-${docId}`);
+                        replyList.innerHTML = "";
+                        subSnap.forEach(subDoc => {
+                            const replyData = subDoc.data();
+                            replyList.innerHTML += `
+                                <div class="reply-box">
+                                    <span class="text-blue-400 font-bold text-[10px] uppercase">${replyData.name}</span>
+                                    <p class="text-xs text-slate-400">${replyData.content}</p>
+                                </div>
+                            `;
+                        });
+                    });
                 });
             });
         }
