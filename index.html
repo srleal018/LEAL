@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Central de Avaliações</title>
+  <title>Central de Avaliações • Login Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -38,39 +38,30 @@
       padding:20px;
       margin-bottom:30px;
     }
-    h2{margin-top:0}
-
-    /* FORM */
-    form{display:grid;gap:15px}
     input, textarea, button{
+      width:100%;
       background:rgba(255,255,255,.06);
       border:1px solid var(--border);
       border-radius:10px;
       padding:12px;
       color:#e5e7eb;
-      font-size:.95rem;
+      margin-bottom:10px;
     }
-    textarea{resize:none;min-height:100px}
     button{
       cursor:pointer;
       background:linear-gradient(90deg,var(--neon1),var(--neon2));
       border:none;
       font-weight:600;
     }
-
-    /* AVALIAÇÕES */
-    .review{
-      border-bottom:1px solid rgba(255,255,255,.1);
-      padding:15px 0;
-    }
-    .review:last-child{border-bottom:none}
-    .review-header{
-      display:flex;
-      justify-content:space-between;
+    .review{border-bottom:1px solid rgba(255,255,255,.1);padding:15px 0}
+    .reply{
+      margin-top:10px;
+      padding:10px;
+      background:rgba(16,185,129,.15);
+      border-left:3px solid #10b981;
       font-size:.9rem;
-      opacity:.85;
     }
-    .stars{color:#facc15;font-size:1.1rem}
+    .admin{font-size:.75rem;color:#10b981;font-weight:600}
     footer{text-align:center;padding:30px;font-size:.85rem;opacity:.6}
   </style>
 </head>
@@ -79,32 +70,22 @@
 
 <header>
   <h1>Central de Avaliações</h1>
-  <p>Veja e deixe sua experiência</p>
+  <p>Login administrativo para responder avaliações</p>
 </header>
 
 <main>
 
-  <!-- FORMULÁRIO -->
-  <section class="glass">
-    <h2>✍️ Enviar Avaliação</h2>
-    <form id="reviewForm">
-      <input type="text" id="name" placeholder="Seu nome / nick" required>
-      <select id="rating" required>
-        <option value="">Nota</option>
-        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
-        <option value="4">⭐⭐⭐⭐ (4)</option>
-        <option value="3">⭐⭐⭐ (3)</option>
-        <option value="2">⭐⭐ (2)</option>
-        <option value="1">⭐ (1)</option>
-      </select>
-      <textarea id="message" placeholder="Escreva sua avaliação..." required></textarea>
-      <button type="submit">Enviar Avaliação</button>
-    </form>
+  <!-- LOGIN -->
+  <section class="glass" id="loginBox">
+    <h2>🔐 Login Admin</h2>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Senha" required>
+    <button onclick="login()">Entrar</button>
   </section>
 
-  <!-- LISTA -->
-  <section class="glass">
-    <h2>⭐ Avaliações Recentes</h2>
+  <!-- AVALIAÇÕES -->
+  <section class="glass" id="reviewsBox" style="display:none">
+    <h2>⭐ Avaliações</h2>
     <div id="reviews"></div>
   </section>
 
@@ -116,7 +97,9 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp }
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore, collection, query, orderBy, onSnapshot, updateDoc, doc }
     from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -129,40 +112,48 @@
   };
 
   const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const form = document.getElementById("reviewForm");
-  const reviewsDiv = document.getElementById("reviews");
+  const ADMIN_EMAIL = "srleal018@gmail.com";
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    await addDoc(collection(db,"reviews"),{
-      name: name.value,
-      rating: Number(rating.value),
-      message: message.value,
-      timestamp: serverTimestamp()
-    });
-    form.reset();
+  window.login = async () => {
+    await signInWithEmailAndPassword(auth, email.value, password.value);
+  };
+
+  onAuthStateChanged(auth, user => {
+    if(user && user.email === ADMIN_EMAIL){
+      loginBox.style.display="none";
+      reviewsBox.style.display="block";
+      loadReviews();
+    }
   });
 
-  const q = query(collection(db,"reviews"), orderBy("timestamp","desc"));
-
-  onSnapshot(q,(snap)=>{
-    reviewsDiv.innerHTML="";
-    snap.forEach(doc=>{
-      const d=doc.data();
-      const stars="★".repeat(d.rating)+"☆".repeat(5-d.rating);
-      reviewsDiv.innerHTML+=`
-        <div class="review">
-          <div class="review-header">
-            <strong>${d.name}</strong>
-            <span class="stars">${stars}</span>
+  function loadReviews(){
+    const q = query(collection(db,"reviews"), orderBy("timestamp","desc"));
+    onSnapshot(q,(snap)=>{
+      reviews.innerHTML="";
+      snap.forEach(d=>{
+        const r=d.data();
+        reviews.innerHTML+=`
+          <div class="review">
+            <strong>${r.name}</strong>
+            <p>${r.message}</p>
+            ${r.reply ? `<div class="reply"><span class="admin">OFICIAL LEAL</span><br>${r.reply}</div>` : `
+              <textarea id="rep-${d.id}" placeholder="Responder como admin"></textarea>
+              <button onclick="reply('${d.id}')">Responder</button>
+            `}
           </div>
-          <p>${d.message}</p>
-        </div>
-      `;
+        `;
+      });
     });
-  });
+  }
+
+  window.reply = async (id) => {
+    const text = document.getElementById("rep-"+id).value;
+    if(!text) return;
+    await updateDoc(doc(db,"reviews",id),{ reply:text });
+  };
 </script>
 
 </body>
