@@ -1,1141 +1,238 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvaliaScript Studio - Avaliação Profissional</title>
-    <style>
-        :root {
-            --roblox-blue: #00a2ff;
-            --roblox-blue-dark: #0084c7;
-            --roblox-blue-light: #33b5ff;
-            --roblox-gray: #23272a;
-            --roblox-dark: #191b21;
-            --roblox-light: #f5f6f6;
-            --roblox-accent: #00d4aa;
-            --shadow-soft: 0 10px 30px rgba(0, 162, 255, 0.2);
-            --shadow-hard: 0 20px 60px rgba(0, 162, 255, 0.3);
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.25);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Roboto', -apple-system, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, var(--roblox-blue) 0%, var(--roblox-blue-dark) 50%, var(--roblox-gray) 100%);
-            min-height: 100vh;
-            color: #e6e6e6;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(0,162,255,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.3) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Loading */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-blue-dark));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-        }
-
-        .roblox-spinner {
-            width: 80px;
-            height: 80px;
-            border: 6px solid rgba(255,255,255,0.2);
-            border-top: 6px solid white;
-            border-radius: 50%;
-            animation: roblox-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        @keyframes roblox-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Header Premium */
-        .header {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow-hard);
-            margin-bottom: 2.5rem;
-            border-radius: 24px;
-            display: none;
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-        }
-
-        .header.show {
-            display: block;
-            animation: slideDownGlass 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        @keyframes slideDownGlass {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 162, 255, 0.5);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 16px 28px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-soft);
-            min-width: 280px;
-        }
-
-        .user-avatar-large {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(255,255,255,0.4);
-            box-shadow: 0 0 25px rgba(0,162,255,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .user-avatar-large:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 35px rgba(0,162,255,0.7);
-        }
-
-        .user-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-weight: 700;
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-email {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, #ff4757, #ff3838);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(255,71,87,0.4);
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255,71,87,0.5);
-        }
-
-        /* Auth Screen */
-        .auth-screen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        .auth-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            padding: 4.```html
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AvaliaScript Studio - Pro</title>
-    <style>
-        :root {
-            --roblox-blue: #00a2ff;
-            --roblox-blue-dark: #0084c7;
-            --roblox-blue-light: #33b5ff;
-            --roblox-gray: #23272a;
-            --roblox-dark: #191b21;
-            --roblox-light: #f5f6f6;
-            --roblox-accent: #00d4aa;
-            --shadow-soft: 0 10px 30px rgba(0, 162, 255, 0.2);
-            --shadow-hard: 0 20px 60px rgba(0, 162, 255, 0.3);
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.25);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Roboto', -apple-system, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, var(--roblox-blue) 0%, var(--roblox-blue-dark) 50%, var(--roblox-gray) 100%);
-            min-height: 100vh;
-            color: #e6e6e6;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(0,162,255,0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0,212,170,0.3) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Loading */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-blue-dark));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-        }
-
-        .roblox-spinner {
-            width: 80px;
-            height: 80px;
-            border: 6px solid rgba(255,255,255,0.2);
-            border-top: 6px solid white;
-            border-radius: 50%;
-            animation: roblox-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        @keyframes roblox-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Header Premium */
-        .header {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow-hard);
-            margin-bottom: 2.5rem;
-            border-radius: 24px;
-            display: none;
-            position: sticky;
-            top: 20px;
-            z-index: 100;
-        }
-
-        .header.show {
-            display: block;
-            animation: slideDownGlass 0.6s ease;
-        }
-
-        @keyframes slideDownGlass {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 162, 255, 0.5);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 16px 28px;
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-soft);
-            min-width: 280px;
-        }
-
-        .user-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(255,255,255,0.4);
-            box-shadow: 0 0 25px rgba(0,162,255,0.5);
-            transition: all 0.3s ease;
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 35px rgba(0,162,255,0.7);
-        }
-
-        .user-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-weight: 700;
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 2px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .user-email {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, #ff4757, #ff3838);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(255,71,87,0.4);
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255,71,87,0.5);
-        }
-
-        /* Auth Screen */
-        .auth-screen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        .auth-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            padding: 4rem 3.5rem;
-            border-radius: 32px;
-            box-shadow: var(--shadow-hard);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .auth-card h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-        }
-
-        .google-btn {
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,1));
-            color: #333;
-            border: none;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            transition: all 0.4s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-
-        .google-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,162,255,0.4);
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            margin-bottom: 3rem;
-            overflow: hidden;
-            box-shadow: var(--shadow-hard);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 24px 20px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 700;
-            color: rgba(255,255,255,0.8);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .tab-btn:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-        }
-
-        .tab-btn.active {
-            color: white;
-            background: rgba(255,255,255,0.15);
-        }
-
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 3.5rem;
-            box-shadow: var(--shadow-hard);
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: glassSlideIn 0.6s ease;
-        }
-
-        @keyframes glassSlideIn {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .tab-content h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffffff, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 2.5rem;
-            text-align: center;
-        }
-
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            color: rgba(255,255,255,0.95);
-            font-size: 1.1rem;
-        }
-
-        .form-group input, 
-        .form-group textarea, 
-        .form-group select {
-            width: 100%;
-            padding: 20px 24px;
-            background: rgba(255,255,255,0.95);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 20px;
-            font-size: 16px;
-            color: #333;
-            transition: all 0.4s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .form-group input:focus, 
-        .form-group textarea:focus, 
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--roblox-blue-light);
-            box-shadow: 0 0 0 4px rgba(0,162,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 160px;
-        }
-
-        /* Rating Stars */
-        .rating-container {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin: 1rem 0;
-        }
-
-        .stars {
-            display: flex;
-            gap: 8px;
-            padding: 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .star {
-            font-size: 3rem;
-            color: rgba(255,215,0,0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .star:hover, .star.active {
-            color: #ffd700;
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 20px #ffd700);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 20px 40px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-blue-dark));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 60px rgba(0,162,255,0.5);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--roblox-accent), #00b894);
-            color: white;
-        }
-
-        /* Evaluation Cards */
-        .evaluation-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 3rem;
-            margin-bottom: 2.5rem;
-            box-shadow: var(--shadow-hard);
-            border-top: 4px solid var(--roblox-blue);
-            transition: all 0.5s ease;
-        }
-
-        .evaluation-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 40px 100px rgba(0,162,255,0.4);
-        }
-
-        .evaluation-author {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1rem;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.4);
-        }
-
-        .author-info h4 {
-            font-weight: 700;
-            color: white;
-            margin-bottom: 2px;
-        }
-
-        .author-info p {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.95rem;
-        }
-
-        .evaluation-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, white, var(--roblox-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .evaluation-info {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-        }
-
-        .evaluation-rating-display {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.1));
-            padding: 16px 24px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .reply-area {
-            margin-top: 2.5rem;
-            padding-top: 2.5rem;
-            border-top: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 2rem;
-        }
-
-        .reply-input {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            align-items: flex-end;
-        }
-
-        .reply-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .reply-item {
-            background: rgba(255,255,255,0.1);
-            padding: 1.8rem;
-            border-radius: 20px;
-            margin-bottom: 1.5rem;
-            border-left: 5px solid var(--roblox-accent);
-        }
-
-        .reply-author-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 0.8rem;
-        }
-
-        .reply-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 6rem 3rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        @media (max-width: 768px) {
-            .tabs { flex-direction: column; }
-            .reply-input { flex-direction: column; gap: 1rem; }
-            .user-profile { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
-            .container { padding: 0 15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Plataforma de Avaliação</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color: #fff;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: rgba(255,255,255,0.06);
+}
+header strong { font-size: 18px; }
+
+button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.login { background: #fff; }
+.logout { background: #ff6b6b; color: #fff; }
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 25px;
+}
+.card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+input, textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+textarea { min-height: 100px; resize: vertical; }
+
+.review {
+  background: rgba(0,0,0,0.3);
+  border-radius: 15px;
+  padding: 15px;
+  margin-top: 15px;
+}
+.preview img, .preview video {
+  max-width: 200px;
+  border-radius: 10px;
+  margin: 5px;
+}
+.reply-box {
+  margin-top: 10px;
+}
+.reply {
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+footer {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 13px;
+  padding: 15px;
+}
+</style>
 </head>
+
 <body>
-    <!-- Loading -->
-    <div class="loading" id="loading">
-        <div class="roblox-spinner"></div>
-        <p style="margin-top: 2rem; font-size: 1.3rem; font-weight: 600;">Carregando Studio...</p>
-    </div>
 
-    <!-- Auth Screen -->
-    <div class="auth-screen" id="authScreen">
-        <div class="auth-card">
-            <h1>🎨 AvaliaScript Studio</h1>
-            <p style="color: rgba(255,255,255,0.9); margin-bottom: 3rem; font-size: 1.2rem;">
-                Sistema profissional para avaliação de scripts
-            </p>
-            <button class="google-btn" id="googleLogin">
-                <svg width="28" height="28" viewBox="0 0 24 24" style="filter: drop-shadow(0 0 5px rgba(0,0,0,0.3));">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Entrar com Google
-            </button>
+<header>
+  <strong>Plataforma de Avaliação</strong>
+  <div>
+    <button class="login" id="loginBtn">Login com Google</button>
+    <button class="logout" id="logoutBtn" style="display:none;">Sair</button>
+  </div>
+</header>
+
+<main id="app" style="display:none;">
+
+<div class="card">
+  <h2>Nova Avaliação</h2>
+  <input id="titulo" placeholder="Título da avaliação">
+  <textarea id="descricao" placeholder="Descreva sua avaliação"></textarea>
+  <input type="file" id="imagens" multiple accept="image/*">
+  <input type="file" id="video" accept="video/*">
+  <button onclick="publicar()">Publicar Avaliação</button>
+</div>
+
+<div class="card">
+  <h2>Avaliações</h2>
+  <div id="lista"></div>
+</div>
+
+</main>
+
+<footer>© 2026 • Sistema real com Firebase</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, updateDoc, doc, arrayUnion }
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL }
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
+  authDomain: "leal-1a27b.firebaseapp.com",
+  projectId: "leal-1a27b",
+  storageBucket: "leal-1a27b.firebasestorage.app",
+  messagingSenderId: "935085322117",
+  appId: "1:935085322117:web:e8454ce939b8035b809eec"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const appDiv = document.getElementById("app");
+const lista = document.getElementById("lista");
+
+let usuario = null;
+
+loginBtn.onclick = () => signInWithPopup(auth, provider);
+logoutBtn.onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, user => {
+  usuario = user;
+  appDiv.style.display = user ? "block" : "none";
+  loginBtn.style.display = user ? "none" : "inline";
+  logoutBtn.style.display = user ? "inline" : "none";
+});
+
+function limparTexto(txt) {
+  return txt.replace(/[<>]/g, '');
+}
+
+window.publicar = async () => {
+  if (!usuario) return alert("Faça login");
+
+  const titulo = limparTexto(document.getElementById("titulo").value);
+  const descricao = limparTexto(document.getElementById("descricao").value);
+  const imgs = document.getElementById("imagens").files;
+  const vid = document.getElementById("video").files[0];
+
+  const imagensURL = [];
+
+  for (let img of imgs) {
+    const r = ref(storage, `avaliacoes/${Date.now()}_${img.name}`);
+    await uploadBytes(r, img);
+    imagensURL.push(await getDownloadURL(r));
+  }
+
+  let videoURL = null;
+  if (vid) {
+    const rVid = ref(storage, `avaliacoes/${Date.now()}_${vid.name}`);
+    await uploadBytes(rVid, vid);
+    videoURL = await getDownloadURL(rVid);
+  }
+
+  await addDoc(collection(db, "avaliacoes"), {
+    titulo,
+    descricao,
+    imagens: imagensURL,
+    video: videoURL,
+    respostas: [],
+    criadoEm: Date.now()
+  });
+
+  document.getElementById("titulo").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("imagens").value = "";
+  document.getElementById("video").value = "";
+};
+
+const q = query(collection(db, "avaliacoes"), orderBy("criadoEm","desc"));
+onSnapshot(q, snap => {
+  lista.innerHTML = "";
+  snap.forEach(d => {
+    const v = d.data();
+    lista.innerHTML += `
+      <div class="review">
+        <strong>${v.titulo}</strong>
+        <p>${v.descricao}</p>
+
+        <div class="preview">
+          ${v.imagens.map(i => `<img src="${i}">`).join("")}
+          ${v.video ? `<video controls src="${v.video}"></video>` : ""}
         </div>
-    </div>
 
-    <!-- Main App -->
-    <div class="main-app" id="mainApp">
-        <header class="header" id="header">
-            <div class="header-content">
-                <div class="logo">🎨 Studio</div>
-                <div class="user-profile" id="userProfile">
-                    <!-- Preenchido pelo JS -->
-                </div>
-            </div>
-        </header>
-
-        <div class="container">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('newEval')">📤 Nova Avaliação</button>
-                <button class="tab-btn" onclick="switchTab('myEvals')">💎 Minhas</button>
-                <button class="tab-btn" onclick="switchTab('allEvals')">🌐 Todas</button>
-            </div>
-
-            <!-- Nova Avaliação -->
-            <div id="newEval" class="tab-content active">
-                <h2>✨ Criar Nova Avaliação</h2>
-                <form id="evalForm">
-                    <div class="form-group">
-                        <label>Título do Script *</label>
-                        <input type="text" id="evalTitle" required placeholder="Ex: Sistema de Login FiveM">
-                    </div>
-                    <div class="form-group">
-                        <label>Descrição Completa *</label>
-                        <textarea id="evalDesc" required placeholder="Descreva detalhadamente o funcionamento do script..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Categoria *</label>
-                        <select id="evalCategory" required>
-                            <option value="">Selecione uma categoria</option>
-                            <option value="roblox">Roblox</option>
-                            <option value="fivem">FiveM/GTA</option>
-                            <option value="discord">Discord Bot</option>
-                            <option value="web">Web/HTML</option>
-                            <option value="lua">Lua Geral</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Nota do Script * (1-10)</label>
-                        <div class="rating-container">
-                            <div class="stars" id="ratingStars"></div>
-                            <span id="ratingValue">0</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">🚀 Publicar Avaliação</button>
-                </form>
-            </div>
-
-            <!-- Minhas Avaliações -->
-            <div id="myEvals" class="tab-content">
-                <h2>💎 Suas Avaliações</h2>
-                <div id="myEvaluationsList" class="empty-state">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
-                    <p>Nenhuma avaliação criada ainda.<br>Crie sua primeira avaliação!</p>
-                </div>
-            </div>
-
-            <!-- Todas Avaliações -->
-            <div id="allEvals" class="tab-content">
-                <h2>🌐 Marketplace de Avaliações</h2>
-                <div id="allEvaluationsList" class="empty-state">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-                    <p>Carregando avaliações...<br>Aguarde alguns segundos.</p>
-                </div>
-            </div>
+        <div class="reply-box">
+          <input placeholder="Responder..." 
+            onkeydown="if(event.key==='Enter') responder('${d.id}', this)">
+          ${v.respostas.map(r => `<div class="reply">${r}</div>`).join("")}
         </div>
-    </div>
+      </div>
+    `;
+  });
+});
 
-    <!-- Firebase + JavaScript -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp, doc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+window.responder = async (id, input) => {
+  if (!usuario) return;
+  if (!input.value) return;
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCOk0bV5VwLBiaZ_vL5a8kpYzOCmqTad0I",
-            authDomain: "leal-1a27b.firebaseapp.com",
-            projectId: "leal-1a27b",
-            storageBucket: "leal-1a27b.firebasestorage.app",
-            messagingSenderId: "935085322117",
-            appId: "1:935085322117:web:e8454ce939b8035b809eec",
-            measurementId: "G-RSPSJGHY8N"
-        };
+  const refDoc = doc(db, "avaliacoes", id);
+  await updateDoc(refDoc, {
+    respostas: arrayUnion(limparTexto(input.value))
+  });
+  input.value = "";
+};
+</script>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
-
-        let currentUser = null;
-        let currentRating = 0;
-
-        // DOM Elements
-        const loading = document.getElementById('loading');
-        const authScreen = document.getElementById('authScreen');
-        const mainApp = document.getElementById('mainApp');
-        const header = document.getElementById('header');
-        const userProfile = document.getElementById('userProfile');
-        const googleLogin = document.getElementById('googleLogin');
-        const evalForm = document.getElementById('evalForm');
-
-        // Auth State Observer
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                loading.style.display = 'none';
-                authScreen.style.display = 'none';
-                mainApp.style.display = 'block';
-                header.classList.add('show');
-                updateUserProfile();
-                loadUserEvaluations();
-                loadAllEvaluations();
-            } else {
-                currentUser = null;
-                loading.style.display = 'none';
-                authScreen.style.display = 'flex';
-                mainApp.style.display = 'none';
-                header.classList.remove('show');
-            }
-        });
-
-        // Google Login
-        googleLogin.addEventListener('click', async () => {
-            try {
-                loading.style.display = 'flex';
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error('Erro login:', error);
-                alert('Erro no login: ' + error.message);
-                loading.style.display = 'none';
-            }
-        });
-
-        // Logout
-        window.logout = async () => {
-            try {
-                loading.style.display = 'flex';
-                await signOut(auth);
-            } catch (error) {
-                console.error('Erro logout:', error);
-            }
-        };
-
-        // Update User Profile
-        function updateUserProfile() {
-            userProfile.innerHTML = `
-                <img src="${currentUser.photoURL}" alt="Avatar" class="user-avatar">
-                <div class="user-details">
-                    <div class="user-name">${currentUser.displayName}</div>
-                    <div class="user-email">${currentUser.email}</div>
-                </div>
-                <button class="logout-btn" onclick="logout()">Sair</button>
-            `;
-        }
-
-        // Tab Switching
-        window.switchTab = (tabId) => {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        };
-
-        // Initialize Rating Stars
-        function initStars() {
-            const starsContainer = document.getElementById('ratingStars');
-            starsContainer.innerHTML = '';
-            for (let i = 1; i <= 10; i++) {
-                const star = document.createElement('span');
-                star.className = 'star';
-                star.textContent = '⭐';
-                star.dataset.rating = i;
-                star.onclick = () => setRating(i);
-                starsContainer.appendChild(star);
-            }
-        }
-
-        function setRating(rating) {
-            currentRating = rating;
-            document.getElementById('ratingValue').textContent = rating;
-            document.querySelectorAll('#ratingStars .star').forEach((star, index) => {
-                star.classList.toggle('active', index < rating);
-            });
-        }
-
-        initStars();
-
-        // Submit Evaluation (SEM ARQUIVOS)
-        evalForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentRating || !currentUser) {
-                alert('⚠️ Preencha todos os campos e dê uma nota!');
-                return;
-            }
-
-            try {
-                loading.style.display = 'flex';
-                
-                await addDoc(collection(db, 'evaluations'), {
-                    title: document.getElementById('evalTitle').value,
-                    description: document.getElementById('evalDesc').value,
-                    category: document.getElementById('evalCategory').value,
-                    rating: currentRating,
-                    authorId: currentUser.uid,
-                    authorName: currentUser.displayName,
-                    authorEmail: currentUser.email,
-                    authorPhoto: currentUser.photoURL,
-                    replies: [],
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
-                });
-
-                alert('✅ Avaliação publicada com sucesso!');
-                evalForm.reset();
-                setRating(0);
-                loadUserEvaluations();
-                loadAllEvaluations();
-
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao publicar: ' + error.message);
-            } finally {
-                loading.style.display = 'none';
-            }
-        });
-
-        // Load User Evaluations
-        window.loadUserEvaluations = async () => {
-            if (!currentUser) return;
-            const q = query(
-                collection(db, 'evaluations'),
-                where('authorId', '==', currentUser.uid),
-                orderBy('createdAt', 'desc')
-            );
-            const snapshot = await getDocs(q);
-            displayEvaluations(snapshot.docs, 'myEvaluationsList');
-        };
-
-        // Load All Evaluations
-        window.loadAllEvaluations = async () => {
-            const q = query(
-                collection(db, 'evaluations'),
-                orderBy('createdAt', 'desc')
-            );
-            const snapshot = await getDocs(q);
-            displayEvaluations(snapshot.docs, 'allEvaluationsList');
-        };
-
-        // Display Evaluations
-        function displayEvaluations(docs, containerId) {
-            const container = document.getElementById(containerId);
-            if (docs.empty) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">📝</div>
-                        <p>${containerId === 'myEvaluationsList' ? 
-                            'Nenhuma avaliação criada ainda.' : 
-                            'Nenhuma avaliação encontrada.'}</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = docs.map(doc => {
-                const data = doc.data();
-                const stars = '⭐'.repeat(data.rating);
-                const repliesCount = data.replies?.length || 0;
-
-                return `
-                    <div class="evaluation-card" data-id="${doc.id}">
-                        <div class="evaluation-author">
-                            <img src="${data.authorPhoto}" alt="${data.authorName}" class="author-avatar">
-                            <div class="author-info">
-                                <h4>${data.authorName}</h4>
-                                <p>${data.authorEmail}</p>
-                            </div>
-                        </div>
-                        <div class="evaluation-title">${data.title}</div>
-                        <div class="evaluation-info">
-                            <span class="info-tag">📂 ${data.category}</span>
-                            <span class="info-tag">💬 ${repliesCount} respostas</span>
-                        </div>
-                        <div class="evaluation-rating-display">
-                            ${stars} ${data.rating}/10
-                        </div>
-                        <p style="margin: 1.5rem 0; color: rgba(255,255,255,0.9); line-height: 1.7;">
-                            ${data.description}
-                        </p>
-                        
-                        <div class="reply-area">
-                            <div class="reply-input">
-                                <textarea placeholder="💭 Deixe sua resposta aqui... (Ctrl+Enter)" 
-                                          onkeydown="handleReply(event, this, '${doc.id}')"></textarea>
-                                <button class="btn btn-success" onclick="addReply('${doc.id}', this.previousElementSibling)">Responder</button>
-                            </div>
-                            <div class="reply-list">
-                                ${data.replies?.map(reply => `
-                                    <div class="reply-item">
-                                        <div class="reply-author-info">
-                                            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--roblox-blue),var(--roblox-accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${reply.author.charAt(0).toUpperCase()}</div>
-                                            <div>
-                                                <div style="font-weight:700;color:white;">${reply.author}</div>
-                                                <div style="color:rgba(255,255,255,0.6);font-size:0.9rem;">${reply.date ? new Date(reply.date.toDate()).toLocaleDateString('pt-BR') : 'Agora'}</div>
-                                            </div>
-                                        </div>
-                                        <div style="color:rgba(255,255,255,0.95);margin-top:1rem;">${reply.text}</div>
-                                    </div>
-                                `).join('') || ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Add Reply
-        window.addReply = async (docId, textarea) => {
-            const text = textarea.value.trim();
-            if (!text || !currentUser) return;
-
-            try {
-                await updateDoc(doc(db, 'evaluations', docId), {
-                    replies: arrayUnion({
-                        author: currentUser.displayName,
-                        text: text,
-                        date: serverTimestamp()
-                    }),
-                    updatedAt: serverTimestamp()
-                });
-                textarea.value = '';
-                loadUserEvaluations();
-                loadAllEvaluations();
-            } catch (error) {
-                console.error('Erro reply:', error);
-            }
-        };
-
-        window.handleReply = (event, textarea, docId) => {
-            if (event.ctrlKey && event.key === 'Enter') {
-                addReply(docId, textarea);
-            }
-        };
-    </script>
 </body>
 </html>
