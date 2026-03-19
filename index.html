@@ -3,132 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Web Obby 3D</title>
+    <title>Web Obby Studio</title>
     <style>
-        /* Removemos as margens para o jogo ocupar a tela inteira do celular */
-        body { margin: 0; overflow: hidden; background-color: #87CEEB; touch-action: none; }
-        #ui { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            color: white; 
-            font-family: sans-serif; 
-            font-size: 24px; 
-            font-weight: bold; 
-            text-shadow: 2px 2px 0 #000; 
-            z-index: 10;
-        }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e24; color: white; touch-action: none; overflow: hidden; }
+        
+        /* Telas */
+        .screen { display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; justify-content: center; }
+        #hubScreen { display: flex; } /* Começa no Hub */
+        
+        /* UI Elements */
+        h1 { font-size: 2rem; margin-bottom: 20px; color: #00d2ff; }
+        .btn { background: #00d2ff; color: #1e1e24; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 10px; width: 80%; max-width: 300px; text-transform: uppercase; }
+        .btn:active { background: #0096b3; }
+        .nav-bar { position: absolute; top: 0; left: 0; width: 100%; padding: 10px; background: #2b2b36; display: flex; justify-content: space-between; box-sizing: border-box; }
+        .nav-btn { background: #ff4757; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
+
+        /* Canvas */
+        canvas { background-color: #87CEEB; display: block; border-bottom: 5px solid #2b2b36; }
+        
+        /* Paleta do Studio */
+        #palette { display: flex; justify-content: center; padding: 10px; background: #2b2b36; width: 100%; gap: 10px; }
+        .tool { width: 40px; height: 40px; border-radius: 5px; border: 2px solid transparent; }
+        .tool.active { border-color: white; transform: scale(1.1); }
+        .t-platform { background: #2ed573; }
+        .t-lava { background: #ff4757; }
+        .t-erase { background: #1e1e24; border: 1px solid #555; }
     </style>
 </head>
 <body>
-    <div id="ui">Toque na tela para pular!</div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
+
+    <div id="hubScreen" class="screen">
+        <h1>Meu Web Hub</h1>
+        <button class="btn" onclick="openStudio()">Abrir Studio</button>
+        <button class="btn" onclick="playGame()">Jogar Obby</button>
+    </div>
+
+    <div id="studioScreen" class="screen">
+        <div class="nav-bar">
+            <span>Modo Studio</span>
+            <button class="nav-btn" onclick="openHub()">Sair</button>
+        </div>
+        <canvas id="studioCanvas" width="300" height="400" style="margin-top: 50px;"></canvas>
+        <div id="palette">
+            <div class="tool t-platform active" onclick="selectTool(1, this)"></div>
+            <div class="tool t-lava" onclick="selectTool(2, this)"></div>
+            <div class="tool t-erase" onclick="selectTool(0, this)"></div>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="screen">
+        <div class="nav-bar">
+            <span>Toque para Pular!</span>
+            <button class="nav-btn" onclick="openHub()">Sair</button>
+        </div>
+        <canvas id="gameCanvas" width="300" height="400" style="margin-top: 50px;"></canvas>
+    </div>
+
     <script>
-        // 1. Configuração do Cenário e Câmera
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // Céu azul
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // 2. Iluminação
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 10, 5);
-        scene.add(light);
-        scene.add(new THREE.AmbientLight(0x606060));
-
-        // 3. O Jogador (Cubo Vermelho)
-        const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const playerMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
-        const player = new THREE.Mesh(playerGeometry, playerMaterial);
-        player.position.set(0, 5, 0);
-        scene.add(player);
-
-        // 4. Sistema de Plataformas
-        const platforms = [];
-        const platformGeometry = new THREE.BoxGeometry(4, 0.5, 4);
-        const platformMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
-
-        function createPlatform(x, y, z) {
-            const plat = new THREE.Mesh(platformGeometry, platformMaterial);
-            plat.position.set(x, y, z);
-            scene.add(plat);
-            platforms.push(plat);
+        // --- GERENCIAMENTO DE TELAS ---
+        function hideAll() {
+            document.getElementById('hubScreen').style.display = 'none';
+            document.getElementById('studioScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'none';
+            cancelAnimationFrame(gameLoopId);
         }
 
-        // Desenhando o mapa do Obby (x, altura y, profundidade z)
-        createPlatform(0, 0, 0);
-        createPlatform(0, 1.5, -7);
-        createPlatform(3, 3, -14);
-        createPlatform(-3, 4.5, -21);
-        createPlatform(0, 6, -28); // Chegada
+        function openHub() { hideAll(); document.getElementById('hubScreen').style.display = 'flex'; }
+        
+        function openStudio() { 
+            hideAll(); 
+            document.getElementById('studioScreen').style.display = 'flex'; 
+            drawStudio();
+        }
 
-        // 5. Física e Controles Mobile/PC
-        let velocityY = 0;
-        const gravity = -0.012;
+        function playGame() {
+            hideAll();
+            document.getElementById('gameScreen').style.display = 'flex';
+            startGame();
+        }
+
+        // --- SISTEMA DE MAPA (Grade/Grid) ---
+        const tileSize = 30;
+        const cols = 10;
+        const rows = 13;
+        // 0 = Vazio, 1 = Plataforma, 2 = Lava
+        let map = Array(rows).fill().map(() => Array(cols).fill(0));
+        
+        // Plataforma inicial padrão
+        map[12][1] = 1; map[12][2] = 1;
+
+        // --- MODO STUDIO ---
+        const studioCtx = document.getElementById('studioCanvas').getContext('2d');
+        let currentTool = 1;
+
+        function selectTool(toolId, element) {
+            currentTool = toolId;
+            document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function drawStudio() {
+            studioCtx.clearRect(0, 0, 300, 400);
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (map[r][c] === 1) studioCtx.fillStyle = '#2ed573'; // Plataforma
+                    else if (map[r][c] === 2) studioCtx.fillStyle = '#ff4757'; // Lava
+                    else studioCtx.fillStyle = 'rgba(255,255,255,0.1)'; // Grid Vazio
+                    
+                    studioCtx.fillRect(c * tileSize, r * tileSize, tileSize - 1, tileSize - 1);
+                }
+            }
+        }
+
+        // Adicionar blocos tocando na tela
+        document.getElementById('studioCanvas').addEventListener('pointerdown', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const col = Math.floor(x / tileSize);
+            const row = Math.floor(y / tileSize);
+            
+            if (row >= 0 && row < rows && col >= 0 && col < cols) {
+                map[row][col] = currentTool;
+                drawStudio();
+            }
+        });
+
+        // --- MOTOR DE FÍSICA E JOGO ---
+        const gameCtx = document.getElementById('gameCanvas').getContext('2d');
+        let gameLoopId;
+        
+        let player = { x: 45, y: 50, w: 20, h: 20, vx: 0, vy: 0, speed: 2, jumpForce: -8 };
+        const gravity = 0.4;
         let isGrounded = false;
-        const speed = 0.1; // Velocidade que o jogador corre para frente
 
-        // Identifica o toque na tela ou clique
-        window.addEventListener('pointerdown', () => {
+        // Pular tocando no canvas do jogo
+        document.getElementById('gameCanvas').addEventListener('pointerdown', () => {
             if (isGrounded) {
-                velocityY = 0.35; // Força do pulo
+                player.vy = player.jumpForce;
                 isGrounded = false;
             }
         });
 
-        // 6. Loop Principal do Jogo
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Aplica a gravidade e o movimento constante
-            velocityY += gravity;
-            player.position.y += velocityY;
-            player.position.z -= speed; 
-
-            // A câmera segue o jogador
-            camera.position.z = player.position.z + 6;
-            camera.position.y = player.position.y + 4;
-            camera.lookAt(player.position);
-
-            // Sistema de Morte (Caiu no vazio)
-            if (player.position.y < -10) {
-                player.position.set(0, 5, 0); // Reseta a posição
-                velocityY = 0;
-            }
-
-            // Sistema de Colisão com as Plataformas
+        function checkCollision() {
             isGrounded = false;
-            for (let plat of platforms) {
-                // Checa se as bordas do jogador estão dentro das bordas da plataforma
-                if (
-                    Math.abs(player.position.x - plat.position.x) < 2.5 &&
-                    Math.abs(player.position.z - plat.position.z) < 2.5 &&
-                    player.position.y - plat.position.y <= 1 &&
-                    player.position.y - plat.position.y >= 0 &&
-                    velocityY <= 0
-                ) {
-                    player.position.y = plat.position.y + 0.75;
-                    velocityY = 0;
-                    isGrounded = true;
+            
+            // Colisão com as bordas da tela
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.w > 300) player.x = 300 - player.w;
+            if (player.y > 400) resetPlayer(); // Caiu no buraco
+
+            // Colisão com os blocos do mapa (Física AABB simplificada e robusta)
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (map[r][c] !== 0) {
+                        let blockX = c * tileSize;
+                        let blockY = r * tileSize;
+
+                        // Verifica se está batendo no bloco
+                        if (player.x < blockX + tileSize && player.x + player.w > blockX &&
+                            player.y < blockY + tileSize && player.y + player.h > blockY) {
+                            
+                            if (map[r][c] === 2) {
+                                resetPlayer(); // Encostou na lava
+                                return;
+                            }
+
+                            // Física básica de colisão vertical (pisar em cima)
+                            if (player.vy > 0 && player.y + player.h - player.vy <= blockY) {
+                                player.y = blockY - player.h;
+                                player.vy = 0;
+                                isGrounded = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function resetPlayer() {
+            player.x = 45; player.y = 50; player.vy = 0;
+        }
+
+        function updateGame() {
+            // Aplica gravidade e movimento contínuo pra direita (estilo Obby)
+            player.vy += gravity;
+            player.y += player.vy;
+            player.x += player.speed;
+
+            // Se bater na parede direita, volta pra esquerda pra continuar o loop
+            if(player.x > 300 - player.w) player.x = 0;
+
+            checkCollision();
+        }
+
+        function drawGame() {
+            gameCtx.clearRect(0, 0, 300, 400);
+
+            // Desenha o Mapa
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (map[r][c] === 1) gameCtx.fillStyle = '#2ed573';
+                    if (map[r][c] === 2) gameCtx.fillStyle = '#ff4757';
+                    if (map[r][c] !== 0) gameCtx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
                 }
             }
 
-            renderer.render(scene, camera);
+            // Desenha o Jogador
+            gameCtx.fillStyle = '#00d2ff';
+            gameCtx.fillRect(player.x, player.y, player.w, player.h);
         }
 
-        // Redimensiona o jogo se a tela virar
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        function loop() {
+            updateGame();
+            drawGame();
+            gameLoopId = requestAnimationFrame(loop);
+        }
 
-        animate();
+        function startGame() {
+            resetPlayer();
+            loop();
+        }
     </script>
 </body>
 </html>
