@@ -11,6 +11,7 @@
             --bg-color: #0c0c0e;
             --card-bg: #16161a;
             --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #27272a;
@@ -18,9 +19,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
 
-        /* BADGES STYLE */
         .badge-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 4px; }
         .currency-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; }
 
@@ -37,53 +37,58 @@
         .user-profile { display: flex; align-items: center; gap: 8px; background: #27272a; padding: 5px 12px; border-radius: 20px; }
         .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
 
-        /* ANÚNCIOS GERAIS (ADM) */
+        /* CONTROLES (Busca e Filtro) */
+        .controls-section { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; align-items: center; }
+        .search-input { flex: 1; min-width: 250px; background: #16161a; border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; color: white; }
+        .filter-select { background: #16161a; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; cursor: pointer; }
+
         #admin-announcements {
             margin: 20px 5% 0; padding: 20px; background: linear-gradient(90deg, #1e1b4b 0%, #16161a 100%);
             border-radius: 12px; border: 1px solid #3730a3; display: none;
         }
 
-        /* GRID E CARDS */
-        main { padding: 30px 5%; max-width: 1300px; margin: 0 auto; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; margin-top: 30px; }
+        main { padding: 30px 5%; max-width: 1400px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
 
         .service-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
-            overflow: hidden; display: flex; flex-direction: column; transition: 0.3s;
+            overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; height: 100%;
         }
-        .service-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .service-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
         .card-content { padding: 20px; flex-grow: 1; }
         .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #2e1065; color: #ddd6fe; margin-bottom: 12px; display: inline-block; }
         .tag-adm { background: #78350f; color: #fef3c7; }
 
-        .media-container { width: 100%; background: #000; display: flex; justify-content: center; }
-        .media-container img, .media-container video { width: 100%; max-height: 220px; object-fit: cover; }
+        .media-container { width: 100%; background: #000; height: 180px; display: flex; justify-content: center; overflow: hidden; }
+        .media-container img, .media-container video { width: 100%; height: 100%; object-fit: cover; }
 
         .card-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #1c1c21; }
         
-        /* BOTÕES */
         .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-danger { background: #991b1b; color: white; font-size: 12px; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: #991b1b; color: white; font-size: 11px; padding: 5px 10px; border-radius: 4px; }
         
-        /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--card-bg); width: 90%; max-width: 550px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f0f12; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 20px; }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 550px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f0f12; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: var(--primary); }
 
-        /* LOGIN */
-        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle, #1e1b4b 0%, #0c0c0e 100%); }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <div style="background: var(--card-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--border);">
+        <div style="background: var(--card-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
             <img src="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png" width="80" style="margin-bottom: 20px;">
-            <h1>Roblox Hub</h1>
-            <p style="color: var(--text-muted); margin-bottom: 30px;">Entre para acessar a plataforma de serviços.</p>
-            <button class="btn btn-primary" id="btn-login" style="width: 100%;">Entrar com Google</button>
+            <h1 style="margin-bottom: 10px;">Roblox Hub</h1>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Acesse a maior vitrine de serviços e parcerias.</p>
+            <button class="btn btn-primary" id="btn-login" style="width: 100%; justify-content: center; padding: 15px;">
+                Entrar com Google
+            </button>
         </div>
     </div>
 
@@ -91,7 +96,7 @@
         <header>
             <div class="logo-area">
                 <img src="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png" class="logo-main">
-                <span style="font-weight: 800; letter-spacing: 1px;">ROBLOX HUB</span>
+                <span style="font-weight: 800; letter-spacing: 1px; font-size: 18px;">ROBLOX HUB</span>
             </div>
             <div class="user-nav">
                 <div class="user-profile">
@@ -105,26 +110,41 @@
         <section id="admin-announcements">
             <h4 style="color: var(--admin-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
                 <img src="https://image2url.com/r2/default/images/1774402297032-7584b3b8-ea4e-4efd-9968-db070178433a.png" width="18">
-                ANÚNCIOS GERAIS DA ADMINISTRAÇÃO
+                AVISOS DA ADMINISTRAÇÃO
             </h4>
             <div id="admin-notices-list" style="font-size: 14px; color: #e2e8f0;"></div>
         </section>
 
         <main>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Serviços & Parcerias</h2>
-                <button class="btn btn-primary" id="btn-add">+ Criar Anúncio</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h2>Feed de Serviços</h2>
+                <button class="btn btn-primary" id="btn-add">+ Novo Anúncio</button>
             </div>
-            <div class="services-grid" id="feed"></div>
+
+            <div class="controls-section">
+                <input type="text" id="search-bar" class="search-input" placeholder="Pesquisar por título...">
+                <select id="filter-category" class="filter-select">
+                    <option value="Todos">Todas as Categorias</option>
+                    <option value="Build">Build</option>
+                    <option value="Script">Script</option>
+                    <option value="GFX Maker">GFX Maker</option>
+                    <option value="UI Design">UI Design</option>
+                    <option value="Parcerias">Parcerias</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="services-grid" id="feed">
+                </div>
         </main>
     </div>
 
     <div class="modal" id="modal-ad">
         <div class="modal-content">
-            <h3 style="margin-bottom: 20px;">Nova Publicação</h3>
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Criar Publicação</h3>
             <form id="form-ad">
-                <label>Título</label>
-                <input type="text" id="title" required>
+                <label>Título do Serviço</label>
+                <input type="text" id="title" placeholder="Ex: Script de Sistema de Inventário" required>
                 
                 <label>Categoria</label>
                 <select id="category">
@@ -134,22 +154,21 @@
                     <option value="UI Design">UI Design</option>
                     <option value="Outros">Outros</option>
                     <option value="Parcerias" class="adm-only" style="display:none;">🤝 Parcerias (ADM)</option>
-                    <option value="Avisos" class="adm-only" style="display:none;">⚠️ Avisos da ADM</option>
                     <option value="Anúncio Geral" class="adm-only" style="display:none;">📢 Anúncio Geral (Topo)</option>
                 </select>
 
-                <label>URL Imagem/Vídeo</label>
-                <input type="url" id="media" placeholder="https://...">
+                <label>Link da Imagem/Vídeo</label>
+                <input type="url" id="media" placeholder="Link direto (Discord, Imgur, etc)">
 
-                <label>Descrição</label>
-                <textarea id="desc" rows="4" required></textarea>
+                <label>Descrição Detalhada</label>
+                <textarea id="desc" rows="4" placeholder="Descreva seu serviço e deixe seu contato..." required></textarea>
 
                 <label>Preço</label>
                 <input type="text" id="price" placeholder="Ex: 500 Robux ou R$ 20,00" required>
 
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     <button type="button" class="btn" id="btn-cancel" style="flex:1; background: #27272a;">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="flex:1;">Publicar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1; justify-content: center;">Publicar Agora</button>
                 </div>
             </form>
         </div>
@@ -158,7 +177,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
@@ -175,7 +194,6 @@
         const provider = new GoogleAuthProvider();
 
         const ADM_UID = "hF0CdUoF5DZF036PlgQPC8T04oy1";
-
         const BADGES = {
             adm: "https://image2url.com/r2/default/images/1774402297032-7584b3b8-ea4e-4efd-9968-db070178433a.png",
             membro: "https://image2url.com/r2/default/images/1774402198028-522deb5e-dfa7-4b89-acf4-c633e0ddb920.png",
@@ -183,6 +201,9 @@
             money: "https://image2url.com/r2/default/images/1774402438176-eee0bff8-e429-4336-a83a-28e49a61789a.png"
         };
 
+        let allPosts = []; // Cache para busca/filtro
+
+        // LOGIN E ESTADO DO USUÁRIO
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-screen').style.display = 'none';
@@ -193,7 +214,7 @@
                 if(user.uid === ADM_UID) {
                     document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'block');
                 }
-                loadPosts();
+                listenPosts(); // Inicia o tempo real
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
@@ -205,75 +226,107 @@
         document.getElementById('btn-add').onclick = () => document.getElementById('modal-ad').style.display = 'flex';
         document.getElementById('btn-cancel').onclick = () => document.getElementById('modal-ad').style.display = 'none';
 
+        // SALVAR POST
         document.getElementById('form-ad').onsubmit = async (e) => {
             e.preventDefault();
-            await addDoc(collection(db, "roblox_posts"), {
-                title: document.getElementById('title').value,
-                category: document.getElementById('category').value,
-                media: document.getElementById('media').value,
-                desc: document.getElementById('desc').value,
-                price: document.getElementById('price').value,
-                uid: auth.currentUser.uid,
-                author: auth.currentUser.displayName,
-                avatar: auth.currentUser.photoURL,
-                time: serverTimestamp()
-            });
-            document.getElementById('modal-ad').style.display = 'none';
-            e.target.reset();
-            loadPosts();
+            const category = document.getElementById('category').value;
+            
+            try {
+                await addDoc(collection(db, "roblox_posts"), {
+                    title: document.getElementById('title').value,
+                    category: category,
+                    media: document.getElementById('media').value,
+                    desc: document.getElementById('desc').value,
+                    price: document.getElementById('price').value,
+                    uid: auth.currentUser.uid,
+                    author: auth.currentUser.displayName,
+                    avatar: auth.currentUser.photoURL,
+                    time: serverTimestamp()
+                });
+                document.getElementById('modal-ad').style.display = 'none';
+                e.target.reset();
+            } catch (err) { alert("Erro ao publicar: " + err.message); }
         };
 
-        async function loadPosts() {
+        // ESCUTAR POSTS (REAL-TIME)
+        function listenPosts() {
             const q = query(collection(db, "roblox_posts"), orderBy("time", "desc"));
-            const snap = await getDocs(q);
+            onSnapshot(q, (snap) => {
+                allPosts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderFeed();
+            });
+        }
+
+        // RENDERIZAR FEED COM FILTROS
+        function renderFeed() {
             const feed = document.getElementById('feed');
             const adminBar = document.getElementById('admin-notices-list');
             const adminSection = document.getElementById('admin-announcements');
-            
+            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+            const filterCat = document.getElementById('filter-category').value;
+
             feed.innerHTML = '';
             adminBar.innerHTML = '';
-            let hasNotice = false;
+            let hasAdminNotice = false;
 
-            snap.forEach(d => {
-                const p = d.data();
-                const isAdm = p.uid === ADM_UID;
-                const descFormatted = p.desc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:var(--primary)">$1</a>');
+            allPosts.forEach(p => {
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm);
+                const matchesFilter = filterCat === "Todos" || p.category === filterCat;
 
+                // Anúncios Globais (ADM)
                 if (p.category === "Anúncio Geral") {
-                    hasNotice = true;
-                    adminBar.innerHTML += `<div style="margin-bottom:8px;">• <strong>${p.title}:</strong> ${descFormatted}</div>`;
+                    hasAdminNotice = true;
+                    adminBar.innerHTML += `<div style="margin-bottom:8px;">• <strong>${p.title}:</strong> ${p.desc}</div>`;
                     return;
                 }
+
+                if (!matchesSearch || !matchesFilter) return;
+
+                const isVideo = p.media && p.media.match(/\.(mp4|webm)$/i);
+                const isAdm = p.uid === ADM_UID;
+                const descFormatted = p.desc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:var(--primary);text-decoration:none;">Link</a>');
 
                 const card = document.createElement('div');
                 card.className = 'service-card';
                 card.innerHTML = `
-                    ${p.media ? `<div class="media-container"><img src="${p.media}"></div>` : ''}
+                    ${p.media ? `<div class="media-container">${isVideo ? `<video src="${p.media}" controls></video>` : `<img src="${p.media}" loading="lazy">`}</div>` : ''}
                     <div class="card-content">
                         <span class="tag ${isAdm ? 'tag-adm' : ''}">${p.category}</span>
-                        <h3>${p.title}</h3>
-                        <p style="font-size:14px; color:var(--text-muted); margin-top:10px;">${descFormatted}</p>
+                        <h3 style="margin-bottom:10px; font-size: 16px;">${p.title}</h3>
+                        <p style="font-size:13px; color:var(--text-muted); white-space:pre-wrap;">${descFormatted}</p>
                     </div>
                     <div class="card-footer">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${p.avatar}" style="width:24px; height:24px; border-radius:50%;">
-                            <span style="font-size:12px;"><img src="${isAdm ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${p.author}</span>
+                            <img src="${p.avatar}" style="width:24px; height:24px; border-radius:50%; border: 1px solid var(--border);">
+                            <span style="font-size:11px; font-weight:600;">
+                                <img src="${isAdm ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${p.author}
+                            </span>
                         </div>
                         <div style="text-align:right">
-                            <span style="color:#10b981; font-weight:700;">
-                                <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon"> ${p.price}
+                            <span style="font-size:13px; font-weight:700; color:#10b981; display: flex; align-items:center; justify-content:flex-end;">
+                                <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon">
+                                ${p.price}
                             </span>
-                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? `<br><button class="btn-danger" onclick="deletePost('${d.id}')">Excluir</button>` : ''}
+                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? 
+                                `<button class="btn-danger" style="margin-top:5px;" onclick="deletePost('${p.id}')">Excluir</button>` : ''}
                         </div>
                     </div>
                 `;
                 feed.appendChild(card);
             });
-            adminSection.style.display = hasNotice ? 'block' : 'none';
+
+            adminSection.style.display = hasAdminNotice ? 'block' : 'none';
         }
 
+        // EVENTOS DE FILTRO
+        document.getElementById('search-bar').oninput = renderFeed;
+        document.getElementById('filter-category').onchange = renderFeed;
+
+        // FUNÇÃO DE EXCLUIR
         window.deletePost = async (id) => {
-            if(confirm("Excluir?")) { await deleteDoc(doc(db, "roblox_posts", id)); loadPosts(); }
+            if(confirm("Tem certeza que deseja excluir este anúncio?")) {
+                await deleteDoc(doc(db, "roblox_posts", id));
+            }
         };
     </script>
 </body>
