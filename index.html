@@ -3,224 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Hub - Plataforma Profissional</title>
+    <title>Roblox Hub - Serviços</title>
+    <link rel="icon" href="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #09090b;
-            --card-bg: #18181b;
+            --bg-color: #0c0c0e;
+            --card-bg: #16161a;
             --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border: #27272a;
-            --admin-color: #f59e0b;
+            --admin-gold: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-        }
+        /* BADGES STYLE */
+        .badge-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 4px; }
+        .currency-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; }
 
-        /* TELA DE LOGIN */
-        #login-screen {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; background: radial-gradient(circle at top, #18181b 0%, var(--bg-color) 100%);
-        }
-
-        .login-box {
-            background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(10px);
-            padding: 40px; border-radius: 16px; text-align: center;
-            border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            max-width: 400px; width: 90%;
-        }
-
-        .login-box h1 { margin-bottom: 10px; font-size: 26px; font-weight: 700; }
-        .login-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
-
-        .btn {
-            background: var(--primary); color: white; border: none;
-            padding: 12px 24px; border-radius: 8px; font-weight: 600;
-            cursor: pointer; transition: all 0.2s ease;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-        }
-
-        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-danger { background: var(--danger); font-size: 12px; padding: 6px 12px; }
-        .btn-danger:hover { background: var(--danger-hover); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); }
-        .btn-outline:hover { background: var(--border); }
-
-        /* HEADER E APP */
-        #app-screen { display: none; }
-
+        /* HEADER */
         header {
-            background: rgba(24, 24, 27, 0.9); backdrop-filter: blur(8px);
-            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
+            background: rgba(22, 22, 26, 0.95); backdrop-filter: blur(10px);
+            padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-main { width: 32px; height: 32px; }
+
+        .user-nav { display: flex; align-items: center; gap: 15px; }
+        .user-profile { display: flex; align-items: center; gap: 8px; background: #27272a; padding: 5px 12px; border-radius: 20px; }
+        .user-profile img { width: 24px; height: 24px; border-radius: 50%; }
+
+        /* ANÚNCIOS GERAIS (ADM) */
+        #admin-announcements {
+            margin: 20px 5% 0; padding: 20px; background: linear-gradient(90deg, #1e1b4b 0%, #16161a 100%);
+            border-radius: 12px; border: 1px solid #3730a3; display: none;
         }
 
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
-
-        main { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
-
-        .top-bar { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
-
-        /* CARDS DE SERVIÇO */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        /* GRID E CARDS */
+        main { padding: 30px 5%; max-width: 1300px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; margin-top: 30px; }
 
         .service-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 12px; padding: 24px; transition: all 0.2s ease;
-            display: flex; flex-direction: column; gap: 12px;
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+            overflow: hidden; display: flex; flex-direction: column; transition: 0.3s;
         }
+        .service-card:hover { border-color: var(--primary); transform: translateY(-3px); }
 
-        .service-card:hover { border-color: var(--primary); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1); }
+        .card-content { padding: 20px; flex-grow: 1; }
+        .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #2e1065; color: #ddd6fe; margin-bottom: 12px; display: inline-block; }
+        .tag-adm { background: #78350f; color: #fef3c7; }
+
+        .media-container { width: 100%; background: #000; display: flex; justify-content: center; }
+        .media-container img, .media-container video { width: 100%; max-height: 220px; object-fit: cover; }
+
+        .card-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #1c1c21; }
         
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        /* BOTÕES */
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: #991b1b; color: white; font-size: 12px; }
         
-        .tag {
-            background: rgba(139, 92, 246, 0.15); color: #c4b5fd;
-            padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
-        }
-        .tag-admin { background: rgba(245, 158, 11, 0.15); color: var(--admin-color); }
-
-        .service-card h3 { font-size: 18px; color: var(--text-main); line-height: 1.3; }
-        
-        .service-card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
-        
-        .card-media img, .card-media video {
-            width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border);
-        }
-
-        .card-footer {
-            display: flex; justify-content: space-between; align-items: center;
-            border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto;
-        }
-
-        .author-info { display: flex; align-items: center; gap: 10px; }
-        .author-info img { width: 28px; height: 28px; border-radius: 50%; }
-        .author-name { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; }
-        .admin-badge { font-size: 10px; color: var(--admin-color); font-weight: bold; }
-
-        .price { color: #10b981; font-weight: 700; font-size: 15px; }
-
-        .contact-box {
-            background: rgba(255, 255, 255, 0.03); padding: 10px; border-radius: 8px;
-            font-size: 13px; margin-top: 10px; border: 1px dashed var(--border);
-            word-break: break-all;
-        }
-
-        .contact-box a { color: var(--primary); text-decoration: none; font-weight: 500; }
-        .contact-box a:hover { text-decoration: underline; }
-
         /* MODAL */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
-            align-items: center; justify-content: center; z-index: 50;
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 550px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f0f12; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; }
 
-        .modal-content {
-            background: var(--card-bg); padding: 32px; border-radius: 16px;
-            width: 90%; max-width: 500px; border: 1px solid var(--border);
-            max-height: 90vh; overflow-y: auto;
-        }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); font-weight: 500; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 12px; background: var(--bg-color); border: 1px solid var(--border);
-            color: white; border-radius: 8px; outline: none; transition: border 0.2s;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
-        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+        /* LOGIN */
+        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <div class="login-box">
+        <div style="background: var(--card-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--border);">
+            <img src="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png" width="80" style="margin-bottom: 20px;">
             <h1>Roblox Hub</h1>
-            <p>A plataforma definitiva para builders, scripters e criadores.</p>
-            <button class="btn" id="btn-login" style="width: 100%;">
-                Entrar com Google
-            </button>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Entre para acessar a plataforma de serviços.</p>
+            <button class="btn btn-primary" id="btn-login" style="width: 100%;">Entrar com Google</button>
         </div>
     </div>
 
-    <div id="app-screen">
+    <div id="app-screen" style="display: none;">
         <header>
-            <h2 style="font-size: 20px;">Roblox Hub</h2>
-            <div class="user-info">
-                <div style="text-align: right;">
-                    <span id="user-name" style="display: block; font-size: 14px; font-weight: 600;"></span>
-                    <span id="admin-tag" style="display: none; font-size: 11px; color: var(--admin-color); font-weight: bold;">Administrador</span>
+            <div class="logo-area">
+                <img src="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png" class="logo-main">
+                <span style="font-weight: 800; letter-spacing: 1px;">ROBLOX HUB</span>
+            </div>
+            <div class="user-nav">
+                <div class="user-profile">
+                    <img id="u-avatar" src="">
+                    <span id="u-name" style="font-size: 13px; font-weight: 600;"></span>
                 </div>
-                <img id="user-avatar" class="user-avatar" src="" alt="Avatar">
-                <button class="btn btn-outline" id="btn-logout" style="padding: 8px 16px; font-size: 13px;">Sair</button>
+                <button class="btn" id="btn-logout" style="background: transparent; border: 1px solid var(--border); color: var(--text-muted);">Sair</button>
             </div>
         </header>
 
+        <section id="admin-announcements">
+            <h4 style="color: var(--admin-gold); display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <img src="https://image2url.com/r2/default/images/1774402297032-7584b3b8-ea4e-4efd-9968-db070178433a.png" width="18">
+                ANÚNCIOS GERAIS DA ADMINISTRAÇÃO
+            </h4>
+            <div id="admin-notices-list" style="font-size: 14px; color: #e2e8f0;"></div>
+        </section>
+
         <main>
-            <div class="top-bar">
-                <div>
-                    <h1 style="font-size: 28px; margin-bottom: 8px;">Mural de Anúncios</h1>
-                    <p style="color: var(--text-muted);">Encontre e ofereça serviços para a comunidade.</p>
-                </div>
-                <button class="btn" id="btn-open-modal">+ Novo Anúncio</button>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Serviços & Parcerias</h2>
+                <button class="btn btn-primary" id="btn-add">+ Criar Anúncio</button>
             </div>
 
-            <div class="services-grid" id="services-container">
-                </div>
+            <div class="services-grid" id="feed"></div>
         </main>
     </div>
 
-    <div class="modal" id="ad-modal">
+    <div class="modal" id="modal-ad">
         <div class="modal-content">
-            <h2 style="margin-bottom: 20px;">Criar Publicação</h2>
-            <form id="ad-form">
-                <div class="form-group">
-                    <label>Título</label>
-                    <input type="text" id="ad-title" placeholder="Ex: Viatura PMESP" required>
-                </div>
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="ad-category" required>
-                        <option value="Scripter">Scripter</option>
-                        <option value="Builder">Builder</option>
-                        <option value="UI Designer">UI Designer</option>
-                        <option value="GFX Maker">GFX Maker</option>
-                        <option value="Parcerias">Parcerias</option>
-                        <option value="Avisos da ADM" id="opt-admin" style="display: none; font-weight: bold; color: var(--admin-color);">Avisos da ADM</option>
-                        <option value="Outros">Outros</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>URL de Imagem ou Vídeo (Opcional)</label>
-                    <input type="url" id="ad-media" placeholder="Link de uma imagem ou vídeo .mp4">
-                </div>
-                <div class="form-group">
-                    <label>Descrição</label>
-                    <textarea id="ad-desc" rows="4" placeholder="Detalhe seu serviço, adicione links de portfólio..." required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Preço</label>
-                    <input type="text" id="ad-price" placeholder="Ex: R$ 15,00 / Grátis / A combinar" required>
-                </div>
-                <div class="form-group">
-                    <label>Contato / Link direto</label>
-                    <input type="text" id="ad-contact" placeholder="Seu Discord ou link do servidor" required>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" id="btn-close-modal" style="flex: 1;">Cancelar</button>
-                    <button type="submit" class="btn" style="flex: 1;">Publicar</button>
+            <h3 style="margin-bottom: 20px;">Nova Publicação</h3>
+            <form id="form-ad">
+                <label>Título</label>
+                <input type="text" id="title" required>
+                
+                <label>Categoria</label>
+                <select id="category">
+                    <option value="Build">Build</option>
+                    <option value="Script">Script</option>
+                    <option value="GFX Maker">GFX Maker</option>
+                    <option value="UI Design">UI Design</option>
+                    <option value="Outros">Outros</option>
+                    <option value="Parcerias" class="adm-only" style="display:none;">🤝 Parcerias (ADM)</option>
+                    <option value="Avisos" class="adm-only" style="display:none;">⚠️ Avisos da ADM</option>
+                    <option value="Anúncio Geral" class="adm-only" style="display:none;">📢 Anúncio Geral (Topo)</option>
+                </select>
+
+                <label>URL Imagem/Vídeo (Link Direto)</label>
+                <input type="url" id="media" placeholder="https://...">
+
+                <label>Descrição e Links</label>
+                <textarea id="desc" rows="4" required></textarea>
+
+                <label>Preço</label>
+                <input type="text" id="price" placeholder="Ex: 500 Robux ou R$ 20,00" required>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="btn" id="btn-cancel" style="flex:1; background: #27272a;">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Publicar</button>
                 </div>
             </form>
         </div>
@@ -245,171 +175,124 @@
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        const ADMIN_UID = "hF0CdUoF5DZF036PlgQPC8T04oy1"; // UID do Administrador
+        const ADM_UID = "hF0CdUoF5DZF036PlgQPC8T04oy1";
 
-        // UI Elements
-        const modal = document.getElementById('ad-modal');
-        const servicesContainer = document.getElementById('services-container');
+        const BADGES = {
+            adm: "https://image2url.com/r2/default/images/1774402297032-7584b3b8-ea4e-4efd-9968-db070178433a.png",
+            membro: "https://image2url.com/r2/default/images/1774402198028-522deb5e-dfa7-4b89-acf4-c633e0ddb920.png",
+            robux: "https://image2url.com/r2/default/images/1774402379720-05a80f89-33fb-4e48-895c-acc603f0efad.png",
+            money: "https://image2url.com/r2/default/images/1774402438176-eee0bff8-e429-4336-a83a-28e49a61789a.png",
+            all: "https://image2url.com/r2/default/images/1774402355307-85cbdd2a-e541-430a-9cf8-67d1bd550703.png"
+        };
 
-        // Função para transformar texto com links em tags <a> clicáveis
-        function linkify(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank">${url}</a>`;
-            });
-        }
-
-        // Função para verificar se a URL é de vídeo
-        function isVideoUrl(url) {
-            return url.match(/\.(mp4|webm|ogg)$/i);
-        }
-
-        // Monitorar Autenticação
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-screen').style.display = 'block';
-                document.getElementById('user-name').innerText = user.displayName;
-                document.getElementById('user-avatar').src = user.photoURL;
-
-                // Verifica se é admin
-                if (user.uid === ADMIN_UID) {
-                    document.getElementById('admin-tag').style.display = 'block';
-                    document.getElementById('opt-admin').style.display = 'block';
-                } else {
-                    document.getElementById('admin-tag').style.display = 'none';
-                    document.getElementById('opt-admin').style.display = 'none';
+                document.getElementById('u-avatar').src = user.photoURL;
+                document.getElementById('u-name').innerHTML = `<img src="${user.uid === ADM_UID ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${user.displayName}`;
+                
+                if(user.uid === ADM_UID) {
+                    document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'block');
                 }
-                loadServices();
+                loadPosts();
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
             }
         });
 
-        document.getElementById('btn-login').addEventListener('click', () => signInWithPopup(auth, provider));
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
-        document.getElementById('btn-open-modal').addEventListener('click', () => modal.style.display = 'flex');
-        document.getElementById('btn-close-modal').addEventListener('click', () => modal.style.display = 'none');
+        document.getElementById('btn-login').onclick = () => signInWithPopup(auth, provider);
+        document.getElementById('btn-logout').onclick = () => signOut(auth);
+        document.getElementById('btn-add').onclick = () => document.getElementById('modal-ad').style.display = 'flex';
+        document.getElementById('btn-cancel').onclick = () => document.getElementById('modal-ad').style.display = 'none';
 
-        // Salvar Anúncio
-        document.getElementById('ad-form').addEventListener('submit', async (e) => {
+        document.getElementById('form-ad').onsubmit = async (e) => {
             e.preventDefault();
-            const btnSubmit = e.target.querySelector('button[type="submit"]');
-            btnSubmit.innerText = "Publicando..."; btnSubmit.disabled = true;
+            const category = document.getElementById('category').value;
+            
+            await addDoc(collection(db, "roblox_posts"), {
+                title: document.getElementById('title').value,
+                category: category,
+                media: document.getElementById('media').value,
+                desc: document.getElementById('desc').value,
+                price: document.getElementById('price').value,
+                uid: auth.currentUser.uid,
+                author: auth.currentUser.displayName,
+                avatar: auth.currentUser.photoURL,
+                time: serverTimestamp()
+            });
+            
+            document.getElementById('modal-ad').style.display = 'none';
+            e.target.reset();
+            loadPosts();
+        };
 
-            const category = document.getElementById('ad-category').value;
-            if (category === "Avisos da ADM" && auth.currentUser.uid !== ADMIN_UID) {
-                alert("Apenas administradores podem postar avisos.");
-                btnSubmit.innerText = "Publicar"; btnSubmit.disabled = false;
-                return;
-            }
+        async function loadPosts() {
+            const q = query(collection(db, "roblox_posts"), orderBy("time", "desc"));
+            const snap = await getDocs(q);
+            const feed = document.getElementById('feed');
+            const adminBar = document.getElementById('admin-notices-list');
+            const adminSection = document.getElementById('admin-announcements');
+            
+            feed.innerHTML = '';
+            adminBar.innerHTML = '';
+            let hasAdminNotice = false;
 
-            try {
-                await addDoc(collection(db, "services"), {
-                    title: document.getElementById('ad-title').value,
-                    category: category,
-                    mediaUrl: document.getElementById('ad-media').value,
-                    description: document.getElementById('ad-desc').value,
-                    price: document.getElementById('ad-price').value,
-                    contact: document.getElementById('ad-contact').value,
-                    authorName: auth.currentUser.displayName,
-                    authorPhoto: auth.currentUser.photoURL,
-                    authorUid: auth.currentUser.uid,
-                    createdAt: serverTimestamp()
-                });
-                modal.style.display = 'none';
-                e.target.reset();
-                loadServices();
-            } catch (error) {
-                console.error("Erro:", error); alert("Erro ao publicar.");
-            } finally {
-                btnSubmit.innerText = "Publicar"; btnSubmit.disabled = false;
-            }
-        });
+            snap.forEach(d => {
+                const p = d.data();
+                const isVideo = p.media && p.media.match(/\.(mp4|webm)$/i);
+                const isAdm = p.uid === ADM_UID;
+                const badge = isAdm ? BADGES.adm : BADGES.membro;
+                
+                // Formata links na descrição
+                const descFormatted = p.desc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:var(--primary)">$1</a>');
 
-        // Carregar e Renderizar Anúncios
-        async function loadServices() {
-            servicesContainer.innerHTML = '<p>Carregando...</p>';
-            try {
-                const q = query(collection(db, "services"), orderBy("createdAt", "desc"));
-                const snapshot = await getDocs(q);
-                servicesContainer.innerHTML = '';
-
-                if(snapshot.empty) {
-                    servicesContainer.innerHTML = '<p style="color:var(--text-muted)">Nenhum serviço publicado.</p>';
+                // Se for Anúncio Geral, vai para a barra do topo
+                if (p.category === "Anúncio Geral") {
+                    hasAdminNotice = true;
+                    adminBar.innerHTML += `<div style="margin-bottom:5px;">• <strong>${p.title}:</strong> ${descFormatted}</div>`;
                     return;
                 }
 
-                snapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const id = docSnap.id;
-                    const card = document.createElement('div');
-                    card.className = 'service-card';
-                    
-                    const isAdminPost = data.category === "Avisos da ADM";
-                    const tagClass = isAdminPost ? 'tag tag-admin' : 'tag';
-                    const adminBadge = data.authorUid === ADMIN_UID ? '<span class="admin-badge">✔ Admin</span>' : '';
-
-                    let mediaHTML = '';
-                    if (data.mediaUrl) {
-                        if (isVideoUrl(data.mediaUrl)) {
-                            mediaHTML = `<div class="card-media"><video src="${data.mediaUrl}" controls></video></div>`;
-                        } else {
-                            mediaHTML = `<div class="card-media"><img src="${data.mediaUrl}" alt="Mídia do anúncio"></div>`;
-                        }
-                    }
-
-                    // Botão de deletar: Aparece se o usuário for o ADM GERAL ou se for o dono do post
-                    let deleteBtnHTML = '';
-                    if (auth.currentUser && (auth.currentUser.uid === ADMIN_UID || auth.currentUser.uid === data.authorUid)) {
-                        deleteBtnHTML = `<button class="btn btn-danger" onclick="deleteAd('${id}')">Excluir</button>`;
-                    }
-
-                    card.innerHTML = `
-                        <div class="card-header">
-                            <span class="${tagClass}">${data.category}</span>
-                            ${deleteBtnHTML}
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.innerHTML = `
+                    ${p.media ? `<div class="media-container">${isVideo ? `<video src="${p.media}" controls></video>` : `<img src="${p.media}">`}</div>` : ''}
+                    <div class="card-content">
+                        <span class="tag ${isAdm ? 'tag-adm' : ''}">${p.category}</span>
+                        <h3 style="margin-bottom:10px;">${p.title}</h3>
+                        <p style="font-size:14px; color:var(--text-muted); white-space:pre-wrap;">${descFormatted}</p>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${p.avatar}" style="width:24px; height:24px; border-radius:50%;">
+                            <span style="font-size:12px; font-weight:600;">
+                                <img src="${badge}" class="badge-icon"> ${p.author}
+                            </span>
                         </div>
-                        <h3>${data.title}</h3>
-                        ${mediaHTML}
-                        <p>${linkify(data.description)}</p>
-                        
-                        <div class="contact-box">
-                            <strong>Contato/Link:</strong> <br>
-                            ${linkify(data.contact)}
+                        <div style="text-align:right">
+                            <span style="font-size:14px; font-weight:700; color:#10b981;">
+                                <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon">
+                                ${p.price}
+                            </span>
+                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? 
+                                `<br><button class="btn-danger" style="margin-top:8px; border-radius:4px;" onclick="deletePost('${d.id}')">Excluir</button>` : ''}
                         </div>
+                    </div>
+                `;
+                feed.appendChild(card);
+            });
 
-                        <div class="card-footer">
-                            <div class="author-info">
-                                <img src="${data.authorPhoto || 'https://via.placeholder.com/40'}" alt="Foto">
-                                <div class="author-name">
-                                    <span>${data.authorName}</span>
-                                    ${adminBadge}
-                                </div>
-                            </div>
-                            <span class="price">${data.price}</span>
-                        </div>
-                    `;
-                    servicesContainer.appendChild(card);
-                });
-            } catch (error) {
-                console.error(error);
-                servicesContainer.innerHTML = '<p style="color:var(--danger)">Erro ao carregar dados do banco.</p>';
-            }
+            adminSection.style.display = hasAdminNotice ? 'block' : 'none';
         }
 
-        // Deletar anúncio (Exposta globalmente para o onClick do HTML funcionar)
-        window.deleteAd = async function(docId) {
-            if(confirm("Tem certeza que deseja excluir esta publicação?")) {
-                try {
-                    await deleteDoc(doc(db, "services", docId));
-                    loadServices(); // Recarrega após deletar
-                } catch (error) {
-                    alert("Erro ao excluir. Verifique permissões.");
-                }
+        window.deletePost = async (id) => {
+            if(confirm("Excluir anúncio?")) {
+                await deleteDoc(doc(db, "roblox_posts", id));
+                loadPosts();
             }
-        }
+        };
     </script>
 </body>
 </html>
