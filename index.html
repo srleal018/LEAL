@@ -1,412 +1,319 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Hub - Serviços</title>
+    
+    <link rel="icon" href="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<title>Roblox Hub - Serviços</title>
+    <style>
+        :root {
+            --bg-color: #0c0c0e;
+            --card-bg: #16161a;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --danger: #ef4444;
+        }
 
-<link rel="icon"
-href="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png">
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-rel="stylesheet">
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-<style>
+        /* Header e Auth */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
 
-/* ======= SEU CSS ORIGINAL ======= */
-/* (mantido exatamente igual) */
+        /* Botões Gerais */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
 
-:root {
---bg-color:#0c0c0e;
---card-bg:#16161a;
---primary:#8b5cf6;
---primary-hover:#7c3aed;
---text-main:#f4f4f5;
---text-muted:#a1a1aa;
---border:#27272a;
---admin-gold:#f59e0b;
-}
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); margin-top: 15px; }
+        .btn-danger:hover { background: var(--danger); color: white; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
-}
+        /* Área de Criação */
+        .post-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
 
-body{
-background-color:var(--bg-color);
-color:var(--text-main);
-}
+        textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            resize: none;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
 
-/* ===== POPUP ANIMADO ===== */
+        /* Feed de Posts */
+        .post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            animation: fadeIn 0.4s ease;
+        }
 
-.popup-overlay {
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .author-name { font-weight: 700; color: var(--primary); font-size: 14px; }
+        .post-date { color: var(--text-muted); font-size: 12px; }
 
-position:fixed;
-inset:0;
+        /* Popups */
+        .popup-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; backdrop-filter: blur(8px);
+        }
 
-background:rgba(0,0,0,.8);
+        .popup-box {
+            background: var(--card-bg); padding: 25px; border-radius: 16px;
+            border: 1px solid var(--border); width: 90%; max-width: 400px;
+            text-align: center;
+        }
 
-display:none;
+        .popup-input {
+            width: 100%; padding: 12px; margin: 15px 0;
+            background: #000; border: 1px solid var(--border);
+            border-radius: 8px; color: white;
+        }
 
-align-items:center;
-justify-content:center;
+        .popup-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .popup-buttons button { flex: 1; }
 
-z-index:9999;
-
-backdrop-filter:blur(5px);
-
-}
-
-.popup-box {
-
-background:var(--card-bg);
-
-padding:25px;
-
-border-radius:16px;
-
-border:1px solid var(--border);
-
-width:100%;
-max-width:420px;
-
-animation:scaleIn .2s ease;
-
-}
-
-.popup-buttons {
-
-display:flex;
-gap:10px;
-margin-top:15px;
-
-}
-
-.popup-buttons button {
-
-flex:1;
-
-}
-
-@keyframes scaleIn {
-
-from{
-transform:scale(.85);
-opacity:0;
-}
-
-to{
-transform:scale(1);
-opacity:1;
-}
-
-}
-
-</style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-
 <body>
 
-<!-- ===== POPUP ===== -->
-
-<div id="popup-overlay" class="popup-overlay">
-
-<div class="popup-box">
-
-<h3 id="popup-title">Mensagem</h3>
-
-<p id="popup-text"></p>
-
-<input
-id="popup-input"
-placeholder="Digite aqui..."
-style="display:none;">
-
-<div class="popup-buttons">
-
-<button
-class="btn"
-id="popup-cancel">
-
-Cancelar
-
-</button>
-
-<button
-class="btn btn-primary"
-id="popup-confirm">
-
-OK
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- ===== AQUI FICA TODO SEU HTML ORIGINAL ===== -->
-<!-- (mantido igual ao que você mandou) -->
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-
-import {
-getAuth,
-signInWithPopup,
-GoogleAuthProvider,
-onAuthStateChanged,
-signOut
-}
-from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-onSnapshot,
-deleteDoc,
-doc,
-query,
-orderBy,
-serverTimestamp,
-getDoc,
-setDoc
-}
-from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-/* ===============================
-   FIREBASE
-=============================== */
-
-const firebaseConfig = {
-
-apiKey:"AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
-
-authDomain:"bloco-de-notas-85103.firebaseapp.com",
-
-projectId:"bloco-de-notas-85103",
-
-storageBucket:"bloco-de-notas-85103.firebasestorage.app",
-
-messagingSenderId:"890697512853",
-
-appId:"1:890697512853:web:7bff196880f1b010d5289c"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-const provider = new GoogleAuthProvider();
-
-/* ===============================
-   HIERARQUIA
-=============================== */
-
-const OWNER_UID =
-"hF0CdUoF5DZF036PlgQPC8T04oy1";
-
-let USER_ROLE = "user";
-
-/* CARREGAR ROLE */
-
-async function loadUserRole(user){
-
-if(user.uid===OWNER_UID){
-
-USER_ROLE="owner";
-
-return;
-
-}
-
-const roleRef =
-doc(db,"roles",user.uid);
-
-const roleSnap =
-await getDoc(roleRef);
-
-if(roleSnap.exists()){
-
-USER_ROLE=
-roleSnap.data().role;
-
-}
-
-}
-
-/* ===============================
-   POPUP SYSTEM
-=============================== */
-
-function showPopup({
-title="Aviso",
-text="",
-type="alert"
-}){
-
-return new Promise(resolve=>{
-
-const overlay =
-document.getElementById("popup-overlay");
-
-const titleEl =
-document.getElementById("popup-title");
-
-const textEl =
-document.getElementById("popup-text");
-
-const inputEl =
-document.getElementById("popup-input");
-
-const btnCancel =
-document.getElementById("popup-cancel");
-
-const btnConfirm =
-document.getElementById("popup-confirm");
-
-titleEl.innerText=title;
-
-textEl.innerText=text;
-
-overlay.style.display="flex";
-
-inputEl.style.display=
-type==="prompt"
-? "block"
-: "none";
-
-btnCancel.style.display=
-type==="alert"
-? "none"
-: "block";
-
-btnConfirm.onclick=()=>{
-
-overlay.style.display="none";
-
-if(type==="prompt"){
-
-resolve(inputEl.value);
-
-}
-
-else{
-
-resolve(true);
-
-}
-
-};
-
-btnCancel.onclick=()=>{
-
-overlay.style.display="none";
-
-resolve(false);
-
-};
-
-});
-
-}
-
-/* ===============================
-   LOGIN
-=============================== */
-
-onAuthStateChanged(auth,
-async(user)=>{
-
-if(user){
-
-await loadUserRole(user);
-
-/* aqui continua seu sistema original */
-
-}
-
-});
-
-/* ===============================
-   DELETE POST
-=============================== */
-
-window.deletePost =
-async(id)=>{
-
-const ok =
-await showPopup({
-
-title:"Excluir",
-
-text:"Tem certeza que deseja excluir?",
-
-type:"confirm"
-
-});
-
-if(!ok) return;
-
-await deleteDoc(
-doc(db,"roblox_posts",id)
-);
-
-};
-
-/* ===============================
-   ADD MOD
-=============================== */
-
-async function addModerator(){
-
-if(USER_ROLE!=="owner"){
-
-showPopup({
-title:"Erro",
-text:"Apenas o dono pode adicionar moderadores"
-});
-
-return;
-
-}
-
-const uid =
-await showPopup({
-
-title:"Adicionar Moderador",
-
-text:"Digite o UID:",
-
-type:"prompt"
-
-});
-
-if(!uid) return;
-
-await setDoc(
-doc(db,"roles",uid),
-{ role:"mod" }
-);
-
-showPopup({
-title:"Sucesso",
-text:"Moderador adicionado!"
-});
-
-}
-
-</script>
-
+    <header>
+        <div>
+            <h1 style="font-size: 22px;">Roblox Hub</h1>
+            <p id="user-status" style="font-size: 12px; color: var(--text-muted);">Visitante</p>
+        </div>
+        <div id="auth-controls">
+            <button class="btn btn-primary" id="btn-login">Entrar com Google</button>
+            <button class="btn btn-outline" id="btn-logout" style="display:none;">Sair</button>
+        </div>
+    </header>
+
+    <div id="owner-panel" style="display:none; margin-bottom: 20px;">
+        <button class="btn" style="background: #f59e0b; color: #000;" onclick="handleMenuModerator()">+ Gerenciar Moderadores</button>
+    </div>
+
+    <div id="create-post-area" style="display: none;">
+        <div class="post-box">
+            <h3 style="margin-bottom: 15px; font-size: 16px;">Anunciar Serviço</h3>
+            <textarea id="post-content" rows="3" placeholder="Descreva seu serviço ou script..."></textarea>
+            <button class="btn btn-primary" id="btn-publish">Publicar no Hub</button>
+        </div>
+    </div>
+
+    <div id="posts-container">
+        <p style="text-align: center; color: var(--text-muted);">Carregando serviços...</p>
+    </div>
+
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-box">
+            <h3 id="popup-title">Mensagem</h3>
+            <p id="popup-text" style="color: var(--text-muted); margin-top: 10px;"></p>
+            <input type="text" id="popup-input" class="popup-input" placeholder="Digite aqui...">
+            <div class="popup-buttons">
+                <button class="btn btn-outline" id="popup-cancel">Cancelar</button>
+                <button class="btn btn-primary" id="popup-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // Configuração original mantida
+        const firebaseConfig = {
+            apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
+            authDomain: "bloco-de-notas-85103.firebaseapp.com",
+            projectId: "bloco-de-notas-85103",
+            storageBucket: "bloco-de-notas-85103.firebasestorage.app",
+            messagingSenderId: "890697512853",
+            appId: "1:890697512853:web:7bff196880f1b010d5289c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        const OWNER_UID = "hF0CdUoF5DZF036PlgQPC8T04oy1";
+        let USER_ROLE = "user";
+
+        // --- SISTEMA DE POPUP PROMISE ---
+        window.customPopup = ({ title = "Aviso", text = "", type = "alert" }) => {
+            return new Promise(resolve => {
+                const overlay = document.getElementById("popup-overlay");
+                const input = document.getElementById("popup-input");
+                document.getElementById("popup-title").innerText = title;
+                document.getElementById("popup-text").innerText = text;
+                
+                overlay.style.display = "flex";
+                input.style.display = type === "prompt" ? "block" : "none";
+                document.getElementById("popup-cancel").style.display = type === "alert" ? "none" : "block";
+
+                document.getElementById("popup-confirm").onclick = () => {
+                    overlay.style.display = "none";
+                    resolve(type === "prompt" ? input.value : true);
+                };
+                document.getElementById("popup-cancel").onclick = () => {
+                    overlay.style.display = "none";
+                    resolve(false);
+                };
+            });
+        };
+
+        // --- CARREGAR CARGOS ---
+        async function checkPermissions(user) {
+            if (user.uid === OWNER_UID) {
+                USER_ROLE = "owner";
+                document.getElementById("owner-panel").style.display = "block";
+            } else {
+                const docRef = doc(db, "roles", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) USER_ROLE = docSnap.data().role;
+            }
+            document.getElementById("user-status").innerText = `Logado como: ${USER_ROLE.toUpperCase()}`;
+        }
+
+        // --- AUTH OBSERVER ---
+        onAuthStateChanged(auth, async (user) => {
+            const loginBtn = document.getElementById("btn-login");
+            const logoutBtn = document.getElementById("btn-logout");
+            const postArea = document.getElementById("create-post-area");
+
+            if (user) {
+                await checkPermissions(user);
+                loginBtn.style.display = "none";
+                logoutBtn.style.display = "block";
+                postArea.style.display = "block";
+            } else {
+                USER_ROLE = "user";
+                loginBtn.style.display = "block";
+                logoutBtn.style.display = "none";
+                postArea.style.display = "none";
+                document.getElementById("owner-panel").style.display = "none";
+                document.getElementById("user-status").innerText = "Visitante";
+            }
+            renderPosts();
+        });
+
+        document.getElementById("btn-login").onclick = () => signInWithPopup(auth, provider);
+        document.getElementById("btn-logout").onclick = () => signOut(auth);
+
+        // --- GESTÃO DE POSTS ---
+        document.getElementById("btn-publish").onclick = async () => {
+            const txt = document.getElementById("post-content").value;
+            if (!txt.trim()) return;
+
+            try {
+                await addDoc(collection(db, "roblox_posts"), {
+                    text: txt,
+                    author: auth.currentUser.displayName,
+                    uid: auth.currentUser.uid,
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById("post-content").value = "";
+            } catch (e) {
+                console.error("Erro ao postar:", e);
+            }
+        };
+
+        function renderPosts() {
+            const q = query(collection(db, "roblox_posts"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const container = document.getElementById("posts-container");
+                container.innerHTML = "";
+
+                if (snapshot.empty) {
+                    container.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Nenhum serviço anunciado ainda.</p>`;
+                    return;
+                }
+
+                snapshot.forEach(d => {
+                    const data = d.data();
+                    const isAuthor = auth.currentUser && auth.currentUser.uid === data.uid;
+                    const canDelete = USER_ROLE === "owner" || USER_ROLE === "mod" || isAuthor;
+
+                    const card = document.createElement("div");
+                    card.className = "post-card";
+                    card.innerHTML = `
+                        <div class="post-header">
+                            <span class="author-name">${data.author}</span>
+                            <span class="post-date">Anúncio Ativo</span>
+                        </div>
+                        <p style="line-height: 1.5;">${data.text}</p>
+                        ${canDelete ? `<button class="btn btn-danger" onclick="handleDeletePost('${d.id}')">Excluir Post</button>` : ''}
+                    `;
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        // --- FUNÇÕES GLOBAIS (WINDOW) ---
+        window.handleDeletePost = async (id) => {
+            const confirm = await customPopup({
+                title: "Confirmar Exclusão",
+                text: "Esta ação não pode ser desfeita.",
+                type: "confirm"
+            });
+            if (confirm) await deleteDoc(doc(db, "roblox_posts", id));
+        };
+
+        window.handleMenuModerator = async () => {
+            if (USER_ROLE !== "owner") return;
+            const uid = await customPopup({
+                title: "Novo Moderador",
+                text: "Insira o UID do usuário do Firebase:",
+                type: "prompt"
+            });
+            if (uid) {
+                await setDoc(doc(db, "roles", uid), { role: "mod" });
+                customPopup({ text: "Permissão de Moderador concedida!" });
+            }
+        };
+
+    </script>
 </body>
 </html>
