@@ -1,229 +1,367 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Web Obby Studio</title>
-    <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e24; color: white; touch-action: none; overflow: hidden; }
-        
-        /* Telas */
-        .screen { display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; justify-content: center; }
-        #hubScreen { display: flex; } /* Começa no Hub */
-        
-        /* UI Elements */
-        h1 { font-size: 2rem; margin-bottom: 20px; color: #00d2ff; }
-        .btn { background: #00d2ff; color: #1e1e24; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; margin: 10px; width: 80%; max-width: 300px; text-transform: uppercase; }
-        .btn:active { background: #0096b3; }
-        .nav-bar { position: absolute; top: 0; left: 0; width: 100%; padding: 10px; background: #2b2b36; display: flex; justify-content: space-between; box-sizing: border-box; }
-        .nav-btn { background: #ff4757; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
+<meta charset="UTF-8">
+<title>Roblox Serviços</title>
 
-        /* Canvas */
-        canvas { background-color: #87CEEB; display: block; border-bottom: 5px solid #2b2b36; }
-        
-        /* Paleta do Studio */
-        #palette { display: flex; justify-content: center; padding: 10px; background: #2b2b36; width: 100%; gap: 10px; }
-        .tool { width: 40px; height: 40px; border-radius: 5px; border: 2px solid transparent; }
-        .tool.active { border-color: white; transform: scale(1.1); }
-        .t-platform { background: #2ed573; }
-        .t-lava { background: #ff4757; }
-        .t-erase { background: #1e1e24; border: 1px solid #555; }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:#0d1117;
+color:white;
+}
+
+header{
+background:#161b22;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #30363d;
+}
+
+.logo{
+font-size:22px;
+font-weight:700;
+color:#58a6ff;
+}
+
+button{
+background:#238636;
+border:none;
+padding:10px 18px;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-weight:500;
+}
+
+button:hover{
+background:#2ea043;
+}
+
+.container{
+padding:20px;
+}
+
+.form{
+background:#161b22;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+display:none;
+}
+
+input, textarea, select{
+
+width:100%;
+padding:10px;
+margin-top:10px;
+background:#0d1117;
+border:1px solid #30363d;
+border-radius:8px;
+color:white;
+
+}
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+gap:15px;
+
+}
+
+.card{
+
+background:#161b22;
+padding:15px;
+border-radius:12px;
+border:1px solid #30363d;
+
+}
+
+.card h3{
+
+margin:0;
+
+}
+
+.category{
+
+color:#58a6ff;
+font-size:13px;
+
+}
+
+.user{
+
+font-size:12px;
+color:#8b949e;
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <div id="hubScreen" class="screen">
-        <h1>Meu Web Hub</h1>
-        <button class="btn" onclick="openStudio()">Abrir Studio</button>
-        <button class="btn" onclick="playGame()">Jogar Obby</button>
-    </div>
+<header>
 
-    <div id="studioScreen" class="screen">
-        <div class="nav-bar">
-            <span>Modo Studio</span>
-            <button class="nav-btn" onclick="openHub()">Sair</button>
-        </div>
-        <canvas id="studioCanvas" width="300" height="400" style="margin-top: 50px;"></canvas>
-        <div id="palette">
-            <div class="tool t-platform active" onclick="selectTool(1, this)"></div>
-            <div class="tool t-lava" onclick="selectTool(2, this)"></div>
-            <div class="tool t-erase" onclick="selectTool(0, this)"></div>
-        </div>
-    </div>
+<div class="logo">
+🎮 Roblox Serviços
+</div>
 
-    <div id="gameScreen" class="screen">
-        <div class="nav-bar">
-            <span>Toque para Pular!</span>
-            <button class="nav-btn" onclick="openHub()">Sair</button>
-        </div>
-        <canvas id="gameCanvas" width="300" height="400" style="margin-top: 50px;"></canvas>
-    </div>
+<div>
 
-    <script>
-        // --- GERENCIAMENTO DE TELAS ---
-        function hideAll() {
-            document.getElementById('hubScreen').style.display = 'none';
-            document.getElementById('studioScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'none';
-            cancelAnimationFrame(gameLoopId);
-        }
+<button onclick="loginGoogle()" id="loginBtn">
+Login Google
+</button>
 
-        function openHub() { hideAll(); document.getElementById('hubScreen').style.display = 'flex'; }
-        
-        function openStudio() { 
-            hideAll(); 
-            document.getElementById('studioScreen').style.display = 'flex'; 
-            drawStudio();
-        }
+<button onclick="logout()" id="logoutBtn" style="display:none;background:#da3633;">
+Sair
+</button>
 
-        function playGame() {
-            hideAll();
-            document.getElementById('gameScreen').style.display = 'flex';
-            startGame();
-        }
+</div>
 
-        // --- SISTEMA DE MAPA (Grade/Grid) ---
-        const tileSize = 30;
-        const cols = 10;
-        const rows = 13;
-        // 0 = Vazio, 1 = Plataforma, 2 = Lava
-        let map = Array(rows).fill().map(() => Array(cols).fill(0));
-        
-        // Plataforma inicial padrão
-        map[12][1] = 1; map[12][2] = 1;
+</header>
 
-        // --- MODO STUDIO ---
-        const studioCtx = document.getElementById('studioCanvas').getContext('2d');
-        let currentTool = 1;
+<div class="container">
 
-        function selectTool(toolId, element) {
-            currentTool = toolId;
-            document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
-        }
+<button onclick="abrirForm()" id="criarBtn" style="display:none;margin-bottom:15px;">
+➕ Criar Anúncio
+</button>
 
-        function drawStudio() {
-            studioCtx.clearRect(0, 0, 300, 400);
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (map[r][c] === 1) studioCtx.fillStyle = '#2ed573'; // Plataforma
-                    else if (map[r][c] === 2) studioCtx.fillStyle = '#ff4757'; // Lava
-                    else studioCtx.fillStyle = 'rgba(255,255,255,0.1)'; // Grid Vazio
-                    
-                    studioCtx.fillRect(c * tileSize, r * tileSize, tileSize - 1, tileSize - 1);
-                }
-            }
-        }
+<div class="form" id="form">
 
-        // Adicionar blocos tocando na tela
-        document.getElementById('studioCanvas').addEventListener('pointerdown', (e) => {
-            const rect = e.target.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const col = Math.floor(x / tileSize);
-            const row = Math.floor(y / tileSize);
-            
-            if (row >= 0 && row < rows && col >= 0 && col < cols) {
-                map[row][col] = currentTool;
-                drawStudio();
-            }
-        });
+<h2>Criar Anúncio</h2>
 
-        // --- MOTOR DE FÍSICA E JOGO ---
-        const gameCtx = document.getElementById('gameCanvas').getContext('2d');
-        let gameLoopId;
-        
-        let player = { x: 45, y: 50, w: 20, h: 20, vx: 0, vy: 0, speed: 2, jumpForce: -8 };
-        const gravity = 0.4;
-        let isGrounded = false;
+<select id="categoria">
 
-        // Pular tocando no canvas do jogo
-        document.getElementById('gameCanvas').addEventListener('pointerdown', () => {
-            if (isGrounded) {
-                player.vy = player.jumpForce;
-                isGrounded = false;
-            }
-        });
+<option>Builds</option>
+<option>Scripts</option>
+<option>GFX Maker</option>
+<option>UI Designer</option>
+<option>Modelagem</option>
 
-        function checkCollision() {
-            isGrounded = false;
-            
-            // Colisão com as bordas da tela
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.w > 300) player.x = 300 - player.w;
-            if (player.y > 400) resetPlayer(); // Caiu no buraco
+</select>
 
-            // Colisão com os blocos do mapa (Física AABB simplificada e robusta)
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (map[r][c] !== 0) {
-                        let blockX = c * tileSize;
-                        let blockY = r * tileSize;
+<input type="text" id="titulo" placeholder="Título do serviço">
 
-                        // Verifica se está batendo no bloco
-                        if (player.x < blockX + tileSize && player.x + player.w > blockX &&
-                            player.y < blockY + tileSize && player.y + player.h > blockY) {
-                            
-                            if (map[r][c] === 2) {
-                                resetPlayer(); // Encostou na lava
-                                return;
-                            }
+<textarea id="descricao" placeholder="Descrição do serviço"></textarea>
 
-                            // Física básica de colisão vertical (pisar em cima)
-                            if (player.vy > 0 && player.y + player.h - player.vy <= blockY) {
-                                player.y = blockY - player.h;
-                                player.vy = 0;
-                                isGrounded = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+<button onclick="criarAnuncio()">
+Publicar
+</button>
 
-        function resetPlayer() {
-            player.x = 45; player.y = 50; player.vy = 0;
-        }
+</div>
 
-        function updateGame() {
-            // Aplica gravidade e movimento contínuo pra direita (estilo Obby)
-            player.vy += gravity;
-            player.y += player.vy;
-            player.x += player.speed;
+<div class="cards" id="cards"></div>
 
-            // Se bater na parede direita, volta pra esquerda pra continuar o loop
-            if(player.x > 300 - player.w) player.x = 0;
+</div>
 
-            checkCollision();
-        }
+<script type="module">
 
-        function drawGame() {
-            gameCtx.clearRect(0, 0, 300, 400);
+// FIREBASE
 
-            // Desenha o Mapa
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (map[r][c] === 1) gameCtx.fillStyle = '#2ed573';
-                    if (map[r][c] === 2) gameCtx.fillStyle = '#ff4757';
-                    if (map[r][c] !== 0) gameCtx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
-                }
-            }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 
-            // Desenha o Jogador
-            gameCtx.fillStyle = '#00d2ff';
-            gameCtx.fillRect(player.x, player.y, player.w, player.h);
-        }
+import { getFirestore,
+collection,
+addDoc,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        function loop() {
-            updateGame();
-            drawGame();
-            gameLoopId = requestAnimationFrame(loop);
-        }
+import {
+getAuth,
+GoogleAuthProvider,
+signInWithPopup,
+signOut,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        function startGame() {
-            resetPlayer();
-            loop();
-        }
-    </script>
+const firebaseConfig = {
+
+apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
+
+authDomain: "bloco-de-notas-85103.firebaseapp.com",
+
+projectId: "bloco-de-notas-85103",
+
+storageBucket: "bloco-de-notas-85103.firebasestorage.app",
+
+messagingSenderId: "890697512853",
+
+appId: "1:890697512853:web:7bff196880f1b010d5289c",
+
+measurementId: "G-SKDH1JR99T"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth();
+
+const provider = new GoogleAuthProvider();
+
+let usuario = null;
+
+// LOGIN
+
+window.loginGoogle = async () => {
+
+await signInWithPopup(auth, provider);
+
+};
+
+// LOGOUT
+
+window.logout = async () => {
+
+await signOut(auth);
+
+};
+
+// ESTADO LOGIN
+
+onAuthStateChanged(auth, (user) => {
+
+if(user){
+
+usuario = user;
+
+document.getElementById("loginBtn").style.display="none";
+
+document.getElementById("logoutBtn").style.display="inline";
+
+document.getElementById("criarBtn").style.display="inline";
+
+}else{
+
+usuario=null;
+
+document.getElementById("loginBtn").style.display="inline";
+
+document.getElementById("logoutBtn").style.display="none";
+
+document.getElementById("criarBtn").style.display="none";
+
+}
+
+});
+
+// FORM
+
+window.abrirForm = () => {
+
+let f=document.getElementById("form");
+
+f.style.display = f.style.display=="none" ? "block" : "none";
+
+};
+
+// CRIAR ANUNCIO
+
+window.criarAnuncio = async () => {
+
+if(!usuario){
+
+alert("Faça login primeiro");
+
+return;
+
+}
+
+let categoria=document.getElementById("categoria").value;
+
+let titulo=document.getElementById("titulo").value;
+
+let descricao=document.getElementById("descricao").value;
+
+if(!titulo || !descricao){
+
+alert("Preencha tudo");
+
+return;
+
+}
+
+await addDoc(collection(db,"anuncios"),{
+
+categoria,
+
+titulo,
+
+descricao,
+
+usuario:usuario.displayName,
+
+uid:usuario.uid,
+
+data:Date.now()
+
+});
+
+carregarAnuncios();
+
+document.getElementById("titulo").value="";
+document.getElementById("descricao").value="";
+
+};
+
+// CARREGAR ANUNCIOS
+
+async function carregarAnuncios(){
+
+let cards=document.getElementById("cards");
+
+cards.innerHTML="";
+
+let querySnapshot = await getDocs(collection(db,"anuncios"));
+
+querySnapshot.forEach((doc)=>{
+
+let d=doc.data();
+
+let card=`
+
+<div class="card">
+
+<h3>${d.titulo}</h3>
+
+<div class="category">
+${d.categoria}
+</div>
+
+<p>
+${d.descricao}
+</p>
+
+<div class="user">
+Por ${d.usuario}
+</div>
+
+</div>
+
+`;
+
+cards.innerHTML+=card;
+
+});
+
+}
+
+carregarAnuncios();
+
+</script>
+
 </body>
 </html>
