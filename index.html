@@ -115,7 +115,6 @@
                 <h2>Serviços & Parcerias</h2>
                 <button class="btn btn-primary" id="btn-add">+ Criar Anúncio</button>
             </div>
-
             <div class="services-grid" id="feed"></div>
         </main>
     </div>
@@ -139,10 +138,10 @@
                     <option value="Anúncio Geral" class="adm-only" style="display:none;">📢 Anúncio Geral (Topo)</option>
                 </select>
 
-                <label>URL Imagem/Vídeo (Link Direto)</label>
+                <label>URL Imagem/Vídeo</label>
                 <input type="url" id="media" placeholder="https://...">
 
-                <label>Descrição e Links</label>
+                <label>Descrição</label>
                 <textarea id="desc" rows="4" required></textarea>
 
                 <label>Preço</label>
@@ -181,8 +180,7 @@
             adm: "https://image2url.com/r2/default/images/1774402297032-7584b3b8-ea4e-4efd-9968-db070178433a.png",
             membro: "https://image2url.com/r2/default/images/1774402198028-522deb5e-dfa7-4b89-acf4-c633e0ddb920.png",
             robux: "https://image2url.com/r2/default/images/1774402379720-05a80f89-33fb-4e48-895c-acc603f0efad.png",
-            money: "https://image2url.com/r2/default/images/1774402438176-eee0bff8-e429-4336-a83a-28e49a61789a.png",
-            all: "https://image2url.com/r2/default/images/1774402355307-85cbdd2a-e541-430a-9cf8-67d1bd550703.png"
+            money: "https://image2url.com/r2/default/images/1774402438176-eee0bff8-e429-4336-a83a-28e49a61789a.png"
         };
 
         onAuthStateChanged(auth, (user) => {
@@ -209,11 +207,9 @@
 
         document.getElementById('form-ad').onsubmit = async (e) => {
             e.preventDefault();
-            const category = document.getElementById('category').value;
-            
             await addDoc(collection(db, "roblox_posts"), {
                 title: document.getElementById('title').value,
-                category: category,
+                category: document.getElementById('category').value,
                 media: document.getElementById('media').value,
                 desc: document.getElementById('desc').value,
                 price: document.getElementById('price').value,
@@ -222,7 +218,6 @@
                 avatar: auth.currentUser.photoURL,
                 time: serverTimestamp()
             });
-            
             document.getElementById('modal-ad').style.display = 'none';
             e.target.reset();
             loadPosts();
@@ -237,61 +232,48 @@
             
             feed.innerHTML = '';
             adminBar.innerHTML = '';
-            let hasAdminNotice = false;
+            let hasNotice = false;
 
             snap.forEach(d => {
                 const p = d.data();
-                const isVideo = p.media && p.media.match(/\.(mp4|webm)$/i);
                 const isAdm = p.uid === ADM_UID;
-                const badge = isAdm ? BADGES.adm : BADGES.membro;
-                
-                // Formata links na descrição
                 const descFormatted = p.desc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:var(--primary)">$1</a>');
 
-                // Se for Anúncio Geral, vai para a barra do topo
                 if (p.category === "Anúncio Geral") {
-                    hasAdminNotice = true;
-                    adminBar.innerHTML += `<div style="margin-bottom:5px;">• <strong>${p.title}:</strong> ${descFormatted}</div>`;
+                    hasNotice = true;
+                    adminBar.innerHTML += `<div style="margin-bottom:8px;">• <strong>${p.title}:</strong> ${descFormatted}</div>`;
                     return;
                 }
 
                 const card = document.createElement('div');
                 card.className = 'service-card';
                 card.innerHTML = `
-                    ${p.media ? `<div class="media-container">${isVideo ? `<video src="${p.media}" controls></video>` : `<img src="${p.media}">`}</div>` : ''}
+                    ${p.media ? `<div class="media-container"><img src="${p.media}"></div>` : ''}
                     <div class="card-content">
                         <span class="tag ${isAdm ? 'tag-adm' : ''}">${p.category}</span>
-                        <h3 style="margin-bottom:10px;">${p.title}</h3>
-                        <p style="font-size:14px; color:var(--text-muted); white-space:pre-wrap;">${descFormatted}</p>
+                        <h3>${p.title}</h3>
+                        <p style="font-size:14px; color:var(--text-muted); margin-top:10px;">${descFormatted}</p>
                     </div>
                     <div class="card-footer">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <img src="${p.avatar}" style="width:24px; height:24px; border-radius:50%;">
-                            <span style="font-size:12px; font-weight:600;">
-                                <img src="${badge}" class="badge-icon"> ${p.author}
-                            </span>
+                            <span style="font-size:12px;"><img src="${isAdm ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${p.author}</span>
                         </div>
                         <div style="text-align:right">
-                            <span style="font-size:14px; font-weight:700; color:#10b981;">
-                                <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon">
-                                ${p.price}
+                            <span style="color:#10b981; font-weight:700;">
+                                <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon"> ${p.price}
                             </span>
-                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? 
-                                `<br><button class="btn-danger" style="margin-top:8px; border-radius:4px;" onclick="deletePost('${d.id}')">Excluir</button>` : ''}
+                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? `<br><button class="btn-danger" onclick="deletePost('${d.id}')">Excluir</button>` : ''}
                         </div>
                     </div>
                 `;
                 feed.appendChild(card);
             });
-
-            adminSection.style.display = hasAdminNotice ? 'block' : 'none';
+            adminSection.style.display = hasNotice ? 'block' : 'none';
         }
 
         window.deletePost = async (id) => {
-            if(confirm("Excluir anúncio?")) {
-                await deleteDoc(doc(db, "roblox_posts", id));
-                loadPosts();
-            }
+            if(confirm("Excluir?")) { await deleteDoc(doc(db, "roblox_posts", id)); loadPosts(); }
         };
     </script>
 </body>
