@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Hub - Serviços</title>
+    <title>Roblox - leallxzz</title>
     <link rel="icon" href="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -21,12 +21,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; overflow-x: hidden; }
 
+        /* Canvas de Fundo Animado */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         .badge-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 4px; }
         .currency-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; }
 
         /* HEADER */
         header {
-            background: rgba(22, 22, 26, 0.95); backdrop-filter: blur(10px);
+            background: rgba(22, 22, 26, 0.85); backdrop-filter: blur(10px);
             padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
         }
@@ -39,22 +50,22 @@
 
         /* CONTROLES (Busca e Filtro) */
         .controls-section { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; align-items: center; }
-        .search-input { flex: 1; min-width: 250px; background: #16161a; border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; color: white; }
-        .filter-select { background: #16161a; border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; cursor: pointer; }
+        .search-input { flex: 1; min-width: 250px; background: rgba(22, 22, 26, 0.8); border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; color: white; backdrop-filter: blur(4px); }
+        .filter-select { background: rgba(22, 22, 26, 0.8); border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; cursor: pointer; backdrop-filter: blur(4px); }
 
         #admin-announcements {
-            margin: 20px 5% 0; padding: 20px; background: linear-gradient(90deg, #1e1b4b 0%, #16161a 100%);
-            border-radius: 12px; border: 1px solid #3730a3; display: none;
+            margin: 20px 5% 0; padding: 20px; background: linear-gradient(90deg, rgba(30, 27, 75, 0.9) 0%, rgba(22, 22, 26, 0.9) 100%);
+            border-radius: 12px; border: 1px solid #3730a3; display: none; backdrop-filter: blur(5px);
         }
 
         main { padding: 30px 5%; max-width: 1400px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
 
         .service-card {
-            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+            background: rgba(22, 22, 26, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 14px;
             overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; height: 100%;
         }
-        .service-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .service-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(139, 92, 246, 0.15); }
 
         .card-content { padding: 20px; flex-grow: 1; }
         .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; background: #2e1065; color: #ddd6fe; margin-bottom: 12px; display: inline-block; }
@@ -63,7 +74,7 @@
         .media-container { width: 100%; background: #000; height: 180px; display: flex; justify-content: center; overflow: hidden; }
         .media-container img, .media-container video { width: 100%; height: 100%; object-fit: cover; }
 
-        .card-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #1c1c21; }
+        .card-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(28, 28, 33, 0.8); }
         
         .btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
@@ -71,18 +82,29 @@
         .btn-danger { background: #991b1b; color: white; font-size: 11px; padding: 5px 10px; border-radius: 4px; }
         
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 20px; }
-        .modal-content { background: var(--card-bg); width: 100%; max-width: 550px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 550px; padding: 30px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f0f12; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
-        input:focus { border-color: var(--primary); }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f0f12; border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
 
-        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: radial-gradient(circle, #1e1b4b 0%, #0c0c0e 100%); }
+        #login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: transparent; }
+
+        /* Sistema de Toasts (Alertas Animados) */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--card-bg); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 8px; color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; min-width: 250px; }
+        .toast.show { transform: translateX(0); }
+        .toast.error { border-left-color: #ef4444; }
+        .toast.success { border-left-color: #10b981; }
     </style>
 </head>
 <body>
 
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="toast-container"></div>
+
     <div id="login-screen">
-        <div style="background: var(--card-bg); padding: 50px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div style="background: rgba(22, 22, 26, 0.9); padding: 50px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); backdrop-filter: blur(10px);">
             <img src="https://image2url.com/r2/default/images/1774402467122-38f2afde-7636-4704-af10-0cc3f11d2a39.png" width="80" style="margin-bottom: 20px;">
             <h1 style="margin-bottom: 10px;">Roblox Hub</h1>
             <p style="color: var(--text-muted); margin-bottom: 30px;">Acesse a maior vitrine de serviços e parcerias.</p>
@@ -99,6 +121,7 @@
                 <span style="font-weight: 800; letter-spacing: 1px; font-size: 18px;">ROBLOX HUB</span>
             </div>
             <div class="user-nav">
+                <button class="btn btn-primary adm-only" id="btn-open-admin" style="display:none; font-size: 12px; padding: 8px 12px; background: #ea580c;">Painel ADM</button>
                 <div class="user-profile">
                     <img id="u-avatar" src="">
                     <span id="u-name" style="font-size: 13px; font-weight: 600;"></span>
@@ -174,11 +197,45 @@
         </div>
     </div>
 
+    <div class="modal" id="modal-confirm">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h3 style="margin-bottom: 15px; color: #ef4444;">Atenção</h3>
+            <p id="confirm-msg" style="margin-bottom: 25px; color: var(--text-muted);"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" id="btn-confirm-no" style="background: #27272a;">Cancelar</button>
+                <button class="btn btn-primary" id="btn-confirm-yes" style="background: #ef4444;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-admin">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--admin-gold);">Painel de Administração</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Atribua cargos para usuários utilizando o UID deles.</p>
+            <form id="form-admin">
+                <label>UID do Usuário</label>
+                <input type="text" id="admin-uid-input" placeholder="Ex: aBcD123..." required>
+                
+                <label>Cargo</label>
+                <select id="admin-role-input">
+                    <option value="membro">Membro Padrão</option>
+                    <option value="adm">Administrador</option>
+                </select>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn" id="btn-close-admin" style="flex:1; background: #27272a;">Fechar</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1; justify-content: center; background: #ea580c;">Salvar Cargo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, serverTimestamp, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+        // CONFIGURAÇÃO FIREBASE (Mantida original)
         const firebaseConfig = {
             apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
             authDomain: "bloco-de-notas-85103.firebaseapp.com",
@@ -201,20 +258,108 @@
             money: "https://image2url.com/r2/default/images/1774402438176-eee0bff8-e429-4336-a83a-28e49a61789a.png"
         };
 
-        let allPosts = []; // Cache para busca/filtro
+        let allPosts = []; 
+        let isCurrentUserAdmin = false;
 
-        // LOGIN E ESTADO DO USUÁRIO
-        onAuthStateChanged(auth, (user) => {
+        // --- SISTEMA DE ANIMAÇÃO DE FUNDO (CANVAS) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+
+                // Fuga do mouse
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) { this.x -= dx / 15; this.y -= dy / 15; }
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        function initParticles() { particles = []; for (let i = 0; i < 70; i++) particles.push(new Particle()); }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles(); animateParticles();
+
+        // --- SISTEMA DE TOASTS E MODAIS CUSTOMIZADOS ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function showConfirm(message, onConfirmCallback) {
+            const modal = document.getElementById('modal-confirm');
+            document.getElementById('confirm-msg').innerText = message;
+            modal.style.display = 'flex';
+            
+            document.getElementById('btn-confirm-yes').onclick = () => {
+                modal.style.display = 'none';
+                onConfirmCallback();
+            };
+            document.getElementById('btn-confirm-no').onclick = () => {
+                modal.style.display = 'none';
+            };
+        }
+
+        // --- LOGIN E ESTADO DO USUÁRIO ---
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Checa se é Admin Master ou via Banco de Dados
+                isCurrentUserAdmin = (user.uid === ADM_UID);
+                if (!isCurrentUserAdmin) {
+                    try {
+                        const roleDoc = await getDoc(doc(db, "user_roles", user.uid));
+                        if (roleDoc.exists() && roleDoc.data().role === 'adm') {
+                            isCurrentUserAdmin = true;
+                        }
+                    } catch(e) { console.error("Erro ao puxar cargo:", e); }
+                }
+
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('app-screen').style.display = 'block';
                 document.getElementById('u-avatar').src = user.photoURL;
-                document.getElementById('u-name').innerHTML = `<img src="${user.uid === ADM_UID ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${user.displayName}`;
+                document.getElementById('u-name').innerHTML = `<img src="${isCurrentUserAdmin ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${user.displayName}`;
                 
-                if(user.uid === ADM_UID) {
+                if(isCurrentUserAdmin) {
                     document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'block');
+                } else {
+                    document.querySelectorAll('.adm-only').forEach(el => el.style.display = 'none');
                 }
-                listenPosts(); // Inicia o tempo real
+
+                listenPosts();
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('app-screen').style.display = 'none';
@@ -223,10 +368,15 @@
 
         document.getElementById('btn-login').onclick = () => signInWithPopup(auth, provider);
         document.getElementById('btn-logout').onclick = () => signOut(auth);
+        
+        // --- CONTROLES DE MODAIS ---
         document.getElementById('btn-add').onclick = () => document.getElementById('modal-ad').style.display = 'flex';
         document.getElementById('btn-cancel').onclick = () => document.getElementById('modal-ad').style.display = 'none';
+        
+        document.getElementById('btn-open-admin').onclick = () => document.getElementById('modal-admin').style.display = 'flex';
+        document.getElementById('btn-close-admin').onclick = () => document.getElementById('modal-admin').style.display = 'none';
 
-        // SALVAR POST
+        // --- SALVAR POST ---
         document.getElementById('form-ad').onsubmit = async (e) => {
             e.preventDefault();
             const category = document.getElementById('category').value;
@@ -241,14 +391,34 @@
                     uid: auth.currentUser.uid,
                     author: auth.currentUser.displayName,
                     avatar: auth.currentUser.photoURL,
+                    role: isCurrentUserAdmin ? 'adm' : 'membro', // Salva o cargo na hora do post
                     time: serverTimestamp()
                 });
                 document.getElementById('modal-ad').style.display = 'none';
                 e.target.reset();
-            } catch (err) { alert("Erro ao publicar: " + err.message); }
+                showToast("Anúncio publicado com sucesso!", "success");
+            } catch (err) { 
+                showToast("Erro ao publicar: " + err.message, "error"); 
+            }
         };
 
-        // ESCUTAR POSTS (REAL-TIME)
+        // --- SALVAR CARGO ADM ---
+        document.getElementById('form-admin').onsubmit = async (e) => {
+            e.preventDefault();
+            const targetUid = document.getElementById('admin-uid-input').value;
+            const targetRole = document.getElementById('admin-role-input').value;
+
+            try {
+                await setDoc(doc(db, "user_roles", targetUid), { role: targetRole }, { merge: true });
+                showToast(`Cargo atribuído ao UID com sucesso!`, "success");
+                document.getElementById('modal-admin').style.display = 'none';
+                e.target.reset();
+            } catch (err) {
+                showToast("Erro ao definir cargo: " + err.message, "error");
+            }
+        };
+
+        // --- ESCUTAR POSTS (REAL-TIME) ---
         function listenPosts() {
             const q = query(collection(db, "roblox_posts"), orderBy("time", "desc"));
             onSnapshot(q, (snap) => {
@@ -257,7 +427,7 @@
             });
         }
 
-        // RENDERIZAR FEED COM FILTROS
+        // --- RENDERIZAR FEED ---
         function renderFeed() {
             const feed = document.getElementById('feed');
             const adminBar = document.getElementById('admin-notices-list');
@@ -273,7 +443,6 @@
                 const matchesSearch = p.title.toLowerCase().includes(searchTerm);
                 const matchesFilter = filterCat === "Todos" || p.category === filterCat;
 
-                // Anúncios Globais (ADM)
                 if (p.category === "Anúncio Geral") {
                     hasAdminNotice = true;
                     adminBar.innerHTML += `<div style="margin-bottom:8px;">• <strong>${p.title}:</strong> ${p.desc}</div>`;
@@ -283,7 +452,7 @@
                 if (!matchesSearch || !matchesFilter) return;
 
                 const isVideo = p.media && p.media.match(/\.(mp4|webm)$/i);
-                const isAdm = p.uid === ADM_UID;
+                const postAuthorIsAdm = p.role === 'adm' || p.uid === ADM_UID;
                 const descFormatted = p.desc.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:var(--primary);text-decoration:none;">Link</a>');
 
                 const card = document.createElement('div');
@@ -291,7 +460,7 @@
                 card.innerHTML = `
                     ${p.media ? `<div class="media-container">${isVideo ? `<video src="${p.media}" controls></video>` : `<img src="${p.media}" loading="lazy">`}</div>` : ''}
                     <div class="card-content">
-                        <span class="tag ${isAdm ? 'tag-adm' : ''}">${p.category}</span>
+                        <span class="tag ${postAuthorIsAdm ? 'tag-adm' : ''}">${p.category}</span>
                         <h3 style="margin-bottom:10px; font-size: 16px;">${p.title}</h3>
                         <p style="font-size:13px; color:var(--text-muted); white-space:pre-wrap;">${descFormatted}</p>
                     </div>
@@ -299,7 +468,7 @@
                         <div style="display:flex; align-items:center; gap:8px;">
                             <img src="${p.avatar}" style="width:24px; height:24px; border-radius:50%; border: 1px solid var(--border);">
                             <span style="font-size:11px; font-weight:600;">
-                                <img src="${isAdm ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${p.author}
+                                <img src="${postAuthorIsAdm ? BADGES.adm : BADGES.membro}" class="badge-icon"> ${p.author}
                             </span>
                         </div>
                         <div style="text-align:right">
@@ -307,7 +476,7 @@
                                 <img src="${p.price.toLowerCase().includes('robux') ? BADGES.robux : BADGES.money}" class="currency-icon">
                                 ${p.price}
                             </span>
-                            ${(auth.currentUser.uid === ADM_UID || auth.currentUser.uid === p.uid) ? 
+                            ${(isCurrentUserAdmin || auth.currentUser.uid === p.uid) ? 
                                 `<button class="btn-danger" style="margin-top:5px;" onclick="deletePost('${p.id}')">Excluir</button>` : ''}
                         </div>
                     </div>
@@ -318,15 +487,20 @@
             adminSection.style.display = hasAdminNotice ? 'block' : 'none';
         }
 
-        // EVENTOS DE FILTRO
+        // FILTROS
         document.getElementById('search-bar').oninput = renderFeed;
         document.getElementById('filter-category').onchange = renderFeed;
 
-        // FUNÇÃO DE EXCLUIR
-        window.deletePost = async (id) => {
-            if(confirm("Tem certeza que deseja excluir este anúncio?")) {
-                await deleteDoc(doc(db, "roblox_posts", id));
-            }
+        // FUNÇÃO DE EXCLUIR (Disponibilizada no window para o onclick)
+        window.deletePost = (id) => {
+            showConfirm("Tem certeza que deseja excluir este anúncio?", async () => {
+                try {
+                    await deleteDoc(doc(db, "roblox_posts", id));
+                    showToast("Anúncio excluído com sucesso!", "success");
+                } catch(err) {
+                    showToast("Erro ao excluir: " + err.message, "error");
+                }
+            });
         };
     </script>
 </body>
