@@ -298,7 +298,7 @@
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        function initParticles() { particles = []; for (let i = 0; i < 7000; i++) particles.push(new Particle()); }
+        function initParticles() { particles = []; for (let i = 0; i < 700; i++) particles.push(new Particle()); }
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
