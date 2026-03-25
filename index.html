@@ -1,367 +1,452 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Roblox Serviços</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Hub - Serviços e Assets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --card-bg: #1c1c24;
+            --primary: #8b5cf6; /* Roxo Neon */
+            --primary-hover: #7c3aed;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --border: #272732;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-<style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
 
-body{
-margin:0;
-font-family:Poppins;
-background:#0d1117;
-color:white;
-}
+        /* TELA DE LOGIN */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a2e 0%, var(--bg-color) 100%);
+        }
 
-header{
-background:#161b22;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-bottom:1px solid #30363d;
-}
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+        }
 
-.logo{
-font-size:22px;
-font-weight:700;
-color:#58a6ff;
-}
+        .login-box h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
 
-button{
-background:#238636;
-border:none;
-padding:10px 18px;
-color:white;
-border-radius:8px;
-cursor:pointer;
-font-weight:500;
-}
+        .login-box p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
 
-button:hover{
-background:#2ea043;
-}
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
 
-.container{
-padding:20px;
-}
+        .btn:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
 
-.form{
-background:#161b22;
-padding:20px;
-border-radius:12px;
-margin-bottom:20px;
-display:none;
-}
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            width: auto;
+        }
 
-input, textarea, select{
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: none;
+        }
 
-width:100%;
-padding:10px;
-margin-top:10px;
-background:#0d1117;
-border:1px solid #30363d;
-border-radius:8px;
-color:white;
+        /* TELA PRINCIPAL (APP) */
+        #app-screen {
+            display: none;
+        }
 
-}
+        header {
+            background: var(--card-bg);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
 
-.cards{
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-gap:15px;
+        .user-info span {
+            font-weight: 500;
+        }
 
-}
+        main {
+            padding: 40px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.card{
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-background:#161b22;
-padding:15px;
-border-radius:12px;
-border:1px solid #30363d;
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-}
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
 
-.card h3{
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
 
-margin:0;
+        .tag {
+            background: rgba(139, 92, 246, 0.2);
+            color: #bfa4ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
 
-}
+        .service-card h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
 
-.category{
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
 
-color:#58a6ff;
-font-size:13px;
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            font-size: 14px;
+        }
 
-}
+        .price {
+            color: #10b981; /* Verde para valor */
+            font-weight: 700;
+        }
 
-.user{
+        /* MODAL DE NOVO ANÚNCIO */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
 
-font-size:12px;
-color:#8b949e;
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
 
-}
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
 
-</style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+    </style>
 </head>
-
 <body>
 
-<header>
-
-<div class="logo">
-🎮 Roblox Serviços
-</div>
-
-<div>
-
-<button onclick="loginGoogle()" id="loginBtn">
-Login Google
-</button>
-
-<button onclick="logout()" id="logoutBtn" style="display:none;background:#da3633;">
-Sair
-</button>
-
-</div>
-
-</header>
-
-<div class="container">
-
-<button onclick="abrirForm()" id="criarBtn" style="display:none;margin-bottom:15px;">
-➕ Criar Anúncio
-</button>
-
-<div class="form" id="form">
-
-<h2>Criar Anúncio</h2>
-
-<select id="categoria">
-
-<option>Builds</option>
-<option>Scripts</option>
-<option>GFX Maker</option>
-<option>UI Designer</option>
-<option>Modelagem</option>
-
-</select>
-
-<input type="text" id="titulo" placeholder="Título do serviço">
-
-<textarea id="descricao" placeholder="Descrição do serviço"></textarea>
-
-<button onclick="criarAnuncio()">
-Publicar
-</button>
-
-</div>
-
-<div class="cards" id="cards"></div>
-
-</div>
-
-<script type="module">
-
-// FIREBASE
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-
-import { getFirestore,
-collection,
-addDoc,
-getDocs
-}
-from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-import {
-getAuth,
-GoogleAuthProvider,
-signInWithPopup,
-signOut,
-onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
-
-authDomain: "bloco-de-notas-85103.firebaseapp.com",
-
-projectId: "bloco-de-notas-85103",
-
-storageBucket: "bloco-de-notas-85103.firebasestorage.app",
-
-messagingSenderId: "890697512853",
-
-appId: "1:890697512853:web:7bff196880f1b010d5289c",
-
-measurementId: "G-SKDH1JR99T"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const auth = getAuth();
-
-const provider = new GoogleAuthProvider();
-
-let usuario = null;
-
-// LOGIN
-
-window.loginGoogle = async () => {
-
-await signInWithPopup(auth, provider);
-
-};
-
-// LOGOUT
-
-window.logout = async () => {
-
-await signOut(auth);
-
-};
-
-// ESTADO LOGIN
-
-onAuthStateChanged(auth, (user) => {
-
-if(user){
-
-usuario = user;
-
-document.getElementById("loginBtn").style.display="none";
-
-document.getElementById("logoutBtn").style.display="inline";
-
-document.getElementById("criarBtn").style.display="inline";
-
-}else{
-
-usuario=null;
-
-document.getElementById("loginBtn").style.display="inline";
-
-document.getElementById("logoutBtn").style.display="none";
-
-document.getElementById("criarBtn").style.display="none";
-
-}
-
-});
-
-// FORM
-
-window.abrirForm = () => {
-
-let f=document.getElementById("form");
-
-f.style.display = f.style.display=="none" ? "block" : "none";
-
-};
-
-// CRIAR ANUNCIO
-
-window.criarAnuncio = async () => {
-
-if(!usuario){
-
-alert("Faça login primeiro");
-
-return;
-
-}
-
-let categoria=document.getElementById("categoria").value;
-
-let titulo=document.getElementById("titulo").value;
-
-let descricao=document.getElementById("descricao").value;
-
-if(!titulo || !descricao){
-
-alert("Preencha tudo");
-
-return;
-
-}
-
-await addDoc(collection(db,"anuncios"),{
-
-categoria,
-
-titulo,
-
-descricao,
-
-usuario:usuario.displayName,
-
-uid:usuario.uid,
-
-data:Date.now()
-
-});
-
-carregarAnuncios();
-
-document.getElementById("titulo").value="";
-document.getElementById("descricao").value="";
-
-};
-
-// CARREGAR ANUNCIOS
-
-async function carregarAnuncios(){
-
-let cards=document.getElementById("cards");
-
-cards.innerHTML="";
-
-let querySnapshot = await getDocs(collection(db,"anuncios"));
-
-querySnapshot.forEach((doc)=>{
-
-let d=doc.data();
-
-let card=`
-
-<div class="card">
-
-<h3>${d.titulo}</h3>
-
-<div class="category">
-${d.categoria}
-</div>
-
-<p>
-${d.descricao}
-</p>
-
-<div class="user">
-Por ${d.usuario}
-</div>
-
-</div>
-
-`;
-
-cards.innerHTML+=card;
-
-});
-
-}
-
-carregarAnuncios();
-
-</script>
-
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>Roblox Hub</h1>
+            <p>Faça login para anunciar e contratar serviços.</p>
+            <button class="btn" id="btn-login">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
+                </svg>
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+
+    <div id="app-screen">
+        <header>
+            <h2>Roblox Hub</h2>
+            <div class="user-info">
+                <span id="user-name">Usuário</span>
+                <button class="btn btn-outline" id="btn-logout">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="top-bar">
+                <div>
+                    <h1>Serviços Disponíveis</h1>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Builds, Scripts, UI Design e GFX.</p>
+                </div>
+                <button class="btn" id="btn-open-modal">+ Criar Anúncio</button>
+            </div>
+
+            <div class="services-grid" id="services-container">
+                </div>
+        </main>
+    </div>
+
+    <div class="modal" id="ad-modal">
+        <div class="modal-content">
+            <h2>Novo Anúncio</h2>
+            <form id="ad-form">
+                <div class="form-group">
+                    <label>Título do Serviço</label>
+                    <input type="text" id="ad-title" placeholder="Ex: Vendo Viatura PMESP" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="ad-category" required>
+                        <option value="Scripter">Scripter</option>
+                        <option value="Builder">Builder (Mapas/Modelos)</option>
+                        <option value="UI Designer">UI Designer</option>
+                        <option value="GFX Maker">GFX Maker</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="ad-desc" rows="3" placeholder="Detalhes do seu serviço ou produto..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Preço (R$ ou Robux)</label>
+                    <input type="text" id="ad-price" placeholder="Ex: 500 Robux / R$ 15,00" required>
+                </div>
+                <div class="form-group">
+                    <label>Contato (Discord / Link)</label>
+                    <input type="text" id="ad-contact" placeholder="Ex: discord_user#1234" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="btn-close-modal" style="width: 50%;">Cancelar</button>
+                    <button type="submit" class="btn" style="width: 50%;">Publicar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importações do Firebase SDK v10 (Modular) via CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // Sua Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC08uBaH3okS0pdOkMM9wWS2c_sTt6_UTU",
+            authDomain: "bloco-de-notas-85103.firebaseapp.com",
+            projectId: "bloco-de-notas-85103",
+            storageBucket: "bloco-de-notas-85103.firebasestorage.app",
+            messagingSenderId: "890697512853",
+            appId: "1:890697512853:web:7bff196880f1b010d5289c",
+            measurementId: "G-SKDH1JR99T"
+        };
+
+        // Inicialização
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Elementos da UI
+        const loginScreen = document.getElementById('login-screen');
+        const appScreen = document.getElementById('app-screen');
+        const userNameDisplay = document.getElementById('user-name');
+        const servicesContainer = document.getElementById('services-container');
+        const modal = document.getElementById('ad-modal');
+
+        // Monitorar Autenticação (Obrigatório)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuário logado
+                loginScreen.style.display = 'none';
+                appScreen.style.display = 'block';
+                userNameDisplay.innerText = user.displayName;
+                loadServices(); // Carrega os anúncios
+            } else {
+                // Usuário deslogado
+                loginScreen.style.display = 'flex';
+                appScreen.style.display = 'none';
+            }
+        });
+
+        // Eventos de Login e Logout
+        document.getElementById('btn-login').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch((error) => console.error("Erro no login:", error));
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Eventos do Modal
+        document.getElementById('btn-open-modal').addEventListener('click', () => modal.style.display = 'flex');
+        document.getElementById('btn-close-modal').addEventListener('click', () => modal.style.display = 'none');
+
+        // Salvar Anúncio no Firestore
+        document.getElementById('ad-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            btnSubmit.innerText = "Publicando...";
+            btnSubmit.disabled = true;
+
+            try {
+                await addDoc(collection(db, "services"), {
+                    title: document.getElementById('ad-title').value,
+                    category: document.getElementById('ad-category').value,
+                    description: document.getElementById('ad-desc').value,
+                    price: document.getElementById('ad-price').value,
+                    contact: document.getElementById('ad-contact').value,
+                    author: auth.currentUser.displayName,
+                    createdAt: serverTimestamp()
+                });
+                
+                modal.style.display = 'none';
+                e.target.reset();
+                loadServices(); // Recarrega a lista
+            } catch (error) {
+                console.error("Erro ao publicar:", error);
+                alert("Erro ao publicar anúncio. Verifique as permissões do Firestore.");
+            } finally {
+                btnSubmit.innerText = "Publicar";
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // Carregar Anúncios do Firestore
+        async function loadServices() {
+            servicesContainer.innerHTML = '<p style="color:var(--text-muted)">Carregando serviços...</p>';
+            try {
+                // Busca os documentos na coleção "services"
+                const q = query(collection(db, "services"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                servicesContainer.innerHTML = '';
+                
+                if(querySnapshot.empty) {
+                    servicesContainer.innerHTML = '<p style="color:var(--text-muted)">Nenhum serviço publicado ainda. Seja o primeiro!</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.innerHTML = `
+                        <span class="tag">${data.category}</span>
+                        <h3>${data.title}</h3>
+                        <p>${data.description}</p>
+                        <div class="service-footer">
+                            <span class="price">${data.price}</span>
+                            <span style="color:var(--text-muted)">👤 ${data.author}</span>
+                        </div>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 13px; color: #a1a1aa;">
+                            <strong>Contato:</strong> ${data.contact}
+                        </div>
+                    `;
+                    servicesContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar serviços:", error);
+                servicesContainer.innerHTML = '<p style="color:#ef4444">Erro ao carregar anúncios. Configure o Firestore Database no console do Firebase.</p>';
+            }
+        }
+    </script>
 </body>
 </html>
