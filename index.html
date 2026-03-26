@@ -261,50 +261,53 @@
         let allPosts = []; 
         let isCurrentUserAdmin = false;
 
-        // --- SISTEMA DE ANIMAÇÃO DE FUNDO (CANVAS) ---
+// CANVAS PARTICULAS (700 AZUL NEON)
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         let mouse = { x: null, y: null };
 
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
-        resizeCanvas();
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize;
+        window.onmousemove = (e) => { mouse.x = e.x; mouse.y = e.y; };
+        resize();
 
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
+                this.size = Math.random() * 1.5 + 0.2;
+                this.sx = (Math.random() - 0.5) * 0.8;
+                this.sy = (Math.random() - 0.5) * 0.8;
             }
             update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-
-                // Fuga do mouse
-                if (mouse.x != null) {
+                this.x += this.sx; this.y += this.sy;
+                if(this.x < 0 || this.x > canvas.width) this.sx *= -1;
+                if(this.y < 0 || this.y > canvas.height) this.sy *= -1;
+                if(mouse.x) {
                     let dx = mouse.x - this.x; let dy = mouse.y - this.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) { this.x -= dx / 15; this.y -= dy / 15; }
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 100) { this.x -= dx/20; this.y -= dy/20; }
                 }
             }
             draw() {
-                ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#00f2ff';
+                ctx.shadowBlur = 5; ctx.shadowColor = '#00f2ff';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
+                ctx.shadowBlur = 0;
             }
         }
-        function initParticles() { particles = []; for (let i = 0; i < 70; i++) particles.push(new Particle()); }
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
+
+        function init() { 
+            particles = []; 
+            for(let i=0; i<700; i++) particles.push(new Particle()); 
         }
-        initParticles(); animateParticles();
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        init(); animate();
 
         // --- SISTEMA DE TOASTS E MODAIS CUSTOMIZADOS ---
         function showToast(message, type = 'success') {
